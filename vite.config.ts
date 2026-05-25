@@ -8,10 +8,12 @@ function ogMetaPlugin(): Plugin {
   return {
     name: "og-meta",
     transformIndexHtml(html) {
+      // DEPLOY_URL 은 배포별 미리보기 주소라 OG 이미지 404 원인이 될 수 있음
       const siteUrl = (
-        process.env.URL ||
-        process.env.DEPLOY_URL ||
+        process.env.SITE_URL ||
         process.env.VITE_SITE_URL ||
+        process.env.DEPLOY_PRIME_URL ||
+        process.env.URL ||
         "http://localhost:5173"
       ).replace(/\/$/, "");
       // const imageUrlH = `${siteUrl}/images/coverh01.jpg`;
