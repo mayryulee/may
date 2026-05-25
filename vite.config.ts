@@ -14,10 +14,12 @@ function ogMetaPlugin(): Plugin {
         process.env.VITE_SITE_URL ||
         "http://localhost:5173"
       ).replace(/\/$/, "");
-      const imageUrl = `${siteUrl}/images/coverh01.jpg`;
+      // const imageUrlH = `${siteUrl}/images/coverh01.jpg`;
+      const imageUrlV = `${siteUrl}/images/coverv01.jpg`;
       return html
         .replaceAll("__OG_SITE_URL__", siteUrl)
-        .replaceAll("__OG_IMAGE_URL__", imageUrl);
+        // .replaceAll("__OG_IMAGE_URL_H__", imageUrlH);
+        .replaceAll("__OG_IMAGE_URL_V__", imageUrlV);
     },
   };
 }
