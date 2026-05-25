@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  --font-cabinet: "Cabinet Grotesk", ui-sans-serif, sans-serif;
+  --font-optima: "Optima", "Optima Nova", "Candara", "Calibri", "Segoe UI",
+    sans-serif;
+  --font-snell: "Snell Roundhand", "SnellRoundhand", "Zapfino", "Pinyon Script",
+    cursive;
+  --font-dm: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-cormorant: "Cormorant Garamond", ui-serif, serif;
+  --font-great: "Great Vibes", cursive;
+  --font-noto: "Noto Serif KR", ui-serif, serif;
+}
