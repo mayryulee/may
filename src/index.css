@@ -10,4 +10,9 @@
   --font-cormorant: "Cormorant Garamond", ui-serif, serif;
   --font-great: "Great Vibes", cursive;
   --font-noto: "Noto Serif KR", ui-serif, serif;
+
+  /* 캘린더 섹션 글자 크기 (main.ts 에서 이름만 쓰면 됨) */
+  --text-dday-label: 0.62rem;
+  --text-dday-num: 1.75rem;
+  --text-dday-colon: 1.35rem;
 }

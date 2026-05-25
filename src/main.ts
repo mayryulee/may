@@ -1,43 +1,26 @@
 import "./index.css";
+import { initCalendarCountdown } from "./calendar-countdown";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 if (!app) throw new Error("#app not found");
 
 app.innerHTML = `
   <article>
-    <header class="mb-0.5">
-      <div class="flex items-center gap-2.5">
-        <span
-          class="font-cabinet text-[3.5rem] mr-6 leading-none font-light tracking-[0.01em] whitespace-nowrap italic"
-          style="font-synthesis: style"
-          >Starting</span
-        >
-        <span
-          class="mt-[0.14em] h-px min-w-10 flex-1 bg-[#111111]"
-          aria-hidden="true"
-        ></span>
-      </div>
-      <p
-        class="mt-[0.7rem] mr-12 text-right font-optima text-[2.9rem] leading-tight font-medium tracking-[-0.02em] lowercase"
-      >
-        our life
-      </p>
+    <header class="relative mr-3" aria-label="청첩장 타이틀">
+      <img
+        class="block w-full h-auto"
+        src="/images/title.png"
+        alt="Starting our life Together"
+        width="878"
+        height="486"
+        decoding="async"
+      />
       <div
-        class="mt-6 grid grid-cols-[1fr_auto_1fr] items-end gap-1"
+        class="absolute right-0 bottom-3 flex flex-col items-end font-cabinet text-[0.8rem] leading-normal font-normal tracking-[0.16em] text-[#111111]"
+        aria-label="예식 연월일"
       >
-        <div aria-hidden="true"></div>
-        <h1
-          class="m-0 p-0 text-center font-snell text-[clamp(3rem,18vw,4rem)] leading-[0.82] font-semibold tracking-tight"
-        >
-          Together
-        </h1>
-        <div
-          class="flex flex-col items-end justify-self-end font-cabinet text-[0.9rem] leading-normal font-normal tracking-[0.16em]"
-          aria-label="예식 연월일"
-        >
-          <span class="block">2026</span>
-          <span class="block">04.25</span>
-        </div>
+        <span class="block">2027</span>
+        <span class="block">04.25</span>
       </div>
     </header>
 
@@ -82,13 +65,13 @@ app.innerHTML = `
       <p
         class="mt-[0.85rem] font-cormorant text-[clamp(2.1rem,10.5vw,2.85rem)] leading-tight tracking-wide"
       >
-        <span class="block">26.04.25</span>
+        <span class="block">27.04.25</span>
         <span class="mt-[0.12em] block">am 11:00</span>
       </p>
       <div
         class="mt-[1.35rem] font-noto text-[0.76rem] leading-[1.75] tracking-tight"
       >
-        <p class="m-0">2026년 4월 25일 토요일 오전 11시</p>
+        <p class="m-0">2027년 4월 25일 일요일 오전 11시</p>
         <p class="m-0">노블발렌티 대치점 단독홀</p>
       </div>
     </section>
@@ -114,7 +97,7 @@ app.innerHTML = `
       </h2>
 
       <div
-        class="mt-8 px-1 text-[0.84rem] font-extralight leading-[2.1] tracking-tight text-[#333333]"
+        class="mt-8 text-[0.84rem] font-extralight leading-[2.1] tracking-tight text-[#333333]"
       >
         <p class="m-0">봄 햇살이 함께 했던 지난날,</p>
         <p class="m-0">여러 해의 봄날 처럼</p>
@@ -144,12 +127,121 @@ app.innerHTML = `
       </div>
 
       <img
-        class="mt-16 block w-full"
-        src="/images/main02.png"
+        class="-mx-[46px] mt-16 mb-0 block w-[calc(100%+92px)] max-w-none"
+        src="/images/sub01.png"
         alt="웨딩 사진"
         loading="lazy"
         decoding="async"
       />
     </section>
+
+    <section
+      class="-mx-[46px] bg-[#F7F7F7] py-12 text-center"
+      aria-label="예식까지 남은 시간"
+    >
+      <div class="w-full px-[69px] text-center">
+        <img
+          class="mx-auto block w-full h-auto"
+          src="/images/calendar.png"
+          alt="2027년 4월 예식 일정"
+          width="777"
+          height="912"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+
+      <div class="mt-8 w-full px-[69px] text-center">
+        <div
+          class="mx-auto h-px w-full bg-[#dddddd]"
+          aria-hidden="true"
+        ></div>
+
+        <div
+          class="mx-auto mt-8 w-full px-8"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <div
+            class="grid w-full grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-end justify-items-center gap-x-1"
+          >
+            <div class="w-full text-center">
+              <p
+                class="m-0 font-cormorant text-dday-label font-normal uppercase tracking-[0.22em] text-[#999999]"
+              >
+                Days
+              </p>
+              <p
+                id="count-days"
+                class="m-0 mt-1 w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
+              >
+                000
+              </p>
+            </div>
+            <span class="pb-1 font-dm text-dday-colon leading-none text-[#111111]"
+              >:</span
+            >
+            <div class="w-full text-center">
+              <p
+                class="m-0 font-cormorant text-dday-label font-normal uppercase tracking-[0.22em] text-[#999999]"
+              >
+                Hour
+              </p>
+              <p
+                id="count-hours"
+                class="m-0 mt-1 w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
+              >
+                00
+              </p>
+            </div>
+            <span class="pb-1 font-dm text-dday-colon leading-none text-[#111111]"
+              >:</span
+            >
+            <div class="w-full text-center">
+              <p
+                class="m-0 font-cormorant text-dday-label font-normal uppercase tracking-[0.22em] text-[#999999]"
+              >
+                Min
+              </p>
+              <p
+                id="count-mins"
+                class="m-0 mt-1 w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
+              >
+                00
+              </p>
+            </div>
+            <span class="pb-1 font-dm text-dday-colon leading-none text-[#111111]"
+              >:</span
+            >
+            <div class="w-full text-center">
+              <p
+                class="m-0 font-cormorant text-dday-label font-normal uppercase tracking-[0.22em] text-[#999999]"
+              >
+                Sec
+              </p>
+              <p
+                id="count-secs"
+                class="m-0 mt-1 w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
+              >
+                00
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full px-[69px] pt-10 text-center">
+        <p
+          class="m-0 w-full font-noto text-[1.03rem] leading-snug tracking-tight text-[#111111]"
+        >
+          정호 <span class="text-[#111111]" aria-hidden="true">♥</span> 채현
+          결혼식이
+          <span id="d-day-count" class="font-medium text-[#4a6fa5]">0</span>일
+          남았습니다.
+        </p>
+      </div>
+    </section>
   </article>
 `;
+
+initCalendarCountdown(app);
