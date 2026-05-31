@@ -1,0 +1,197 @@
+const SLIDES = [
+  {
+    title: "화환 반입 금지 안내",
+    lines: [
+      "축하해 주시는 마음만으로도 큰 기쁨입니다.",
+      "식장 사정으로 3단 꽃화환은 정중히 사양하오니",
+      "너른 양해 부탁드립니다.",
+      "(부득이 화환을 보내실 경우 1단 쌀화환 또는",
+      "호접란 화분만 가능합니다.)"
+    ],
+  },
+  { title: "sample2", lines: [] as string[] },
+  { title: "sample3", lines: [] as string[] },
+] as const;
+
+function renderSlide(slide: (typeof SLIDES)[number], index: number): string {
+  const body =
+    slide.lines.length > 0
+      ? `<div class="mt-5 space-y-0.5 font-noto text-[0.76rem] font-extralight leading-[1.85] tracking-tight text-[#666666]">
+          ${slide.lines.map((line) => `<p class="m-0">${line}</p>`).join("")}
+        </div>`
+      : "";
+
+  return `
+    <div
+      class="w-full shrink-0 px-6 py-9 text-center"
+      data-info-slide="${index}"
+      aria-hidden="${index === 0 ? "false" : "true"}"
+    >
+      <p class="m-0 font-noto text-[0.88rem] font-medium tracking-tight text-[#111111]">
+        ${slide.title}
+      </p>
+      ${body}
+    </div>`;
+}
+
+export function renderInformationHtml(): string {
+  const slides = SLIDES.map(renderSlide).join("");
+
+  return `
+    <section
+      id="information"
+      class="-mx-[46px] bg-[#F7F7F7] px-[25px] py-12 text-center"
+      aria-label="안내 사항"
+    >
+      <header>
+        <p
+          class="m-0 font-cormorant text-[1.05rem] font-normal uppercase tracking-[0.38em] text-[#111111]"
+        >
+          Information
+        </p>
+        <p
+          class="m-0 mt-2.5 font-noto text-[0.72rem] font-extralight tracking-[0.06em] text-[#666666]"
+        >
+          결혼식에 관련하여 사전 안내 드립니다
+        </p>
+      </header>
+
+      <div class="relative mx-auto mt-8 max-w-full">
+        <div
+          class="min-h-[11.5rem] overflow-hidden rounded-lg bg-white shadow-[0_2px_14px_rgba(0,0,0,0.06)]"
+        >
+          <div
+            id="info-track"
+            class="flex transition-transform duration-350 ease-out"
+            style="transform: translateX(0%)"
+          >
+            ${slides}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          id="info-next"
+          class="absolute top-1/2 right-1 flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[#cccccc]"
+          aria-label="다음 안내"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M9 6l6 6-6 6" />
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          id="info-prev"
+          class="absolute top-1/2 left-1 flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[#cccccc] opacity-0 pointer-events-none transition-opacity duration-200"
+          aria-label="이전 안내"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M15 6l-6 6 6 6" />
+          </svg>
+        </button>
+      </div>
+
+      <div
+        id="info-dots"
+        class="mt-5 flex items-center justify-center gap-2"
+        role="tablist"
+        aria-label="안내 슬라이드"
+      >
+        ${SLIDES.map(
+          (_, i) => `
+        <button
+          type="button"
+          role="tab"
+          data-info-dot="${i}"
+          aria-label="${i + 1}번째 안내"
+          aria-selected="${i === 0 ? "true" : "false"}"
+          class="h-2 w-2 rounded-full border-0 p-0 transition-colors duration-200 ${i === 0 ? "bg-[#555555]" : "bg-[#dddddd]"}"
+        ></button>`,
+        ).join("")}
+      </div>
+    </section>`;
+}
+
+export function initInformationCarousel(root: ParentNode): void {
+  const section = root.querySelector("#information");
+  const track = root.querySelector<HTMLElement>("#info-track");
+  const prevBtn = root.querySelector<HTMLButtonElement>("#info-prev");
+  const nextBtn = root.querySelector<HTMLButtonElement>("#info-next");
+  const dots = root.querySelectorAll<HTMLButtonElement>("[data-info-dot]");
+  const slides = root.querySelectorAll<HTMLElement>("[data-info-slide]");
+
+  if (!section || !track || !prevBtn || !nextBtn) return;
+
+  let index = 0;
+  const total = SLIDES.length;
+  let touchStartX = 0;
+
+  const goTo = (next: number): void => {
+    index = (next + total) % total;
+    track.style.transform = `translateX(-${index * 100}%)`;
+
+    slides.forEach((slide, i) => {
+      slide.setAttribute("aria-hidden", String(i !== index));
+    });
+
+    dots.forEach((dot, i) => {
+      const active = i === index;
+      dot.setAttribute("aria-selected", String(active));
+      dot.classList.toggle("bg-[#555555]", active);
+      dot.classList.toggle("bg-[#dddddd]", !active);
+    });
+
+    const showPrev = index > 0;
+    prevBtn.classList.toggle("opacity-0", !showPrev);
+    prevBtn.classList.toggle("pointer-events-none", !showPrev);
+  };
+
+  nextBtn.addEventListener("click", () => goTo(index + 1));
+  prevBtn.addEventListener("click", () => goTo(index - 1));
+
+  dots.forEach((dot) => {
+    dot.addEventListener("click", () => {
+      const i = Number(dot.dataset.infoDot);
+      if (!Number.isNaN(i)) goTo(i);
+    });
+  });
+
+  track.addEventListener(
+    "touchstart",
+    (e) => {
+      touchStartX = e.changedTouches[0]?.clientX ?? 0;
+    },
+    { passive: true },
+  );
+
+  track.addEventListener(
+    "touchend",
+    (e) => {
+      const touchEndX = e.changedTouches[0]?.clientX ?? 0;
+      const delta = touchStartX - touchEndX;
+      if (Math.abs(delta) < 40) return;
+      if (delta > 0) goTo(index + 1);
+      else goTo(index - 1);
+    },
+    { passive: true },
+  );
+}

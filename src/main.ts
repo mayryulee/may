@@ -1,6 +1,10 @@
 import "./index.css";
 import { initAccountGift, renderGiftAccountsHtml } from "./account-gift";
 import { initCalendarCountdown } from "./calendar-countdown";
+import {
+  initInformationCarousel,
+  renderInformationHtml,
+} from "./information-carousel";
 import { initLocation } from "./location";
 
 const app = document.querySelector<HTMLDivElement>("#app");
@@ -451,9 +455,12 @@ app.innerHTML = `
     </section>
 
     ${renderGiftAccountsHtml()}
+
+    ${renderInformationHtml()}
   </article>
 `;
 
 initCalendarCountdown(app);
 initLocation(app);
 initAccountGift(app);
+initInformationCarousel(app);
