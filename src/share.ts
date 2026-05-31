@@ -3,9 +3,9 @@ import { copyText, COPY_TOAST, mountCopyToast, showCopyToast } from "./copy-toas
 const SHARE = {
   title: "정호♥채현 결혼합니다.",
   description: "4월 25일 토요일 낮 11시 노블발렌티 대치점",
-  imagePath: "/images/og-kakao.png?v=2",
-  imageWidth: 800,
-  imageHeight: 1062,
+  imagePath: "/images/og-kakao.png?v=3",
+  imageWidth: 600,
+  imageHeight: 800,
 } as const;
 
 type KakaoShareSdk = {
@@ -13,6 +13,8 @@ type KakaoShareSdk = {
   isInitialized: () => boolean;
   Share: {
     sendDefault: (payload: Record<string, unknown>) => void;
+    sendScrap: (payload: Record<string, unknown>) => void;
+    sendCustom: (payload: Record<string, unknown>) => void;
   };
 };
 
@@ -31,11 +33,22 @@ function sharePageUrl(): string {
   return `${siteUrl()}/`;
 }
 
+function shareImageUrl(): string {
+  return `${siteUrl()}${SHARE.imagePath}`;
+}
+
 function kakaoJsKey(): string | undefined {
   const key =
     import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY ||
     import.meta.env.VITE_KAKAO_MAP_APP_KEY;
   return key?.trim() || undefined;
+}
+
+function shareTemplateId(): number | undefined {
+  const raw = import.meta.env.VITE_KAKAO_SHARE_TEMPLATE_ID?.trim();
+  if (!raw) return undefined;
+  const id = Number(raw);
+  return Number.isFinite(id) && id > 0 ? id : undefined;
 }
 
 function loadKakaoSdk(): Promise<KakaoShareSdk> {
@@ -88,16 +101,34 @@ function loadKakaoSdk(): Promise<KakaoShareSdk> {
   });
 }
 
+/** 커스텀 스크랩 템플릿(600×800) — 세로형 카드 */
+function shareWithScrapTemplate(
+  kakao: KakaoShareSdk,
+  url: string,
+  templateId: number,
+): void {
+  kakao.Share.sendScrap({
+    requestUrl: url,
+    templateId,
+  });
+}
+
 async function shareViaKakaoTalk(): Promise<void> {
   const url = sharePageUrl();
   const kakao = await loadKakaoSdk();
+  const templateId = shareTemplateId();
+
+  if (templateId) {
+    shareWithScrapTemplate(kakao, url, templateId);
+    return;
+  }
 
   kakao.Share.sendDefault({
     objectType: "feed",
     content: {
       title: SHARE.title,
       description: SHARE.description,
-      imageUrl: `${siteUrl()}${SHARE.imagePath}`,
+      imageUrl: shareImageUrl(),
       imageWidth: SHARE.imageWidth,
       imageHeight: SHARE.imageHeight,
       link: {
@@ -163,8 +194,13 @@ export function renderShareHtml(): string {
           />
         </button>
       </div>
+      <p
+        class="m-0 mt-3 text-[0.65rem] font-extralight leading-relaxed tracking-tight text-[#999999]"
+      >
+        세로형 미리보기는 위 노란 공유 버튼을 이용해 주세요.
+      </p>
       <img
-        class="mx-auto mt-12 block h-auto w-[5.875rem]"
+        class="mx-auto mt-10 block h-auto w-[5.875rem]"
         src="/icons/copyright.svg"
         alt="© FOR MAY"
         width="94"

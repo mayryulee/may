@@ -3,6 +3,7 @@
 interface ImportMetaEnv {
   readonly VITE_SITE_URL?: string;
   readonly VITE_KAKAO_JAVASCRIPT_KEY?: string;
+  readonly VITE_KAKAO_SHARE_TEMPLATE_ID?: string;
   readonly VITE_KAKAO_MAP_APP_KEY?: string;
 }
 
