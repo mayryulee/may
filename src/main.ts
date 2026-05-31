@@ -1,6 +1,7 @@
 import "./index.css";
 import { initAccountGift, renderGiftAccountsHtml } from "./account-gift";
 import { initCalendarCountdown } from "./calendar-countdown";
+import { initGuestbook, renderGuestbookHtml } from "./guestbook";
 import {
   initInformationCarousel,
   renderInformationHtml,
@@ -457,6 +458,8 @@ app.innerHTML = `
     ${renderGiftAccountsHtml()}
 
     ${renderInformationHtml()}
+
+    ${renderGuestbookHtml()}
   </article>
 `;
 
@@ -464,3 +467,4 @@ initCalendarCountdown(app);
 initLocation(app);
 initAccountGift(app);
 initInformationCarousel(app);
+initGuestbook(app);

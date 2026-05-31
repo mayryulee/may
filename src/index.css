@@ -16,3 +16,13 @@
   --text-dday-num: 1.75rem;
   --text-dday-colon: 1.35rem;
 }
+
+.guestbook-submit {
+  background-color: #9ba4bd;
+}
+
+.guestbook-submit:disabled {
+  cursor: not-allowed;
+  background-color: #d4d8e4;
+  color: rgb(255 255 255 / 0.9);
+}
