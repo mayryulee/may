@@ -5,3 +5,6 @@
 # 카카오 OG: Netlify 기본 URL(boisterous-xxx) 대신 실제 공유 도메인 사용
 [build.environment]
   SITE_URL = "https://formayletter.netlify.app"
+  VITE_SITE_URL = "https://formayletter.netlify.app"
+  VITE_KAKAO_SHARE_TEMPLATE_ID = "133867"
+  VITE_KAKAO_SHARE_METHOD = "scrap"

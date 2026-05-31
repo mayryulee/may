@@ -51,6 +51,25 @@ function shareTemplateId(): number | undefined {
   return Number.isFinite(id) && id > 0 ? id : undefined;
 }
 
+type ShareMethod = "custom" | "scrap";
+
+function shareMethod(): ShareMethod {
+  const mode = import.meta.env.VITE_KAKAO_SHARE_METHOD?.trim().toLowerCase();
+  return mode === "scrap" ? "scrap" : "custom";
+}
+
+function buildTemplateArgs(url: string): Record<string, string> {
+  const image = shareImageUrl();
+  return {
+    title: SHARE.title,
+    description: SHARE.description,
+    image,
+    imageUrl: image,
+    link: url,
+    web_url: url,
+  };
+}
+
 function loadKakaoSdk(): Promise<KakaoShareSdk> {
   const jsKey = kakaoJsKey();
   if (!jsKey) {
@@ -101,25 +120,23 @@ function loadKakaoSdk(): Promise<KakaoShareSdk> {
   });
 }
 
-/** 커스텀 스크랩 템플릿(600×800) — 세로형 카드 */
-function shareWithScrapTemplate(
-  kakao: KakaoShareSdk,
-  url: string,
-  templateId: number,
-): void {
-  kakao.Share.sendScrap({
-    requestUrl: url,
-    templateId,
-  });
-}
-
 async function shareViaKakaoTalk(): Promise<void> {
   const url = sharePageUrl();
   const kakao = await loadKakaoSdk();
   const templateId = shareTemplateId();
 
   if (templateId) {
-    shareWithScrapTemplate(kakao, url, templateId);
+    if (shareMethod() === "scrap") {
+      kakao.Share.sendScrap({
+        requestUrl: url,
+        templateId,
+      });
+    } else {
+      kakao.Share.sendCustom({
+        templateId,
+        templateArgs: buildTemplateArgs(url),
+      });
+    }
     return;
   }
 
