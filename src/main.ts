@@ -7,6 +7,8 @@ import {
   renderInformationHtml,
 } from "./information-carousel";
 import { initLocation } from "./location";
+import { renderQuoteHtml } from "./quote";
+import { initShare, renderShareHtml } from "./share";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 if (!app) throw new Error("#app not found");
@@ -355,11 +357,6 @@ app.innerHTML = `
             />
           </button>
         </p>
-        <p
-          id="copy-address-feedback"
-          class="m-0 mt-1 min-h-[1.1em] text-[0.68rem] text-[#4a6fa5]"
-          aria-live="polite"
-        ></p>
         <p class="m-0 mt-2 text-[0.76rem] font-extralight tracking-tight text-[#666666]">
           Tel. 02-539-0400
         </p>
@@ -460,6 +457,10 @@ app.innerHTML = `
     ${renderInformationHtml()}
 
     ${renderGuestbookHtml()}
+
+    ${renderQuoteHtml()}
+
+    ${renderShareHtml()}
   </article>
 `;
 
@@ -468,3 +469,4 @@ initLocation(app);
 initAccountGift(app);
 initInformationCarousel(app);
 initGuestbook(app);
+initShare();

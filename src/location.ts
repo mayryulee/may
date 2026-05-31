@@ -1,4 +1,6 @@
 /** 예식장 좌표·주소 (지도 링크·임베드 공통) */
+import { copyText, COPY_TOAST, showCopyToast } from "./copy-toast";
+
 export const VENUE = {
   name: "노블발렌티 대치점",
   address: "서울 강남구 영동대로 325",
@@ -224,19 +226,13 @@ export function initLocation(root: ParentNode): void {
   }
 
   const copyBtn = root.querySelector<HTMLButtonElement>("#copy-address");
-  const feedback = root.querySelector<HTMLElement>("#copy-address-feedback");
   if (copyBtn) {
     copyBtn.addEventListener("click", async () => {
       try {
-        await navigator.clipboard.writeText(VENUE.address);
-        if (feedback) {
-          feedback.textContent = "주소가 복사되었습니다";
-          window.setTimeout(() => {
-            feedback.textContent = "";
-          }, 2000);
-        }
+        await copyText(VENUE.address);
+        showCopyToast(COPY_TOAST.address);
       } catch {
-        if (feedback) feedback.textContent = "복사에 실패했습니다";
+        showCopyToast(COPY_TOAST.failed);
       }
     });
   }

@@ -1,4 +1,5 @@
 /** 마음 전하실 곳 — 계좌 정보 (번호는 실제 계좌로 교체) */
+import { copyText, COPY_TOAST, showCopyToast } from "./copy-toast";
 export const GIFT_ACCOUNTS = {
   groom: [
     {
@@ -151,91 +152,7 @@ export function renderGiftAccountsHtml(): string {
       <div class="mt-6 space-y-3 text-left" data-gift-panel="bride" hidden>
         ${brideCards}
       </div>
-
-      <div
-        id="gift-copy-toast"
-        class="pointer-events-none fixed bottom-[calc(2.5rem+env(safe-area-inset-bottom))] left-1/2 z-50 -translate-x-1/2 translate-y-6 rounded-full bg-[#333333]/92 px-5 py-2.5 font-noto text-[0.78rem] font-normal tracking-tight text-white opacity-0 shadow-[0_4px_16px_rgba(0,0,0,0.18)]"
-        role="status"
-        aria-live="polite"
-        hidden
-      >
-        복사했습니다
-      </div>
     </section>`;
-}
-
-let copyToastTimer: number | undefined;
-let copyToastHideTimer: number | undefined;
-
-async function copyText(text: string): Promise<void> {
-  if (navigator.clipboard?.writeText) {
-    try {
-      await navigator.clipboard.writeText(text);
-      return;
-    } catch {
-      /* in-app 브라우저 등 fallback */
-    }
-  }
-
-  const textarea = document.createElement("textarea");
-  textarea.value = text;
-  textarea.setAttribute("readonly", "");
-  textarea.style.position = "fixed";
-  textarea.style.left = "-9999px";
-  document.body.appendChild(textarea);
-  textarea.select();
-  const ok = document.execCommand("copy");
-  document.body.removeChild(textarea);
-  if (!ok) throw new Error("copy failed");
-}
-
-function resetToastToEnterStart(toast: HTMLElement): void {
-  toast.style.transition = "none";
-  toast.classList.remove("opacity-100", "translate-y-0");
-  toast.classList.add("opacity-0", "translate-y-6");
-  void toast.offsetHeight;
-  toast.style.transition = "";
-}
-
-function hideCopyToast(toast: HTMLElement): void {
-  toast.style.transition = "opacity 220ms ease-out";
-  toast.classList.remove("opacity-100");
-  toast.classList.add("opacity-0");
-
-  copyToastHideTimer = window.setTimeout(() => {
-    toast.hidden = true;
-    toast.style.transition = "none";
-    toast.classList.add("translate-y-6");
-    void toast.offsetHeight;
-    toast.style.transition = "";
-  }, 220);
-}
-
-function showCopyToast(root: ParentNode, ok: boolean): void {
-  const toast = root.querySelector<HTMLElement>("#gift-copy-toast");
-  if (!toast) return;
-
-  if (copyToastTimer) window.clearTimeout(copyToastTimer);
-  if (copyToastHideTimer) window.clearTimeout(copyToastHideTimer);
-
-  toast.textContent = ok ? "복사했습니다" : "복사에 실패했습니다";
-  toast.hidden = false;
-
-  resetToastToEnterStart(toast);
-
-  toast.style.transition =
-    "transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 320ms ease-out";
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      toast.classList.remove("opacity-0", "translate-y-6");
-      toast.classList.add("opacity-100", "translate-y-0");
-    });
-  });
-
-  copyToastTimer = window.setTimeout(() => {
-    hideCopyToast(toast);
-  }, 1500);
 }
 
 function setActiveTab(root: ParentNode, side: GiftSide): void {
@@ -274,9 +191,9 @@ export function initAccountGift(root: ParentNode): void {
         if (!text) return;
         try {
           await copyText(text);
-          showCopyToast(root, true);
+          showCopyToast(COPY_TOAST.account);
         } catch {
-          showCopyToast(root, false);
+          showCopyToast(COPY_TOAST.failed);
         }
       });
     },
