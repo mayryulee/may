@@ -1,4 +1,5 @@
 import "./index.css";
+import { initAccountGift, renderGiftAccountsHtml } from "./account-gift";
 import { initCalendarCountdown } from "./calendar-countdown";
 import { initLocation } from "./location";
 
@@ -335,20 +336,18 @@ app.innerHTML = `
           <button
             id="copy-address"
             type="button"
-            class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-0 bg-transparent p-0 text-[#888888] hover:text-[#111111]"
+            class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded border-0 bg-transparent p-0"
             aria-label="주소 복사"
           >
-            <svg
-              class="h-3.5 w-3.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
+            <img
+              src="/icons/copy.svg"
+              alt=""
+              width="17"
+              height="17"
+              class="block h-[17px] w-[17px]"
+              decoding="async"
               aria-hidden="true"
-            >
-              <rect x="9" y="9" width="13" height="13" rx="2" />
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-            </svg>
+            />
           </button>
         </p>
         <p
@@ -450,8 +449,11 @@ app.innerHTML = `
         </div>
       </div>
     </section>
+
+    ${renderGiftAccountsHtml()}
   </article>
 `;
 
 initCalendarCountdown(app);
 initLocation(app);
+initAccountGift(app);
