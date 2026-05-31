@@ -1,6 +1,7 @@
 import "./index.css";
 import { initAccountGift, renderGiftAccountsHtml } from "./account-gift";
 import { initCalendarCountdown } from "./calendar-countdown";
+import { initGallery, renderGalleryHtml } from "./gallery";
 import { initGuestbook, renderGuestbookHtml } from "./guestbook";
 import {
   initInformationCarousel,
@@ -251,74 +252,7 @@ app.innerHTML = `
       </div>
     </section>
 
-    <section
-      class="-mx-[46px] mt-16 px-[25px] pb-14 text-center"
-      aria-label="갤러리"
-    >
-      <header class="pb-10">
-        <p
-          class="m-0 font-cormorant text-[1.05rem] font-normal uppercase tracking-[0.38em] text-[#111111]"
-        >
-          Gallery
-        </p>
-        <p
-          class="m-0 mt-2.5 font-noto text-[0.72rem] font-extralight tracking-[0.12em] text-[#666666]"
-        >
-          갤러리
-        </p>
-      </header>
-
-      <div class="grid grid-cols-2 gap-2.5">
-        <img
-          class="aspect-[3/4] w-full object-cover object-center"
-          src="/images/gallery01.png"
-          alt="갤러리 사진 1"
-          loading="lazy"
-          decoding="async"
-        />
-        <img
-          class="aspect-[3/4] w-full object-cover object-center"
-          src="/images/gallery02.png"
-          alt="갤러리 사진 2"
-          loading="lazy"
-          decoding="async"
-        />
-        <img
-          class="aspect-[3/4] w-full object-cover object-center"
-          src="/images/gallery03.png"
-          alt="갤러리 사진 3"
-          loading="lazy"
-          decoding="async"
-        />
-        <img
-          class="aspect-[3/4] w-full object-cover object-center"
-          src="/images/gallery04.png"
-          alt="갤러리 사진 4"
-          loading="lazy"
-          decoding="async"
-        />
-        <img
-          class="aspect-[3/4] w-full object-cover object-center"
-          src="/images/gallery05.png"
-          alt="갤러리 사진 5"
-          loading="lazy"
-          decoding="async"
-        />
-        <img
-          class="aspect-[3/4] w-full object-cover object-center"
-          src="/images/gallery06.png"
-          alt="갤러리 사진 6"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-
-      <p
-        class="m-0 mt-10 font-noto text-[0.78rem] font-extralight tracking-[0.06em] text-[#111111]"
-      >
-        더보기 +
-      </p>
-    </section>
+    ${renderGalleryHtml()}
 
     <section
       class="-mx-[46px] bg-[#F7F7F7] px-[25px] py-12 text-center"
@@ -465,6 +399,7 @@ app.innerHTML = `
 `;
 
 initCalendarCountdown(app);
+initGallery(app);
 initLocation(app);
 initAccountGift(app);
 initInformationCarousel(app);
