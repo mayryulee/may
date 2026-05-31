@@ -16,12 +16,10 @@ function ogMetaPlugin(): Plugin {
         process.env.URL ||
         "http://localhost:5173"
       ).replace(/\/$/, "");
-      // const imageUrlH = `${siteUrl}/images/coverh01.png`;
-      const imageUrlV = `${siteUrl}/images/coverv01.png`;
+      const imageUrl = `${siteUrl}/images/og-kakao.png`;
       return html
         .replaceAll("__OG_SITE_URL__", siteUrl)
-        // .replaceAll("__OG_IMAGE_URL_H__", imageUrlH);
-        .replaceAll("__OG_IMAGE_URL_V__", imageUrlV);
+        .replaceAll("__OG_IMAGE_URL__", imageUrl);
     },
   };
 }

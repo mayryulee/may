@@ -3,7 +3,7 @@ import { copyText, COPY_TOAST, mountCopyToast, showCopyToast } from "./copy-toas
 const SHARE = {
   title: "정호♥채현 결혼합니다.",
   description: "4월 25일 토요일 낮 11시 노블발렌티 대치점",
-  imagePath: "/images/coverv01.png",
+  imagePath: "/images/og-kakao.png",
 } as const;
 
 type KakaoShareSdk = {

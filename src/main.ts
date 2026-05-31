@@ -242,7 +242,7 @@ app.innerHTML = `
 
       <div class="w-full px-[69px] pt-10 text-center">
         <p
-          class="m-0 w-full font-noto text-[1.03rem] leading-snug tracking-tight text-[#111111]"
+          class="m-0 w-full font-noto text-[calc(1.03rem-2px)] leading-snug tracking-tight text-[#111111]"
         >
           정호 <span class="text-[#111111]" aria-hidden="true">♥</span> 채현
           결혼식이
