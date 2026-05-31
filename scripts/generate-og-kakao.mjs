@@ -6,32 +6,18 @@ const root = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const sourcePath = resolve(root, "public/images/coverv01.png");
 const outputPath = resolve(root, "public/images/og-kakao.png");
 
-/** 카카오톡 링크 미리보기(2:1)에서 세로 이미지 전체가 보이도록 레터박스 */
-const CANVAS_W = 1200;
-const CANVAS_H = 600;
-const BG = "#ffffff";
+/** 카카오 공유·OG용 세로 썸네일 (원본 3:4 비율 유지, 레터박스 없음) */
+const OUTPUT_WIDTH = 800;
 
-const resized = await sharp(sourcePath)
-  .resize({
-    height: CANVAS_H,
-    fit: "inside",
-    withoutEnlargement: false,
-  })
-  .toBuffer({ resolveWithObject: true });
+const source = sharp(sourcePath);
+const meta = await source.metadata();
+const sourceW = meta.width ?? 928;
+const sourceH = meta.height ?? 1232;
+const outputHeight = Math.round((OUTPUT_WIDTH * sourceH) / sourceW);
 
-const left = Math.floor((CANVAS_W - resized.info.width) / 2);
-const top = Math.floor((CANVAS_H - resized.info.height) / 2);
-
-await sharp({
-  create: {
-    width: CANVAS_W,
-    height: CANVAS_H,
-    channels: 3,
-    background: BG,
-  },
-})
-  .composite([{ input: resized.data, left, top }])
+await source
+  .resize(OUTPUT_WIDTH, outputHeight, { fit: "fill" })
   .png()
   .toFile(outputPath);
 
-console.log(`OG Kakao image: ${outputPath} (${CANVAS_W}x${CANVAS_H})`);
+console.log(`OG portrait image: ${outputPath} (${OUTPUT_WIDTH}x${outputHeight})`);

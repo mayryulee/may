@@ -3,7 +3,9 @@ import { copyText, COPY_TOAST, mountCopyToast, showCopyToast } from "./copy-toas
 const SHARE = {
   title: "정호♥채현 결혼합니다.",
   description: "4월 25일 토요일 낮 11시 노블발렌티 대치점",
-  imagePath: "/images/og-kakao.png",
+  imagePath: "/images/og-kakao.png?v=2",
+  imageWidth: 800,
+  imageHeight: 1062,
 } as const;
 
 type KakaoShareSdk = {
@@ -96,6 +98,8 @@ async function shareViaKakaoTalk(): Promise<void> {
       title: SHARE.title,
       description: SHARE.description,
       imageUrl: `${siteUrl()}${SHARE.imagePath}`,
+      imageWidth: SHARE.imageWidth,
+      imageHeight: SHARE.imageHeight,
       link: {
         mobileWebUrl: url,
         webUrl: url,
@@ -103,7 +107,7 @@ async function shareViaKakaoTalk(): Promise<void> {
     },
     buttons: [
       {
-        title: "청첩장 보기",
+        title: "모바일 청첩장 보기",
         link: {
           mobileWebUrl: url,
           webUrl: url,
