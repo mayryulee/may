@@ -1,5 +1,6 @@
 import "./index.css";
 import { initCalendarCountdown } from "./calendar-countdown";
+import { initLocation } from "./location";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 if (!app) throw new Error("#app not found");
@@ -310,7 +311,147 @@ app.innerHTML = `
         더보기 +
       </p>
     </section>
+
+    <section
+      class="-mx-[46px] bg-[#F7F7F7] px-[25px] py-12 text-center"
+      aria-label="오시는 길"
+    >
+      <header class="pb-8">
+        <p
+          class="m-0 font-cormorant text-[1.05rem] font-normal uppercase tracking-[0.38em] text-[#111111]"
+        >
+          Location
+        </p>
+      </header>
+
+      <div class="font-noto text-[#111111]">
+        <p class="m-0 text-[0.92rem] font-normal tracking-tight">
+          노블발렌티 대치점
+        </p>
+        <p
+          class="m-0 mt-3 flex flex-wrap items-center justify-center gap-x-1.5 text-[0.78rem] font-extralight tracking-tight text-[#333333]"
+        >
+          <span>서울 강남구 영동대로 325</span>
+          <button
+            id="copy-address"
+            type="button"
+            class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-0 bg-transparent p-0 text-[#888888] hover:text-[#111111]"
+            aria-label="주소 복사"
+          >
+            <svg
+              class="h-3.5 w-3.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          </button>
+        </p>
+        <p
+          id="copy-address-feedback"
+          class="m-0 mt-1 min-h-[1.1em] text-[0.68rem] text-[#4a6fa5]"
+          aria-live="polite"
+        ></p>
+        <p class="m-0 mt-2 text-[0.76rem] font-extralight tracking-tight text-[#666666]">
+          Tel. 02-539-0400
+        </p>
+      </div>
+
+      <div
+        id="venue-map"
+        class="mt-6 h-[220px] w-full overflow-hidden rounded-sm bg-[#e8edf2]"
+        role="img"
+        aria-label="노블발렌티 대치점 위치 지도"
+      ></div>
+
+      <div class="mt-3 grid grid-cols-3 gap-2">
+        <a
+          data-map="kakao"
+          href="https://map.kakao.com/?q=%EB%85%B8%EB%B8%94%EB%B0%9C%EB%A0%8C%ED%8B%B0%20%EB%8C%80%EC%B9%98%EC%A0%90"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex flex-col items-center justify-center gap-1.5 rounded-md bg-white py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] no-underline"
+        >
+          <span
+            class="flex h-7 w-7 items-center justify-center rounded bg-[#FEE500] text-[0.55rem] font-bold text-[#3B1E1E]"
+            aria-hidden="true"
+            >K</span
+          >
+          <span class="font-noto text-[0.72rem] font-extralight text-[#111111]"
+            >카카오</span
+          >
+        </a>
+        <a
+          data-map="naver"
+          href="https://map.naver.com/p/search/%EB%85%B8%EB%B8%94%EB%B0%9C%EB%A0%8C%ED%8B%B0%20%EB%8C%80%EC%B9%98%EC%A0%90/place/1634613412"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex flex-col items-center justify-center gap-1.5 rounded-md bg-white py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] no-underline"
+        >
+          <span
+            class="flex h-7 w-7 items-center justify-center rounded bg-[#03C75A] text-[0.7rem] font-bold text-white"
+            aria-hidden="true"
+            >N</span
+          >
+          <span class="font-noto text-[0.72rem] font-extralight text-[#111111]"
+            >네이버</span
+          >
+        </a>
+        <a
+          data-map="tmap"
+          href="tmap://route?goalname=%EB%85%B8%EB%B8%94%EB%B0%9C%EB%A0%8C%ED%8B%B0%20%EB%8C%80%EC%B9%98%EC%A0%90&amp;goalx=127.060155&amp;goaly=37.505686"
+          rel="noopener noreferrer"
+          class="flex flex-col items-center justify-center gap-1.5 rounded-md bg-white py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] no-underline"
+        >
+          <span
+            class="flex h-7 w-7 items-center justify-center rounded bg-[#E4002B] text-[0.65rem] font-bold text-white"
+            aria-hidden="true"
+            >T</span
+          >
+          <span class="font-noto text-[0.72rem] font-extralight text-[#111111]"
+            >T MAP</span
+          >
+        </a>
+      </div>
+
+      <div
+        class="mt-10 space-y-0 border-t border-[#dddddd] text-left font-noto text-[0.76rem] font-extralight leading-[1.85] tracking-tight text-[#333333]"
+      >
+        <div class="border-b border-[#dddddd] py-5">
+          <p class="m-0 font-medium text-[#111111]">자가용 이용 시</p>
+          <p class="m-0 mt-2">내비게이션 &apos;노블발렌티 대치점&apos; 검색</p>
+          <p class="m-0">서울 강남구 영동대로 325 (대치동 983-1)</p>
+        </div>
+        <div class="border-b border-[#dddddd] py-5">
+          <p class="m-0 font-medium text-[#111111]">버스 이용 시</p>
+          <p class="m-0 mt-2">
+            휘문고교사거리 하차 후 학여울역 방향 100m 직전
+          </p>
+          <p class="m-0">간선 : 343, 401</p>
+          <p class="m-0">지선 : 4319</p>
+          <p class="m-0">일반 : 11-3, 917</p>
+          <p class="m-0">직행 : 500-2, 9407, 9507, 9607</p>
+          <p class="m-0">마을 : 강남01, 강남06</p>
+        </div>
+        <div class="border-b border-[#dddddd] py-5">
+          <p class="m-0 font-medium text-[#111111]">지하철 이용 시</p>
+          <p class="m-0 mt-2">
+            2호선 삼성역 3번 출구 30m 전방에서 셔틀버스 운행
+          </p>
+          <p class="m-0">(수시운행, 도보 이용시 7분 소요)</p>
+        </div>
+        <div class="pt-5">
+          <p class="m-0 font-medium text-[#111111]">주차장 안내</p>
+          <p class="m-0 mt-2">건물 내 지하주차장 이용 안내</p>
+        </div>
+      </div>
+    </section>
   </article>
 `;
 
 initCalendarCountdown(app);
+initLocation(app);
