@@ -2,18 +2,13 @@ const HOLD_MS = 800;
 
 let bound = false;
 
-/**
- * 화면 왼쪽 하단 고정 영역을 길게 누르면 theme01 ↔ theme02 전환.
- * (더블탭 줌을 피하기 위해 3탭 대신 롱프레스 사용)
- */
-export function bindThemeToggle(onToggle: () => void): void {
+/** © FOR MAY 로고를 길게 누르면 theme01 ↔ theme02 전환 */
+export function bindThemeToggle(
+  root: ParentNode,
+  onToggle: () => void,
+): void {
   if (bound) return;
   bound = true;
-
-  const zone = document.createElement("div");
-  zone.id = "theme-toggle-zone";
-  zone.setAttribute("aria-hidden", "true");
-  document.body.appendChild(zone);
 
   let holdTimer: number | undefined;
 
@@ -24,8 +19,14 @@ export function bindThemeToggle(onToggle: () => void): void {
     }
   };
 
-  zone.addEventListener("pointerdown", (e) => {
-    if (e.pointerType === "mouse" && e.button !== 0) return;
+  const isToggleTarget = (el: EventTarget | null): el is HTMLElement =>
+    el instanceof HTMLElement && Boolean(el.closest("[data-theme-toggle]"));
+
+  root.addEventListener("pointerdown", (e) => {
+    if (!isToggleTarget(e.target)) return;
+    const pe = e as PointerEvent;
+    if (pe.pointerType === "mouse" && pe.button !== 0) return;
+
     clearHold();
     holdTimer = window.setTimeout(() => {
       holdTimer = undefined;
@@ -33,7 +34,10 @@ export function bindThemeToggle(onToggle: () => void): void {
     }, HOLD_MS);
   });
 
-  zone.addEventListener("pointerup", clearHold);
-  zone.addEventListener("pointercancel", clearHold);
-  zone.addEventListener("pointerleave", clearHold);
+  root.addEventListener("pointerup", clearHold);
+  root.addEventListener("pointercancel", clearHold);
+
+  root.addEventListener("contextmenu", (e) => {
+    if (isToggleTarget(e.target)) e.preventDefault();
+  });
 }

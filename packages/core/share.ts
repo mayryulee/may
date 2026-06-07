@@ -198,12 +198,14 @@ export function renderShareHtml(): string {
         </button>
       </div>
       <img
-        class="mx-auto mt-10 block h-auto w-[5.875rem]"
+        class="theme-toggle-target mx-auto mt-10 block h-auto w-[5.875rem]"
         src="/icons/copyright.svg"
         alt="© FOR MAY"
         width="94"
         height="19"
         decoding="async"
+        draggable="false"
+        data-theme-toggle
       />
     </section>`;
 }

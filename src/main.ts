@@ -32,7 +32,7 @@ function mount(themeId: ThemeId): void {
 
 mount(initialThemeId);
 
-bindThemeToggle(() => {
+bindThemeToggle(app, () => {
   const next: ThemeId = activeThemeId === "theme01" ? "theme02" : "theme01";
   mount(next);
 });
