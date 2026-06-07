@@ -1,4 +1,5 @@
-import type { ClientConfig } from "./types";
+import type { ClientConfig, ThemeId } from "./types";
+import { clientOgImageUrl, themeIconUrl } from "./types";
 import { copyText, COPY_TOAST, mountCopyToast, showCopyToast } from "./copy-toast";
 
 type ShareConfig = ClientConfig["share"];
@@ -28,8 +29,8 @@ function sharePageUrl(): string {
   return `${siteUrl()}/`;
 }
 
-function shareImageUrl(share: ShareConfig): string {
-  return `${siteUrl()}${share.imagePath}`;
+function shareImageUrl(clientId: string): string {
+  return `${siteUrl()}${clientOgImageUrl(clientId)}`;
 }
 
 function kakaoJsKey(): string | undefined {
@@ -53,8 +54,12 @@ function shareMethod(): ShareMethod {
   return mode === "scrap" ? "scrap" : "custom";
 }
 
-function buildTemplateArgs(url: string, share: ShareConfig): Record<string, string> {
-  const image = shareImageUrl(share);
+function buildTemplateArgs(
+  url: string,
+  clientId: string,
+  share: ShareConfig,
+): Record<string, string> {
+  const image = shareImageUrl(clientId);
   return {
     title: share.title,
     description: share.description,
@@ -115,7 +120,10 @@ function loadKakaoSdk(): Promise<KakaoShareSdk> {
   });
 }
 
-async function shareViaKakaoTalk(share: ShareConfig): Promise<void> {
+async function shareViaKakaoTalk(
+  clientId: string,
+  share: ShareConfig,
+): Promise<void> {
   const url = sharePageUrl();
   const kakao = await loadKakaoSdk();
   const templateId = shareTemplateId();
@@ -126,7 +134,7 @@ async function shareViaKakaoTalk(share: ShareConfig): Promise<void> {
     } else {
       kakao.Share.sendCustom({
         templateId,
-        templateArgs: buildTemplateArgs(url, share),
+        templateArgs: buildTemplateArgs(url, clientId, share),
       });
     }
     return;
@@ -137,7 +145,7 @@ async function shareViaKakaoTalk(share: ShareConfig): Promise<void> {
     content: {
       title: share.title,
       description: share.description,
-      imageUrl: shareImageUrl(share),
+      imageUrl: shareImageUrl(clientId),
       imageWidth: share.imageWidth,
       imageHeight: share.imageHeight,
       link: { mobileWebUrl: url, webUrl: url },
@@ -165,7 +173,7 @@ async function shareFallback(share: ShareConfig): Promise<void> {
   showCopyToast(COPY_TOAST.address);
 }
 
-export function renderShareHtml(): string {
+export function renderShareHtml(themeId: ThemeId): string {
   return `
     <section
       id="share"
@@ -187,7 +195,7 @@ export function renderShareHtml(): string {
         >
           청첩장 링크 복사하기
           <img
-            src="/icons/copy.svg"
+            src="${themeIconUrl(themeId, "copy.svg")}"
             alt=""
             width="17"
             height="17"
@@ -199,7 +207,7 @@ export function renderShareHtml(): string {
       </div>
       <img
         class="theme-toggle-target mx-auto mt-10 block h-auto w-[5.875rem]"
-        src="/icons/copyright.svg"
+        src="${themeIconUrl(themeId, "copyright.svg")}"
         alt="© FOR MAY"
         width="94"
         height="19"
@@ -210,12 +218,12 @@ export function renderShareHtml(): string {
     </section>`;
 }
 
-export function initShare(share: ShareConfig): void {
+export function initShare(clientId: string, share: ShareConfig): void {
   mountCopyToast();
 
   document.querySelector("#share-kakao")?.addEventListener("click", async () => {
     try {
-      await shareViaKakaoTalk(share);
+      await shareViaKakaoTalk(clientId, share);
     } catch {
       try {
         await shareFallback(share);

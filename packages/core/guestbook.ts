@@ -5,6 +5,8 @@ import {
   listGuestbookEntries,
   type GuestbookEntry,
 } from "./guestbook-store";
+import type { ThemeId } from "./types";
+import { themeIconUrl } from "./types";
 
 const MODALS = ["write", "list", "delete"] as const;
 type ModalName = (typeof MODALS)[number];
@@ -164,7 +166,7 @@ async function refreshList(root: ParentNode, clientId: string): Promise<void> {
   list.innerHTML = entries.map(renderEntryCard).join("");
 }
 
-export function renderGuestbookHtml(): string {
+export function renderGuestbookHtml(themeId: ThemeId): string {
   return `
     <section
       id="guestbook"
@@ -189,7 +191,7 @@ export function renderGuestbookHtml(): string {
 
       <img
         class="mx-auto mt-8 block h-auto w-[9.5rem] max-w-[60%]"
-        src="/icons/message.svg"
+        src="${themeIconUrl(themeId, "message.svg")}"
         alt=""
         width="194"
         height="93"

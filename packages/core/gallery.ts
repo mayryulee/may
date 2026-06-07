@@ -1,8 +1,12 @@
 import type { GalleryImage } from "./types";
-import { imageUrl } from "./types";
+import { clientImageUrl } from "./types";
 
-function renderGalleryThumb(image: GalleryImage, index: number): string {
-  const src = imageUrl(image.src);
+function renderGalleryThumb(
+  clientId: string,
+  image: GalleryImage,
+  index: number,
+): string {
+  const src = clientImageUrl(clientId, image.src);
   return `
     <button
       type="button"
@@ -21,8 +25,11 @@ function renderGalleryThumb(image: GalleryImage, index: number): string {
     </button>`;
 }
 
-export function renderGalleryHtml(images: readonly GalleryImage[]): string {
-  const thumbs = images.map(renderGalleryThumb).join("");
+export function renderGalleryHtml(
+  clientId: string,
+  images: readonly GalleryImage[],
+): string {
+  const thumbs = images.map((img, i) => renderGalleryThumb(clientId, img, i)).join("");
 
   return `
     <section
@@ -105,6 +112,7 @@ export function renderGalleryHtml(images: readonly GalleryImage[]): string {
 
 export function initGallery(
   root: ParentNode,
+  clientId: string,
   images: readonly GalleryImage[],
 ): void {
   const section = root.querySelector("#gallery");
@@ -115,7 +123,7 @@ export function initGallery(
   const lb = lightbox;
   const img = imageEl;
   const resolved = images.map((image) => ({
-    src: imageUrl(image.src),
+    src: clientImageUrl(clientId, image.src),
     alt: image.alt,
   }));
 

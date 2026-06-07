@@ -27,7 +27,6 @@ const config: ClientConfig = {
   weddingAt: "2026-01-01T12:00:00+09:00",
 
   header: {
-    titleImage: "title.png",
     titleImageAlt: "Wedding title",
     year: "2026",
     monthDay: "01.01",
@@ -52,8 +51,6 @@ const config: ClientConfig = {
     fullDateKo: "2026년 1월 1일",
     venueShort: "예식장명",
   },
-
-  calendarImage: "calendar.png",
 
   venue: {
     name: "예식장명",
@@ -83,7 +80,6 @@ const config: ClientConfig = {
   share: {
     title: "신랑♥신부 결혼합니다.",
     description: "예식 일시·장소",
-    imagePath: "/images/og-kakao.png?v=3",
     imageWidth: 600,
     imageHeight: 800,
   },

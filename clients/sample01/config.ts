@@ -1,8 +1,8 @@
 import type { ClientConfig } from "../../packages/core/types";
 
 const config: ClientConfig = {
-  id: "sample",
-  theme: "theme02",
+  id: "sample01",
+  theme: "theme01",
   expiresAt: "2027-07-25",
 
   meta: {
@@ -28,7 +28,6 @@ const config: ClientConfig = {
   weddingAt: "2027-04-25T11:00:00+09:00",
 
   header: {
-    titleImage: "title.png",
     titleImageAlt: "Starting our life Together",
     year: "2027",
     monthDay: "04.25",
@@ -67,8 +66,6 @@ const config: ClientConfig = {
     fullDateKo: "2027년 4월 25일 일요일 오전 11시",
     venueShort: "노블발렌티 대치점 단독홀",
   },
-
-  calendarImage: "calendar.png",
 
   venue: {
     name: "노블발렌티 대치점",
@@ -160,7 +157,6 @@ const config: ClientConfig = {
   share: {
     title: "정호♥채현 결혼합니다.",
     description: "4월 25일 토요일 낮 11시 노블발렌티 대치점",
-    imagePath: "/images/og-kakao.png?v=3",
     imageWidth: 600,
     imageHeight: 800,
   },

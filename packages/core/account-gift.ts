@@ -1,5 +1,6 @@
 import { copyText, COPY_TOAST, showCopyToast } from "./copy-toast";
-import type { GiftAccount, GiftAccounts } from "./types";
+import type { GiftAccount, GiftAccounts, ThemeId } from "./types";
+import { themeIconUrl } from "./types";
 
 export type GiftSide = keyof GiftAccounts;
 
@@ -7,7 +8,7 @@ function accountCopyLine(account: GiftAccount): string {
   return `${account.bank} ${account.number}`;
 }
 
-function renderAccountCard(account: GiftAccount): string {
+function renderAccountCard(account: GiftAccount, themeId: ThemeId): string {
   const copyLine = accountCopyLine(account);
   return `
         <div class="rounded-lg bg-white px-4 py-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
@@ -37,7 +38,7 @@ function renderAccountCard(account: GiftAccount): string {
               aria-label="계좌번호 복사"
             >
               <img
-                src="/icons/copy.svg"
+                src="${themeIconUrl(themeId, "copy.svg")}"
                 alt=""
                 width="17"
                 height="17"
@@ -50,9 +51,12 @@ function renderAccountCard(account: GiftAccount): string {
         </div>`;
 }
 
-export function renderGiftAccountsHtml(accounts: GiftAccounts): string {
-  const groomCards = accounts.groom.map(renderAccountCard).join("");
-  const brideCards = accounts.bride.map(renderAccountCard).join("");
+export function renderGiftAccountsHtml(
+  accounts: GiftAccounts,
+  themeId: ThemeId,
+): string {
+  const groomCards = accounts.groom.map((a) => renderAccountCard(a, themeId)).join("");
+  const brideCards = accounts.bride.map((a) => renderAccountCard(a, themeId)).join("");
   return `
     <section
       id="gift-accounts"

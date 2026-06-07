@@ -47,7 +47,7 @@ function ogMetaPlugin(): Plugin {
         process.env.URL ||
         "http://localhost:5173"
       ).replace(/\/$/, "");
-      const imageUrl = `${siteUrl}/images/og-kakao.png?v=3`;
+      const imageUrl = `${siteUrl}/images/${clientId}/og-kakao.png?v=3`;
 
       return html
         .replaceAll("__OG_SITE_URL__", siteUrl)

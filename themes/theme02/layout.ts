@@ -9,12 +9,12 @@ import {
 import { initLocation, renderTransportHtml } from "../../packages/core/location";
 import { renderQuoteHtml } from "../../packages/core/quote";
 import { initShare, renderShareHtml } from "../../packages/core/share";
-import type { ClientConfig } from "../../packages/core/types";
-import { imageUrl } from "../../packages/core/types";
+import type { ClientConfig, ThemeId } from "../../packages/core/types";
+import { clientImageUrl, themeImageUrl, themeIconUrl } from "../../packages/core/types";
 
 const enc = (s: string) => encodeURIComponent(s);
 
-export function renderPageHtml(config: ClientConfig): string {
+export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
   const { venue } = config;
 
   const invitationLines = config.invitation.lines
@@ -27,10 +27,9 @@ export function renderPageHtml(config: ClientConfig): string {
   return `
   <article>
     <header class="relative mr-3" aria-label="청첩장 타이틀">
-    <h1>theme02</h1>
       <img
         class="block w-full h-auto"
-        src="${imageUrl(config.header.titleImage)}"
+        src="${themeImageUrl(themeId, "title.png")}"
         alt="${config.header.titleImageAlt}"
         width="878"
         height="486"
@@ -47,7 +46,7 @@ export function renderPageHtml(config: ClientConfig): string {
 
     <img
       class="mt-[3.3rem] mb-6 block aspect-[3/4] w-full object-cover object-center"
-      src="${imageUrl(config.hero.image)}"
+      src="${clientImageUrl(config.id, config.hero.image)}"
       alt="${config.hero.alt}"
       width="430"
       height="573"
@@ -145,7 +144,7 @@ export function renderPageHtml(config: ClientConfig): string {
 
       <img
         class="-mx-[46px] mt-16 mb-0 block w-[calc(100%+92px)] max-w-none"
-        src="${imageUrl(config.invitation.subImage)}"
+        src="${clientImageUrl(config.id, config.invitation.subImage)}"
         alt="${config.invitation.subImageAlt}"
         loading="lazy"
         decoding="async"
@@ -159,7 +158,7 @@ export function renderPageHtml(config: ClientConfig): string {
       <div class="w-full px-[69px] text-center">
         <img
           class="mx-auto block w-full h-auto"
-          src="${imageUrl(config.calendarImage)}"
+          src="${themeImageUrl(themeId, "calendar.png")}"
           alt="예식 일정"
           width="777"
           height="912"
@@ -259,7 +258,7 @@ export function renderPageHtml(config: ClientConfig): string {
       </div>
     </section>
 
-    ${renderGalleryHtml(config.gallery)}
+    ${renderGalleryHtml(config.id, config.gallery)}
 
     <section
       class="-mx-[46px] bg-[#F7F7F7] px-[25px] py-12 text-center"
@@ -288,7 +287,7 @@ export function renderPageHtml(config: ClientConfig): string {
             aria-label="주소 복사"
           >
             <img
-              src="/icons/copy.svg"
+              src="${themeIconUrl(themeId, "copy.svg")}"
               alt=""
               width="17"
               height="17"
@@ -367,27 +366,31 @@ export function renderPageHtml(config: ClientConfig): string {
       </div>
     </section>
 
-    ${renderGiftAccountsHtml(config.accounts)}
+    ${renderGiftAccountsHtml(config.accounts, themeId)}
 
     ${renderInformationHtml(config.information)}
 
-    ${renderGuestbookHtml()}
+    ${renderGuestbookHtml(themeId)}
 
     ${renderQuoteHtml(config.quote)}
 
-    ${renderShareHtml()}
+    ${renderShareHtml(themeId)}
   </article>
 `;
 }
 
-export function initPage(root: ParentNode, config: ClientConfig): void {
+export function initPage(
+  root: ParentNode,
+  config: ClientConfig,
+  _themeId: ThemeId,
+): void {
   const weddingAt = new Date(config.weddingAt);
 
   initCalendarCountdown(root, weddingAt);
-  initGallery(root, config.gallery);
+  initGallery(root, config.id, config.gallery);
   initLocation(root, config.venue);
   initAccountGift(root);
   initInformationCarousel(root, config.information);
   initGuestbook(root, config.id);
-  initShare(config.share);
+  initShare(config.id, config.share);
 }

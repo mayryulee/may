@@ -1,8 +1,9 @@
 import "./index.css";
-import clientConfig from "@client/config";
+import sample01Config from "../clients/sample01/config";
+import sample02Config from "../clients/sample02/config";
 import * as theme01 from "@themes/theme01/layout";
 import * as theme02 from "@themes/theme02/layout";
-import type { ThemeId } from "@core/types";
+import type { ClientConfig, ThemeId } from "@core/types";
 import { bindThemeToggle } from "./theme-toggle";
 
 const themes = {
@@ -10,29 +11,43 @@ const themes = {
   theme02,
 } as const;
 
-const themeOverride = import.meta.env.VITE_THEME_OVERRIDE as ThemeId | "";
-const initialThemeId = themeOverride || clientConfig.theme;
+const previewClients = {
+  sample01: sample01Config,
+  sample02: sample02Config,
+} as const;
 
-if (!themes[initialThemeId]) {
-  throw new Error(`Unknown theme: ${initialThemeId}`);
-}
+type PreviewClientId = keyof typeof previewClients;
+
+const buildClientId = import.meta.env.VITE_CLIENT_ID as string;
+const initialClientId: PreviewClientId =
+  buildClientId in previewClients
+    ? (buildClientId as PreviewClientId)
+    : "sample01";
 
 const appEl = document.querySelector<HTMLDivElement>("#app");
 if (!appEl) throw new Error("#app not found");
 
 const app = appEl;
-let activeThemeId = initialThemeId;
+let activeClientId = initialClientId;
 
-function mount(themeId: ThemeId): void {
+function mountClient(clientId: PreviewClientId): void {
+  const config: ClientConfig = previewClients[clientId];
+  const themeId: ThemeId = config.theme;
   const theme = themes[themeId];
-  app.innerHTML = theme.renderPageHtml(clientConfig);
-  theme.initPage(app, clientConfig);
-  activeThemeId = themeId;
+
+  if (!theme) {
+    throw new Error(`Unknown theme: ${themeId}`);
+  }
+
+  app.innerHTML = theme.renderPageHtml(config, themeId);
+  theme.initPage(app, config, themeId);
+  activeClientId = clientId;
 }
 
-mount(initialThemeId);
+mountClient(initialClientId);
 
 bindThemeToggle(app, () => {
-  const next: ThemeId = activeThemeId === "theme01" ? "theme02" : "theme01";
-  mount(next);
+  const next: PreviewClientId =
+    activeClientId === "sample01" ? "sample02" : "sample01";
+  mountClient(next);
 });

@@ -1,25 +1,58 @@
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { PREVIEW_CLIENT_IDS } from "./preview-clients.mjs";
 
 const root = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
-const clientId = process.env.CLIENT || "sample";
-const clientImagesDir = resolve(root, "clients", clientId, "images");
+const buildClientId = process.env.CLIENT || "sample01";
 const publicImagesDir = resolve(root, "public", "images");
+const publicThemeAssetsDir = resolve(root, "public", "theme-assets");
+const themesDir = resolve(root, "themes");
 
-if (!existsSync(clientImagesDir)) {
-  console.error(`Client images not found: ${clientImagesDir}`);
-  process.exit(1);
+const clientIds = [
+  ...new Set([...PREVIEW_CLIENT_IDS, buildClientId]),
+];
+
+function clearDir(dir) {
+  mkdirSync(dir, { recursive: true });
+  if (!existsSync(dir)) return;
+  for (const file of readdirSync(dir)) {
+    rmSync(resolve(dir, file), { recursive: true, force: true });
+  }
 }
 
-mkdirSync(publicImagesDir, { recursive: true });
-
-for (const file of readdirSync(publicImagesDir)) {
-  rmSync(resolve(publicImagesDir, file));
+function copyDirContents(from, to) {
+  mkdirSync(to, { recursive: true });
+  for (const file of readdirSync(from)) {
+    cpSync(resolve(from, file), resolve(to, file));
+  }
 }
 
-for (const file of readdirSync(clientImagesDir)) {
-  cpSync(resolve(clientImagesDir, file), resolve(publicImagesDir, file));
+clearDir(publicImagesDir);
+
+for (const id of clientIds) {
+  const from = resolve(root, "clients", id, "images");
+  if (!existsSync(from)) {
+    console.error(`Client images not found: ${from}`);
+    process.exit(1);
+  }
+  copyDirContents(from, resolve(publicImagesDir, id));
 }
 
-console.log(`Synced ${clientId} images → public/images/`);
+clearDir(publicThemeAssetsDir);
+for (const themeId of readdirSync(themesDir)) {
+  const themeDir = resolve(themesDir, themeId);
+  const imagesFrom = resolve(themeDir, "images");
+  const iconsFrom = resolve(themeDir, "icons");
+
+  if (existsSync(imagesFrom)) {
+    copyDirContents(imagesFrom, resolve(publicThemeAssetsDir, themeId, "images"));
+  }
+  if (existsSync(iconsFrom)) {
+    copyDirContents(iconsFrom, resolve(publicThemeAssetsDir, themeId, "icons"));
+  }
+}
+
+console.log(
+  `Synced clients [${clientIds.join(", ")}] → public/images/{id}/, theme assets → public/theme-assets/`,
+);

@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 
-export function resolveClient(clientId = process.env.CLIENT || "sample") {
+export function resolveClient(clientId = process.env.CLIENT || "sample01") {
   const clientDir = resolve(root, "clients", clientId);
   if (!existsSync(resolve(clientDir, "config.ts"))) {
     throw new Error(`Unknown client: ${clientId}`);

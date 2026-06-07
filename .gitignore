@@ -1,5 +1,9 @@
 node_modules
 dist
+public/images/*
+!public/images/.gitkeep
+public/theme-assets/
+public/icons/
 .DS_Store
 *.local
 .env
