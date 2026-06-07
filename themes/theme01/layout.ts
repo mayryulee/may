@@ -158,8 +158,8 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
       <div class="w-full px-[69px] text-center">
         <img
           class="mx-auto block w-full h-auto"
-          src="${themeImageUrl(themeId, "calendar.png")}"
-          alt="예식 일정"
+          src="${clientImageUrl(config.id, config.calendar.image)}"
+          alt="${config.calendar.alt}"
           width="777"
           height="912"
           loading="lazy"

@@ -3,18 +3,18 @@ import type { ClientConfig } from "../../packages/core/types";
 const config: ClientConfig = {
   id: "sample02",
   theme: "theme02",
-  expiresAt: "2027-07-25",
+  expiresAt: "2027-08-25",
 
   meta: {
     title: "정호♥채현 결혼합니다.",
     description:
-      "2027년 4월 25일, Jeongho & Chaehyun의 모바일 청첩장에 소중한 분들을 초대합니다.",
+      "2026년 5월 25일, Jeongho & Chaehyun의 모바일 청첩장에 소중한 분들을 초대합니다.",
     ogSiteName: "Jeongho & Chaehyun",
     ogTitle: "정호♥채현 결혼합니다.",
-    ogDescription: "4월 25일 토요일 낮 11시 노블발렌티 대치점",
+    ogDescription: "5월 25일 일요일 오전 11시 노블발렌티 대치점",
     ogImageAlt: "정호와 채현의 결혼식 초대",
     twitterTitle: "정호♥채현 결혼합니다.",
-    twitterDescription: "2027년 4월 25일, 소중한 분들을 초대합니다.",
+    twitterDescription: "2026년 5월 25일, 소중한 분들을 초대합니다.",
   },
 
   couple: {
@@ -25,12 +25,17 @@ const config: ClientConfig = {
     ddayLabel: "정호 ♥ 채현",
   },
 
-  weddingAt: "2027-04-25T11:00:00+09:00",
+  weddingAt: "2026-05-25T11:00:00+09:00",
 
   header: {
-    titleImageAlt: "Starting our life Together",
-    year: "2027",
-    monthDay: "04.25",
+    titleImageAlt: "Some things just go together.",
+    heroTitleLines: ["Some Things", "Just Go Together."],
+    heroSubtitleLines: [
+      "Saturday, May 25th 11:00 AM",
+      "At Noblevalenti Daechi",
+    ],
+    year: "2026",
+    monthDay: "05.25",
   },
 
   hero: {
@@ -38,7 +43,18 @@ const config: ClientConfig = {
     alt: "Jeongho와 Chaehyun 웨딩 사진",
   },
 
+  calendar: {
+    image: "calendar.png",
+    alt: "예식 일정",
+  },
+
   invitation: {
+    introLines: [
+      "정호와 채현의 결혼식에 초대합니다.",
+      "사랑과 믿음으로 새 출발을 하고자 합니다.",
+      "바쁘신 중에도 발걸음 해 주시어",
+      "자리를 빛내 주시면 감사하겠습니다.",
+    ],
     lines: [
       "봄 햇살이 함께 했던 지난날,",
       "여러 해의 봄날 처럼",
@@ -61,15 +77,15 @@ const config: ClientConfig = {
   },
 
   dateDisplay: {
-    shortDate: "27.04.25",
+    shortDate: "26.05.25",
     time: "am 11:00",
-    fullDateKo: "2027년 4월 25일 일요일 오전 11시",
-    venueShort: "노블발렌티 대치점 단독홀",
+    fullDateKo: "2026년 5월 25일 일요일 오전 11시",
+    venueShort: "노블발렌티 대치점 B1F",
   },
 
   venue: {
     name: "노블발렌티 대치점",
-    address: "서울 강남구 영동대로 325",
+    address: "서울시 강남구 영동대로 325",
     addressFull: "서울 강남구 영동대로 325 (대치동 983-1)",
     tel: "02-539-0400",
     lat: 37.505686,
@@ -156,7 +172,7 @@ const config: ClientConfig = {
 
   share: {
     title: "정호♥채현 결혼합니다.",
-    description: "4월 25일 토요일 낮 11시 노블발렌티 대치점",
+    description: "5월 25일 일요일 오전 11시 노블발렌티 대치점",
     imageWidth: 600,
     imageHeight: 800,
   },

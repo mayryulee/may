@@ -16,7 +16,7 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@client/*": ["clients/sample01/*"],
+      "@client/*": ["clients/sample02/*"],
       "@core/*": ["packages/core/*"],
       "@themes/*": ["themes/*"]
     }

@@ -37,6 +37,11 @@ const config: ClientConfig = {
     alt: "웨딩 사진",
   },
 
+  calendar: {
+    image: "calendar.png",
+    alt: "예식 일정",
+  },
+
   invitation: {
     lines: ["초대 인사말을 입력해 주세요."],
     groomParents: { parents: "아버지 · 어머니의", relation: "아들", name: "신랑" },

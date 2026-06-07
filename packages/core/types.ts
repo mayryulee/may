@@ -64,6 +64,10 @@ export type ClientConfig = {
   weddingAt: string;
   header: {
     titleImageAlt: string;
+    /** theme02: 메인 히어로 타이틀 (줄 단위) */
+    heroTitleLines?: string[];
+    /** theme02: 메인 히어로 부제 (줄 단위) */
+    heroSubtitleLines?: string[];
     year: string;
     monthDay: string;
   };
@@ -71,7 +75,13 @@ export type ClientConfig = {
     image: string;
     alt: string;
   };
+  calendar: {
+    image: string;
+    alt: string;
+  };
   invitation: {
+    /** theme02: SAVE THE DATE 카드 인사말 */
+    introLines?: string[];
     lines: string[];
     groomParents: { parents: string; relation: string; name: string };
     brideParents: { parents: string; relation: string; name: string };
@@ -109,7 +119,7 @@ export function clientOgImageUrl(clientId: string): string {
   return `${clientImageUrl(clientId, "og-kakao.png")}?v=3`;
 }
 
-/** 테마 전용 이미지 (title.png, calendar.png 등) */
+/** 테마 전용 이미지 (title.png 등) */
 export function themeImageUrl(themeId: ThemeId, filename: string): string {
   return `/theme-assets/${themeId}/images/${filename}`;
 }

@@ -38,6 +38,11 @@ const config: ClientConfig = {
     alt: "Jeongho와 Chaehyun 웨딩 사진",
   },
 
+  calendar: {
+    image: "calendar.png",
+    alt: "예식 일정",
+  },
+
   invitation: {
     lines: [
       "봄 햇살이 함께 했던 지난날,",

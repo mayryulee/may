@@ -10,7 +10,7 @@ import { initLocation, renderTransportHtml } from "../../packages/core/location"
 import { renderQuoteHtml } from "../../packages/core/quote";
 import { initShare, renderShareHtml } from "../../packages/core/share";
 import type { ClientConfig, ThemeId } from "../../packages/core/types";
-import { clientImageUrl, themeImageUrl, themeIconUrl } from "../../packages/core/types";
+import { clientImageUrl, themeIconUrl, themeImageUrl } from "../../packages/core/types";
 
 const enc = (s: string) => encodeURIComponent(s);
 
@@ -24,142 +24,135 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
     })
     .join("");
 
+  const heroTitleLines =
+    config.header.heroTitleLines ?? [config.header.titleImageAlt];
+  const heroSubtitleLines =
+    config.header.heroSubtitleLines ?? [
+      config.dateDisplay.fullDateKo,
+      config.dateDisplay.venueShort,
+    ];
+
+  const heroTitleHtml = heroTitleLines
+    .map((line) => `<span class="block">${line}</span>`)
+    .join("");
+  const heroSubtitleHtml = heroSubtitleLines
+    .map((line) => `<p class="m-0">${line}</p>`)
+    .join("");
+
+  const coupleEnHtml = `${config.couple.groomEn} <span class="font-medium">&amp;</span> ${config.couple.brideEn}`;
+
+  const saveTheDateLines =
+    config.invitation.introLines ?? config.invitation.lines.slice(0, 4);
+  const saveTheDateHtml = saveTheDateLines
+    .map((line) => `<p class="m-0">${line}</p>`)
+    .join("");
+
+  const formatParentsLine = (parents: string, relation: string) =>
+    `${parents.replace(/ · /g, ' <span class="font-medium">·</span> ')} ${relation}`;
+
   return `
   <article>
-    <header class="relative mr-3" aria-label="청첩장 타이틀">
+    <section
+      class="-mx-[46px] -mt-7 relative w-[calc(100%+92px)]"
+      aria-label="메인"
+    >
       <img
         class="block w-full h-auto"
-        src="${themeImageUrl(themeId, "title.png")}"
-        alt="${config.header.titleImageAlt}"
-        width="878"
-        height="486"
+        src="${clientImageUrl(config.id, config.hero.image)}"
+        alt="${config.hero.alt}"
+        width="430"
+        height="573"
         decoding="async"
       />
       <div
-        class="absolute right-0 bottom-3 flex flex-col items-end font-cabinet text-[0.8rem] leading-normal font-normal tracking-[0.16em] text-[#111111]"
-        aria-label="예식 연월일"
-      >
-        <span class="block">${config.header.year}</span>
-        <span class="block">${config.header.monthDay}</span>
-      </div>
-    </header>
-
-    <img
-      class="mt-[3.3rem] mb-6 block aspect-[3/4] w-full object-cover object-center"
-      src="${clientImageUrl(config.id, config.hero.image)}"
-      alt="${config.hero.alt}"
-      width="430"
-      height="573"
-      decoding="async"
-    />
-
-    <section class="text-center" aria-label="신랑 신부">
-      <p class="m-0 font-dm text-[0.92rem] tracking-[0.08em]">
-        ${config.couple.groomEn} &amp; ${config.couple.brideEn}
-      </p>
-      <p
-        class="mt-[0.65rem] font-noto text-[0.88rem] leading-relaxed tracking-[0.18em]"
-      >
-        신랑 ${config.couple.groomKo}&nbsp;&nbsp;&nbsp;신부 ${config.couple.brideKo}
-      </p>
-    </section>
-
-    <div
-      class="mx-auto my-[1.35rem] mb-[1.15rem] h-9 w-px bg-[#111111]"
-      aria-hidden="true"
-    ></div>
-
-    <section class="text-center" aria-label="예식 일시·장소">
-      <div class="flex flex-wrap items-baseline justify-center gap-1.5">
-        <span class="font-dm text-[0.72rem] font-medium tracking-[0.22em]"
-          >SAVE</span
-        >
-        <span
-          class="font-great -translate-y-[0.05em] text-[1.05rem] tracking-wide"
-          >the</span
-        >
-        <span class="font-dm text-[0.72rem] font-medium tracking-[0.22em]"
-          >DATE</span
-        >
-      </div>
-      <p
-        class="mt-[0.85rem] font-cormorant text-[clamp(2.1rem,10.5vw,2.85rem)] leading-tight tracking-wide"
-      >
-        <span class="block">${config.dateDisplay.shortDate}</span>
-        <span class="mt-[0.12em] block">${config.dateDisplay.time}</span>
-      </p>
-      <div
-        class="mt-[1.35rem] font-noto text-[0.76rem] leading-[1.75] tracking-tight"
-      >
-        <p class="m-0">${config.dateDisplay.fullDateKo}</p>
-        <p class="m-0">${config.dateDisplay.venueShort}</p>
-      </div>
-    </section>
-
-    <section class="mt-20 text-center font-noto" aria-label="초대 인사">
-      <div
-        class="mx-auto h-[60px] w-px bg-[#d4d4d4]"
+        class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.08)_38%,rgba(0,0,0,0.08)_62%,rgba(0,0,0,0.62)_100%)]"
         aria-hidden="true"
       ></div>
 
       <div
-        class="mx-auto mt-6 flex h-7 w-[8.75rem] items-center justify-center rounded-[50%] border border-[#111111]"
+        class="pointer-events-none absolute inset-0 px-7 pt-9 pb-10 text-[#FFF4C2]"
       >
-        <span class="font-dm text-[0.62rem] font-normal tracking-[0.22em]"
-          >INVITATION</span
-        >
+        <header aria-label="청첩장 타이틀">
+          <h1
+            class="m-0 font-ultra text-[clamp(2rem,6.8vw,1.75rem)] leading-[1.05] tracking-[-0.01em]"
+          >
+            ${heroTitleHtml}
+          </h1>
+          <div
+            class="mt-5 space-y-1 font-questrial text-[1rem] leading-[1.55] tracking-[0.02em]"
+            aria-label="예식 일시·장소"
+          >
+            ${heroSubtitleHtml}
+          </div>
+        </header>
       </div>
 
-      <h2
-        class="mt-8 text-[1rem] font-medium tracking-tight text-[#111111]"
+      <section
+        class="pointer-events-none absolute inset-x-0 bottom-0 px-7 pb-10 text-center text-[#FFF4C2]"
+        aria-label="신랑 신부"
       >
-        소중한 분들을 초대합니다
+        <p
+          class="m-0 font-quattrocento text-[1rem] font-bold tracking-[0.06em]"
+        >
+          ${coupleEnHtml}
+        </p>
+      </section>
+    </section>
+
+    <section
+      class="-mx-[46px] flex min-h-[560px] w-[calc(100%+92px)] flex-col justify-center bg-cover bg-center px-8 py-32 text-center font-pretendard text-[#111111]"
+      style="background-image: url('${themeImageUrl(themeId, "background.png")}')"
+      aria-label="예식 안내"
+    >
+      <h2
+        class="m-0 mb-14 font-quattrocento text-[0.72rem] font-bold uppercase tracking-[0.1em]"
+      >
+        Save the Date
       </h2>
 
       <div
-        class="mt-8 text-[0.84rem] font-extralight leading-[2.1] tracking-tight text-[#333333]"
+        class="mb-16 space-y-1 text-[0.82rem] font-medium leading-[1.85] tracking-tight"
       >
-        ${invitationLines}
+        ${saveTheDateHtml}
       </div>
 
       <div
-        class="mx-auto mt-10 h-px w-10 bg-[#d4d4d4]"
-        aria-hidden="true"
-      ></div>
-
-      <div
-        class="mt-10 space-y-3 text-[0.86rem] font-extralight tracking-tight text-[#111111]"
+        class="mb-16 grid grid-cols-2 gap-4 text-[0.82rem] font-medium leading-[1.75] tracking-tight"
+        aria-label="신랑 신부"
       >
-        <p class="m-0 flex flex-wrap items-baseline justify-center gap-x-6">
-          <span>${config.invitation.groomParents.parents}</span>
-          <span>${config.invitation.groomParents.relation}</span>
-          <span>${config.invitation.groomParents.name}</span>
-        </p>
-        <p class="m-0 flex flex-wrap items-baseline justify-center gap-x-6">
-          <span>${config.invitation.brideParents.parents}</span>
-          <span>${config.invitation.brideParents.relation}</span>
-          <span>${config.invitation.brideParents.name}</span>
-        </p>
+        <div>
+          <p class="m-0 mb-2">
+            ${formatParentsLine(config.invitation.groomParents.parents, config.invitation.groomParents.relation)}
+          </p>
+          <p class="m-0">신랑 ${config.invitation.groomParents.name}</p>
+        </div>
+        <div>
+          <p class="m-0 mb-2">
+            ${formatParentsLine(config.invitation.brideParents.parents, config.invitation.brideParents.relation)}
+          </p>
+          <p class="m-0">신부 ${config.invitation.brideParents.name}</p>
+        </div>
       </div>
 
-      <img
-        class="-mx-[46px] mt-16 mb-0 block w-[calc(100%+92px)] max-w-none"
-        src="${clientImageUrl(config.id, config.invitation.subImage)}"
-        alt="${config.invitation.subImageAlt}"
-        loading="lazy"
-        decoding="async"
-      />
+      <div
+        class="space-y-1 text-[0.78rem] font-normal leading-[1.75] tracking-tight"
+        aria-label="예식 일시·장소"
+      >
+        <p class="m-0">${config.venue.address}</p>
+        <p class="m-0">${config.dateDisplay.venueShort}</p>
+        <p class="m-0">${config.dateDisplay.fullDateKo}</p>
+      </div>
     </section>
 
     <section
       class="-mx-[46px] bg-[#F7F7F7] py-12 text-center"
-      aria-label="예식까지 남은 시간"
+      aria-label="예식 일정"
     >
       <div class="w-full px-[69px] text-center">
         <img
           class="mx-auto block w-full h-auto"
-          src="${themeImageUrl(themeId, "calendar.png")}"
-          alt="예식 일정"
+          src="${clientImageUrl(config.id, config.calendar.image)}"
+          alt="${config.calendar.alt}"
           width="777"
           height="912"
           loading="lazy"
@@ -167,6 +160,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
         />
       </div>
 
+      <!--
       <div class="mt-8 w-full px-[69px] text-center">
         <div
           class="mx-auto h-px w-full bg-[#dddddd]"
@@ -256,6 +250,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
           남았습니다.
         </p>
       </div>
+      -->
     </section>
 
     ${renderGalleryHtml(config.id, config.gallery)}
