@@ -1,35 +1,39 @@
-const TAP_COUNT = 3;
-const TAP_WINDOW_MS = 600;
+const HOLD_MS = 800;
 
-/** © FOR MAY 로고 영역 3탭으로 theme01 ↔ theme02 전환 */
-export function bindThemeToggle(
-  root: ParentNode,
-  onToggle: () => void,
-): void {
-  let tapCount = 0;
-  let tapTimer: number | undefined;
+let bound = false;
 
-  const resetTaps = (): void => {
-    tapCount = 0;
-    if (tapTimer !== undefined) {
-      window.clearTimeout(tapTimer);
-      tapTimer = undefined;
+/**
+ * 화면 왼쪽 하단 고정 영역을 길게 누르면 theme01 ↔ theme02 전환.
+ * (더블탭 줌을 피하기 위해 3탭 대신 롱프레스 사용)
+ */
+export function bindThemeToggle(onToggle: () => void): void {
+  if (bound) return;
+  bound = true;
+
+  const zone = document.createElement("div");
+  zone.id = "theme-toggle-zone";
+  zone.setAttribute("aria-hidden", "true");
+  document.body.appendChild(zone);
+
+  let holdTimer: number | undefined;
+
+  const clearHold = (): void => {
+    if (holdTimer !== undefined) {
+      window.clearTimeout(holdTimer);
+      holdTimer = undefined;
     }
   };
 
-  const target = root.querySelector<HTMLElement>("[data-theme-toggle]");
-  if (!target) return;
-
-  target.addEventListener("pointerup", (e) => {
+  zone.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
-
-    tapCount += 1;
-    if (tapTimer !== undefined) window.clearTimeout(tapTimer);
-    tapTimer = window.setTimeout(resetTaps, TAP_WINDOW_MS);
-
-    if (tapCount >= TAP_COUNT) {
-      resetTaps();
+    clearHold();
+    holdTimer = window.setTimeout(() => {
+      holdTimer = undefined;
       onToggle();
-    }
+    }, HOLD_MS);
   });
+
+  zone.addEventListener("pointerup", clearHold);
+  zone.addEventListener("pointercancel", clearHold);
+  zone.addEventListener("pointerleave", clearHold);
 }

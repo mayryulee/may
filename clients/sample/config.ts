@@ -2,7 +2,7 @@ import type { ClientConfig } from "../../packages/core/types";
 
 const config: ClientConfig = {
   id: "sample",
-  theme: "theme01",
+  theme: "theme02",
   expiresAt: "2027-07-25",
 
   meta: {

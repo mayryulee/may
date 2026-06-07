@@ -27,6 +27,7 @@ export function renderPageHtml(config: ClientConfig): string {
   return `
   <article>
     <header class="relative mr-3" aria-label="청첩장 타이틀">
+    <h1>theme02</h1>
       <img
         class="block w-full h-auto"
         src="${imageUrl(config.header.titleImage)}"

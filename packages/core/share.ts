@@ -197,11 +197,6 @@ export function renderShareHtml(): string {
           />
         </button>
       </div>
-      <p
-        class="m-0 mt-3 text-[0.65rem] font-extralight leading-relaxed tracking-tight text-[#999999]"
-      >
-        세로형 미리보기는 위 노란 공유 버튼을 이용해 주세요.
-      </p>
       <img
         class="mx-auto mt-10 block h-auto w-[5.875rem]"
         src="/icons/copyright.svg"
@@ -209,7 +204,6 @@ export function renderShareHtml(): string {
         width="94"
         height="19"
         decoding="async"
-        data-theme-toggle
       />
     </section>`;
 }

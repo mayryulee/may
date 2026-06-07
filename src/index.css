@@ -26,3 +26,16 @@
   background-color: #d4d8e4;
   color: rgb(255 255 255 / 0.9);
 }
+
+#theme-toggle-zone {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 300;
+  width: 3rem;
+  height: 3rem;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}

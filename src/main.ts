@@ -28,10 +28,11 @@ function mount(themeId: ThemeId): void {
   app.innerHTML = theme.renderPageHtml(clientConfig);
   theme.initPage(app, clientConfig);
   activeThemeId = themeId;
-  bindThemeToggle(app, () => {
-    const next: ThemeId = activeThemeId === "theme01" ? "theme02" : "theme01";
-    mount(next);
-  });
 }
 
 mount(initialThemeId);
+
+bindThemeToggle(() => {
+  const next: ThemeId = activeThemeId === "theme01" ? "theme02" : "theme01";
+  mount(next);
+});
