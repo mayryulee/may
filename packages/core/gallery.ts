@@ -1,13 +1,8 @@
-const GALLERY_IMAGES = [
-  { src: "/images/gallery01.png", alt: "갤러리 사진 1" },
-  { src: "/images/gallery02.png", alt: "갤러리 사진 2" },
-  { src: "/images/gallery03.png", alt: "갤러리 사진 3" },
-  { src: "/images/gallery04.png", alt: "갤러리 사진 4" },
-  { src: "/images/gallery05.png", alt: "갤러리 사진 5" },
-  { src: "/images/gallery06.png", alt: "갤러리 사진 6" },
-] as const;
+import type { GalleryImage } from "./types";
+import { imageUrl } from "./types";
 
-function renderGalleryThumb(image: (typeof GALLERY_IMAGES)[number], index: number): string {
+function renderGalleryThumb(image: GalleryImage, index: number): string {
+  const src = imageUrl(image.src);
   return `
     <button
       type="button"
@@ -17,7 +12,7 @@ function renderGalleryThumb(image: (typeof GALLERY_IMAGES)[number], index: numbe
     >
       <img
         class="aspect-[3/4] w-full object-cover object-center"
-        src="${image.src}"
+        src="${src}"
         alt="${image.alt}"
         loading="lazy"
         decoding="async"
@@ -26,8 +21,8 @@ function renderGalleryThumb(image: (typeof GALLERY_IMAGES)[number], index: numbe
     </button>`;
 }
 
-export function renderGalleryHtml(): string {
-  const thumbs = GALLERY_IMAGES.map(renderGalleryThumb).join("");
+export function renderGalleryHtml(images: readonly GalleryImage[]): string {
+  const thumbs = images.map(renderGalleryThumb).join("");
 
   return `
     <section
@@ -108,7 +103,10 @@ export function renderGalleryHtml(): string {
     </div>`;
 }
 
-export function initGallery(root: ParentNode): void {
+export function initGallery(
+  root: ParentNode,
+  images: readonly GalleryImage[],
+): void {
   const section = root.querySelector("#gallery");
   const lightbox = root.querySelector<HTMLElement>("#gallery-lightbox");
   const imageEl = root.querySelector<HTMLImageElement>("#gallery-lightbox-image");
@@ -116,14 +114,18 @@ export function initGallery(root: ParentNode): void {
 
   const lb = lightbox;
   const img = imageEl;
+  const resolved = images.map((image) => ({
+    src: imageUrl(image.src),
+    alt: image.alt,
+  }));
 
   let activeIndex = 0;
   let touchStartX = 0;
 
   function showImage(index: number): void {
-    const total = GALLERY_IMAGES.length;
+    const total = resolved.length;
     activeIndex = (index + total) % total;
-    const image = GALLERY_IMAGES[activeIndex];
+    const image = resolved[activeIndex];
     img.src = image.src;
     img.alt = image.alt;
   }

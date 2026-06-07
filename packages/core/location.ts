@@ -1,45 +1,27 @@
-/** 예식장 좌표·주소 (지도 링크·임베드 공통) */
 import { copyText, COPY_TOAST, showCopyToast } from "./copy-toast";
-
-export const VENUE = {
-  name: "노블발렌티 대치점",
-  address: "서울 강남구 영동대로 325",
-  addressFull: "서울 강남구 영동대로 325 (대치동 983-1)",
-  tel: "02-539-0400",
-  lat: 37.505686,
-  lng: 127.060155,
-  /** 네이버 지도 장소 ID (map.naver.com/p/search/.../place/ 이 값) */
-  naverPlaceId: "1634613412",
-} as const;
+import type { Venue } from "./types";
 
 const enc = (s: string) => encodeURIComponent(s);
 
-const SITE_APPNAME = "formayletter.netlify.app";
-
-/**
- * 지도 앱 바로가기 — API 키 불필요 (앱 URL 스킴 + 웹 딥링크)
- * 카카오: link/map 은 좌표만 열리고 검색어 미적용 → ?q= 검색 URL 사용
- * 네이버: v5/search 보다 place ID 상세 URL이 안정적
- * T맵: tmap:// 스킴 (웹 route URL 없음), 미설치 시 스토어
- */
-export const MAP_LINKS = {
-  kakao: {
-    app: `kakaomap://search?q=${enc(VENUE.name)}&p=${VENUE.lat},${VENUE.lng}`,
-    web: `https://map.kakao.com/?q=${enc(VENUE.name)}`,
-    webMobile: `http://m.map.kakao.com/scheme/search?q=${enc(VENUE.name)}&p=${VENUE.lat},${VENUE.lng}`,
-  },
-  naver: {
-    app: `nmap://place?id=${VENUE.naverPlaceId}&appname=${SITE_APPNAME}`,
-    web: `https://map.naver.com/p/search/${enc(VENUE.name)}/place/${VENUE.naverPlaceId}`,
-  },
-  tmap: {
-    app: `tmap://route?goalname=${enc(VENUE.name)}&goalx=${VENUE.lng}&goaly=${VENUE.lat}`,
-    androidIntent: `intent://route?goalname=${enc(VENUE.name)}&goalx=${VENUE.lng}&goaly=${VENUE.lat}#Intent;scheme=tmap;package=com.skt.tmap.ku;end`,
-    store:
-      "https://play.google.com/store/apps/details?id=com.skt.tmap.ku",
-    storeIos: "https://apps.apple.com/app/id431589174",
-  },
-} as const;
+function buildMapLinks(venue: Venue, siteAppName: string) {
+  return {
+    kakao: {
+      app: `kakaomap://search?q=${enc(venue.name)}&p=${venue.lat},${venue.lng}`,
+      web: `https://map.kakao.com/?q=${enc(venue.name)}`,
+      webMobile: `http://m.map.kakao.com/scheme/search?q=${enc(venue.name)}&p=${venue.lat},${venue.lng}`,
+    },
+    naver: {
+      app: `nmap://place?id=${venue.naverPlaceId}&appname=${siteAppName}`,
+      web: `https://map.naver.com/p/search/${enc(venue.name)}/place/${venue.naverPlaceId}`,
+    },
+    tmap: {
+      app: `tmap://route?goalname=${enc(venue.name)}&goalx=${venue.lng}&goaly=${venue.lat}`,
+      androidIntent: `intent://route?goalname=${enc(venue.name)}&goalx=${venue.lng}&goaly=${venue.lat}#Intent;scheme=tmap;package=com.skt.tmap.ku;end`,
+      store: "https://play.google.com/store/apps/details?id=com.skt.tmap.ku",
+      storeIos: "https://apps.apple.com/app/id431589174",
+    },
+  } as const;
+}
 
 type KakaoMaps = {
   maps: {
@@ -62,17 +44,10 @@ function isMobileDevice(): boolean {
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
-function tmapStoreUrl(): string {
-  return /iPhone|iPad|iPod/i.test(navigator.userAgent)
-    ? MAP_LINKS.tmap.storeIos
-    : MAP_LINKS.tmap.store;
-}
-
 function isAndroid(): boolean {
   return /Android/i.test(navigator.userAgent);
 }
 
-/** 모바일: 앱 스킴 시도 → 실패 시 웹/스토어. PC: 웹만 */
 function openMapNavigation(
   appUrl: string,
   webUrl: string,
@@ -96,28 +71,30 @@ function openMapNavigation(
   }, 1200);
 }
 
-function openTmapNavigation(): void {
+function openTmapNavigation(links: ReturnType<typeof buildMapLinks>): void {
+  const tmapStoreUrl = /iPhone|iPad|iPod/i.test(navigator.userAgent)
+    ? links.tmap.storeIos
+    : links.tmap.store;
+
   if (!isMobileDevice()) {
-    window.open(tmapStoreUrl(), "_blank", "noopener,noreferrer");
+    window.open(tmapStoreUrl, "_blank", "noopener,noreferrer");
     return;
   }
-  const appUrl = isAndroid()
-    ? MAP_LINKS.tmap.androidIntent
-    : MAP_LINKS.tmap.app;
-  openMapNavigation(appUrl, MAP_LINKS.tmap.app, tmapStoreUrl());
+  const appUrl = isAndroid() ? links.tmap.androidIntent : links.tmap.app;
+  openMapNavigation(appUrl, links.tmap.app, tmapStoreUrl);
 }
 
-function initMapButtons(root: ParentNode): void {
+function initMapButtons(root: ParentNode, links: ReturnType<typeof buildMapLinks>): void {
   const kakao = root.querySelector<HTMLAnchorElement>('[data-map="kakao"]');
   if (kakao) {
-    kakao.href = MAP_LINKS.kakao.web;
+    kakao.href = links.kakao.web;
     kakao.addEventListener("click", (e) => {
       if (isMobileDevice()) {
         e.preventDefault();
         openMapNavigation(
-          MAP_LINKS.kakao.app,
-          MAP_LINKS.kakao.webMobile,
-          MAP_LINKS.kakao.web,
+          links.kakao.app,
+          links.kakao.webMobile,
+          links.kakao.web,
         );
       }
     });
@@ -125,21 +102,21 @@ function initMapButtons(root: ParentNode): void {
 
   const naver = root.querySelector<HTMLAnchorElement>('[data-map="naver"]');
   if (naver) {
-    naver.href = MAP_LINKS.naver.web;
+    naver.href = links.naver.web;
     naver.addEventListener("click", (e) => {
       if (isMobileDevice()) {
         e.preventDefault();
-        openMapNavigation(MAP_LINKS.naver.app, MAP_LINKS.naver.web);
+        openMapNavigation(links.naver.app, links.naver.web);
       }
     });
   }
 
   const tmap = root.querySelector<HTMLAnchorElement>('[data-map="tmap"]');
   if (tmap) {
-    tmap.href = MAP_LINKS.tmap.app;
+    tmap.href = links.tmap.app;
     tmap.addEventListener("click", (e) => {
       e.preventDefault();
-      openTmapNavigation();
+      openTmapNavigation(links);
     });
   }
 }
@@ -174,7 +151,11 @@ function loadKakaoMapsSdk(appKey: string): Promise<void> {
   });
 }
 
-function initKakaoMap(container: HTMLElement, appKey: string): Promise<void> {
+function initKakaoMap(
+  container: HTMLElement,
+  appKey: string,
+  venue: Venue,
+): Promise<void> {
   return loadKakaoMapsSdk(appKey).then(
     () =>
       new Promise((resolve, reject) => {
@@ -187,7 +168,7 @@ function initKakaoMap(container: HTMLElement, appKey: string): Promise<void> {
           load: (cb: () => void) => void;
         };
         mapsApi.load(() => {
-          const center = new mapsApi.LatLng(VENUE.lat, VENUE.lng);
+          const center = new mapsApi.LatLng(venue.lat, venue.lng);
           const map = new mapsApi.Map(container, { center, level: 3 });
           const marker = new mapsApi.Marker({ position: center });
           marker.setMap(map);
@@ -197,9 +178,9 @@ function initKakaoMap(container: HTMLElement, appKey: string): Promise<void> {
   );
 }
 
-function initMapFallback(container: HTMLElement): void {
+function initMapFallback(container: HTMLElement, webUrl: string): void {
   const link = document.createElement("a");
-  link.href = MAP_LINKS.kakao.web;
+  link.href = webUrl;
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   link.className =
@@ -212,16 +193,22 @@ function initMapFallback(container: HTMLElement): void {
   container.replaceChildren(link);
 }
 
-export function initLocation(root: ParentNode): void {
-  initMapButtons(root);
+export function initLocation(root: ParentNode, venue: Venue): void {
+  const siteAppName =
+    import.meta.env.VITE_SITE_APP_NAME?.trim() || "formayletter.netlify.app";
+  const links = buildMapLinks(venue, siteAppName);
+
+  initMapButtons(root, links);
 
   const mapEl = root.querySelector<HTMLElement>("#venue-map");
   if (mapEl) {
     const appKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY as string | undefined;
     if (appKey?.trim()) {
-      initKakaoMap(mapEl, appKey.trim()).catch(() => initMapFallback(mapEl));
+      initKakaoMap(mapEl, appKey.trim(), venue).catch(() =>
+        initMapFallback(mapEl, links.kakao.web),
+      );
     } else {
-      initMapFallback(mapEl);
+      initMapFallback(mapEl, links.kakao.web);
     }
   }
 
@@ -229,11 +216,32 @@ export function initLocation(root: ParentNode): void {
   if (copyBtn) {
     copyBtn.addEventListener("click", async () => {
       try {
-        await copyText(VENUE.address);
+        await copyText(venue.address);
         showCopyToast(COPY_TOAST.address);
       } catch {
         showCopyToast(COPY_TOAST.failed);
       }
     });
   }
+}
+
+export function renderTransportHtml(
+  transport: readonly Venue["transport"][number][],
+): string {
+  return transport
+    .map((section, i) => {
+      const border =
+        i < transport.length - 1
+          ? "border-b border-[#dddddd] py-5"
+          : "pt-5";
+      const lines = section.lines
+        .map((line) => `<p class="m-0">${line}</p>`)
+        .join("");
+      return `
+        <div class="${border}">
+          <p class="m-0 font-medium text-[#111111]">${section.title}</p>
+          <div class="m-0 mt-2">${lines}</div>
+        </div>`;
+    })
+    .join("");
 }

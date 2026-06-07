@@ -1,12 +1,7 @@
+import type { ClientConfig } from "./types";
 import { copyText, COPY_TOAST, mountCopyToast, showCopyToast } from "./copy-toast";
 
-const SHARE = {
-  title: "정호♥채현 결혼합니다.",
-  description: "4월 25일 토요일 낮 11시 노블발렌티 대치점",
-  imagePath: "/images/og-kakao.png?v=3",
-  imageWidth: 600,
-  imageHeight: 800,
-} as const;
+type ShareConfig = ClientConfig["share"];
 
 type KakaoShareSdk = {
   init: (key: string) => void;
@@ -33,8 +28,8 @@ function sharePageUrl(): string {
   return `${siteUrl()}/`;
 }
 
-function shareImageUrl(): string {
-  return `${siteUrl()}${SHARE.imagePath}`;
+function shareImageUrl(share: ShareConfig): string {
+  return `${siteUrl()}${share.imagePath}`;
 }
 
 function kakaoJsKey(): string | undefined {
@@ -58,11 +53,11 @@ function shareMethod(): ShareMethod {
   return mode === "scrap" ? "scrap" : "custom";
 }
 
-function buildTemplateArgs(url: string): Record<string, string> {
-  const image = shareImageUrl();
+function buildTemplateArgs(url: string, share: ShareConfig): Record<string, string> {
+  const image = shareImageUrl(share);
   return {
-    title: SHARE.title,
-    description: SHARE.description,
+    title: share.title,
+    description: share.description,
     image,
     imageUrl: image,
     link: url,
@@ -120,21 +115,18 @@ function loadKakaoSdk(): Promise<KakaoShareSdk> {
   });
 }
 
-async function shareViaKakaoTalk(): Promise<void> {
+async function shareViaKakaoTalk(share: ShareConfig): Promise<void> {
   const url = sharePageUrl();
   const kakao = await loadKakaoSdk();
   const templateId = shareTemplateId();
 
   if (templateId) {
     if (shareMethod() === "scrap") {
-      kakao.Share.sendScrap({
-        requestUrl: url,
-        templateId,
-      });
+      kakao.Share.sendScrap({ requestUrl: url, templateId });
     } else {
       kakao.Share.sendCustom({
         templateId,
-        templateArgs: buildTemplateArgs(url),
+        templateArgs: buildTemplateArgs(url, share),
       });
     }
     return;
@@ -143,34 +135,28 @@ async function shareViaKakaoTalk(): Promise<void> {
   kakao.Share.sendDefault({
     objectType: "feed",
     content: {
-      title: SHARE.title,
-      description: SHARE.description,
-      imageUrl: shareImageUrl(),
-      imageWidth: SHARE.imageWidth,
-      imageHeight: SHARE.imageHeight,
-      link: {
-        mobileWebUrl: url,
-        webUrl: url,
-      },
+      title: share.title,
+      description: share.description,
+      imageUrl: shareImageUrl(share),
+      imageWidth: share.imageWidth,
+      imageHeight: share.imageHeight,
+      link: { mobileWebUrl: url, webUrl: url },
     },
     buttons: [
       {
         title: "모바일 청첩장 보기",
-        link: {
-          mobileWebUrl: url,
-          webUrl: url,
-        },
+        link: { mobileWebUrl: url, webUrl: url },
       },
     ],
   });
 }
 
-async function shareFallback(): Promise<void> {
+async function shareFallback(share: ShareConfig): Promise<void> {
   const url = sharePageUrl();
   if (navigator.share) {
     await navigator.share({
-      title: SHARE.title,
-      text: SHARE.description,
+      title: share.title,
+      text: share.description,
       url,
     });
     return;
@@ -223,19 +209,20 @@ export function renderShareHtml(): string {
         width="94"
         height="19"
         decoding="async"
+        data-theme-toggle
       />
     </section>`;
 }
 
-export function initShare(): void {
+export function initShare(share: ShareConfig): void {
   mountCopyToast();
 
   document.querySelector("#share-kakao")?.addEventListener("click", async () => {
     try {
-      await shareViaKakaoTalk();
+      await shareViaKakaoTalk(share);
     } catch {
       try {
-        await shareFallback();
+        await shareFallback(share);
       } catch {
         /* Web Share 취소 등 */
       }

@@ -1,11 +1,7 @@
-/** 예식 일시 (한국 시간) */
-export const WEDDING_AT = new Date("2027-04-25T11:00:00+09:00");
-
 const MS_DAY = 86_400_000;
 const MS_HOUR = 3_600_000;
 const MS_MIN = 60_000;
 
-/** KST 기준 날짜(자정)까지 남은 '일' — 하단 멘트용 */
 function getCalendarDaysUntil(target: Date, now = new Date()): number {
   const toKstMidnight = (d: Date) => {
     const [y, m, day] = d
@@ -26,7 +22,10 @@ function pad3(n: number): string {
   return String(n).padStart(3, "0");
 }
 
-export function initCalendarCountdown(root: ParentNode = document): void {
+export function initCalendarCountdown(
+  root: ParentNode,
+  weddingAt: Date,
+): void {
   const daysEl = root.querySelector<HTMLElement>("#count-days");
   const hoursEl = root.querySelector<HTMLElement>("#count-hours");
   const minsEl = root.querySelector<HTMLElement>("#count-mins");
@@ -36,7 +35,7 @@ export function initCalendarCountdown(root: ParentNode = document): void {
   if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
 
   const tick = () => {
-    const diff = Math.max(0, WEDDING_AT.getTime() - Date.now());
+    const diff = Math.max(0, weddingAt.getTime() - Date.now());
 
     const days = Math.floor(diff / MS_DAY);
     const hours = Math.floor((diff % MS_DAY) / MS_HOUR);
@@ -49,7 +48,7 @@ export function initCalendarCountdown(root: ParentNode = document): void {
     secsEl.textContent = pad2(secs);
 
     if (dDayEl) {
-      dDayEl.textContent = String(getCalendarDaysUntil(WEDDING_AT));
+      dDayEl.textContent = String(getCalendarDaysUntil(weddingAt));
     }
   };
 

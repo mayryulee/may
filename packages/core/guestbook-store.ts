@@ -7,11 +7,13 @@ export type GuestbookEntry = {
 
 type StoredEntry = GuestbookEntry & { password: string };
 
-const STORAGE_KEY = "may-guestbook-v1";
+function storageKey(clientId: string): string {
+  return `may-guestbook-${clientId}`;
+}
 
-function readLocal(): StoredEntry[] {
+function readLocal(clientId: string): StoredEntry[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(storageKey(clientId));
     if (!raw) return [];
     const parsed = JSON.parse(raw) as StoredEntry[];
     return Array.isArray(parsed) ? parsed : [];
@@ -20,13 +22,11 @@ function readLocal(): StoredEntry[] {
   }
 }
 
-function writeLocal(entries: StoredEntry[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+function writeLocal(clientId: string, entries: StoredEntry[]): void {
+  localStorage.setItem(storageKey(clientId), JSON.stringify(entries));
 }
 
-async function fetchApi<T>(
-  init: RequestInit,
-): Promise<T | null> {
+async function fetchApi<T>(init: RequestInit): Promise<T | null> {
   try {
     const res = await fetch("/.netlify/functions/guestbook", init);
     if (!res.ok) return null;
@@ -40,17 +40,20 @@ function byNewest(a: GuestbookEntry, b: GuestbookEntry): number {
   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 }
 
-export async function listGuestbookEntries(): Promise<GuestbookEntry[]> {
+export async function listGuestbookEntries(
+  clientId: string,
+): Promise<GuestbookEntry[]> {
   const remote = await fetchApi<GuestbookEntry[]>({ method: "GET" });
   if (remote) return remote.sort(byNewest);
-  return readLocal().map(({ password: _p, ...entry }) => entry).sort(byNewest);
+  return readLocal(clientId)
+    .map(({ password: _p, ...entry }) => entry)
+    .sort(byNewest);
 }
 
-export async function addGuestbookEntry(input: {
-  name: string;
-  message: string;
-  password: string;
-}): Promise<GuestbookEntry> {
+export async function addGuestbookEntry(
+  clientId: string,
+  input: { name: string; message: string; password: string },
+): Promise<GuestbookEntry> {
   const payload = {
     name: input.name.trim(),
     message: input.message.trim(),
@@ -68,14 +71,15 @@ export async function addGuestbookEntry(input: {
     ...payload,
     createdAt: new Date().toISOString(),
   };
-  const entries = readLocal();
+  const entries = readLocal(clientId);
   entries.push(entry);
-  writeLocal(entries);
+  writeLocal(clientId, entries);
   const { password: _p, ...publicEntry } = entry;
   return publicEntry;
 }
 
 export async function deleteGuestbookEntry(
+  clientId: string,
   id: string,
   password: string,
 ): Promise<boolean> {
@@ -85,10 +89,10 @@ export async function deleteGuestbookEntry(
   });
   if (remote) return remote.ok;
 
-  const entries = readLocal();
+  const entries = readLocal(clientId);
   const target = entries.find((e) => e.id === id);
   if (!target || target.password !== password) return false;
-  writeLocal(entries.filter((e) => e.id !== id));
+  writeLocal(clientId, entries.filter((e) => e.id !== id));
   return true;
 }
 

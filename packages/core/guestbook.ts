@@ -150,10 +150,10 @@ function escapeHtml(text: string): string {
     .replaceAll('"', "&quot;");
 }
 
-async function refreshList(root: ParentNode): Promise<void> {
+async function refreshList(root: ParentNode, clientId: string): Promise<void> {
   const list = root.querySelector<HTMLElement>("#guestbook-list");
   if (!list) return;
-  const entries = await listGuestbookEntries();
+  const entries = await listGuestbookEntries(clientId);
   if (entries.length === 0) {
     list.innerHTML = `
       <p class="m-0 py-10 text-center font-noto text-[0.78rem] font-extralight text-[#999999]">
@@ -391,7 +391,7 @@ export function renderGuestbookHtml(): string {
     </div>`;
 }
 
-export function initGuestbook(root: ParentNode): void {
+export function initGuestbook(root: ParentNode, clientId: string): void {
   const section = root.querySelector("#guestbook");
   if (!section) return;
 
@@ -408,7 +408,7 @@ export function initGuestbook(root: ParentNode): void {
     });
 
   root.querySelector("#guestbook-open-list")?.addEventListener("click", async () => {
-    await refreshList(root);
+    await refreshList(root, clientId);
     openModal(root, "list");
   });
 
@@ -453,7 +453,7 @@ export function initGuestbook(root: ParentNode): void {
       return;
     }
 
-    await addGuestbookEntry({ name, message, password });
+    await addGuestbookEntry(clientId, { name, message, password });
     writeForm.reset();
     syncWriteSubmit(root);
     closeModals(root);
@@ -477,7 +477,7 @@ export function initGuestbook(root: ParentNode): void {
     const password = String(new FormData(deleteForm).get("password") ?? "");
     deleteError.classList.add("hidden");
 
-    const ok = await deleteGuestbookEntry(deleteTargetId, password);
+    const ok = await deleteGuestbookEntry(clientId, deleteTargetId, password);
     if (!ok) {
       deleteError.textContent = "비밀번호가 일치하지 않습니다.";
       deleteError.classList.remove("hidden");
@@ -487,6 +487,6 @@ export function initGuestbook(root: ParentNode): void {
     deleteForm.reset();
     syncDeleteSubmit(root);
     closeDeleteModal(root);
-    await refreshList(root);
+    await refreshList(root, clientId);
   });
 }

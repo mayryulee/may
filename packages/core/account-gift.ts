@@ -1,51 +1,7 @@
-/** 마음 전하실 곳 — 계좌 정보 (번호는 실제 계좌로 교체) */
 import { copyText, COPY_TOAST, showCopyToast } from "./copy-toast";
-export const GIFT_ACCOUNTS = {
-  groom: [
-    {
-      relation: "신랑",
-      name: "김정호",
-      bank: "신한은행",
-      number: "123-45-67890",
-    },
-    {
-      relation: "신랑 아버지",
-      name: "김종욱",
-      bank: "신한은행",
-      number: "123-45-67891",
-    },
-    {
-      relation: "신랑 어머니",
-      name: "최은희",
-      bank: "신한은행",
-      number: "123-45-67892",
-    },
-  ],
-  bride: [
-    {
-      relation: "신부",
-      name: "박채현",
-      bank: "신한은행",
-      number: "123-45-67893",
-    },
-    {
-      relation: "신부 아버지",
-      name: "박중호",
-      bank: "신한은행",
-      number: "123-45-67894",
-    },
-    {
-      relation: "신부 어머니",
-      name: "김혜진",
-      bank: "신한은행",
-      number: "123-45-67895",
-    },
-  ],
-} as const;
+import type { GiftAccount, GiftAccounts } from "./types";
 
-export type GiftSide = keyof typeof GIFT_ACCOUNTS;
-
-type GiftAccount = (typeof GIFT_ACCOUNTS)[GiftSide][number];
+export type GiftSide = keyof GiftAccounts;
 
 function accountCopyLine(account: GiftAccount): string {
   return `${account.bank} ${account.number}`;
@@ -94,9 +50,9 @@ function renderAccountCard(account: GiftAccount): string {
         </div>`;
 }
 
-export function renderGiftAccountsHtml(): string {
-  const groomCards = GIFT_ACCOUNTS.groom.map(renderAccountCard).join("");
-  const brideCards = GIFT_ACCOUNTS.bride.map(renderAccountCard).join("");
+export function renderGiftAccountsHtml(accounts: GiftAccounts): string {
+  const groomCards = accounts.groom.map(renderAccountCard).join("");
+  const brideCards = accounts.bride.map(renderAccountCard).join("");
   return `
     <section
       id="gift-accounts"

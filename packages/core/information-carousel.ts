@@ -1,19 +1,6 @@
-const SLIDES = [
-  {
-    title: "화환 반입 금지 안내",
-    lines: [
-      "축하해 주시는 마음만으로도 큰 기쁨입니다.",
-      "식장 사정으로 3단 꽃화환은 정중히 사양하오니",
-      "너른 양해 부탁드립니다.",
-      "(부득이 화환을 보내실 경우 1단 쌀화환 또는",
-      "호접란 화분만 가능합니다.)"
-    ],
-  },
-  { title: "sample2", lines: [] as string[] },
-  { title: "sample3", lines: [] as string[] },
-] as const;
+import type { InformationSlide } from "./types";
 
-function renderSlide(slide: (typeof SLIDES)[number], index: number): string {
+function renderSlide(slide: InformationSlide, index: number): string {
   const body =
     slide.lines.length > 0
       ? `<div class="mt-5 space-y-0.5 font-noto text-[0.76rem] font-extralight leading-[1.85] tracking-tight text-[#666666]">
@@ -34,8 +21,8 @@ function renderSlide(slide: (typeof SLIDES)[number], index: number): string {
     </div>`;
 }
 
-export function renderInformationHtml(): string {
-  const slides = SLIDES.map(renderSlide).join("");
+export function renderInformationHtml(slides: readonly InformationSlide[]): string {
+  const slideHtml = slides.map(renderSlide).join("");
 
   return `
     <section
@@ -65,7 +52,7 @@ export function renderInformationHtml(): string {
             class="flex transition-transform duration-350 ease-out"
             style="transform: translateX(0%)"
           >
-            ${slides}
+            ${slideHtml}
           </div>
         </div>
 
@@ -116,7 +103,7 @@ export function renderInformationHtml(): string {
         role="tablist"
         aria-label="안내 슬라이드"
       >
-        ${SLIDES.map(
+        ${slides.map(
           (_, i) => `
         <button
           type="button"
@@ -131,25 +118,28 @@ export function renderInformationHtml(): string {
     </section>`;
 }
 
-export function initInformationCarousel(root: ParentNode): void {
+export function initInformationCarousel(
+  root: ParentNode,
+  slides: readonly InformationSlide[],
+): void {
   const section = root.querySelector("#information");
   const track = root.querySelector<HTMLElement>("#info-track");
   const prevBtn = root.querySelector<HTMLButtonElement>("#info-prev");
   const nextBtn = root.querySelector<HTMLButtonElement>("#info-next");
   const dots = root.querySelectorAll<HTMLButtonElement>("[data-info-dot]");
-  const slides = root.querySelectorAll<HTMLElement>("[data-info-slide]");
+  const slideEls = root.querySelectorAll<HTMLElement>("[data-info-slide]");
 
   if (!section || !track || !prevBtn || !nextBtn) return;
 
   let index = 0;
-  const total = SLIDES.length;
+  const total = slides.length;
   let touchStartX = 0;
 
   const goTo = (next: number): void => {
     index = (next + total) % total;
     track.style.transform = `translateX(-${index * 100}%)`;
 
-    slides.forEach((slide, i) => {
+    slideEls.forEach((slide, i) => {
       slide.setAttribute("aria-hidden", String(i !== index));
     });
 
