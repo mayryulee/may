@@ -69,7 +69,7 @@ const config: ClientConfig = {
     shortDate: "27.04.25",
     time: "am 11:00",
     fullDateKo: "2027년 4월 25일 일요일 오전 11시",
-    venueShort: "노블발렌티 대치점 단독홀",
+    venueShort: "노블발렌티 대치점",
   },
 
   venue: {

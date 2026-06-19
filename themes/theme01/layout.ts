@@ -16,10 +16,12 @@ const enc = (s: string) => encodeURIComponent(s);
 
 export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
   const { venue } = config;
+  const groomParentNames = config.invitation.groomParents.parents.replace(/의$/, "");
+  const brideParentNames = config.invitation.brideParents.parents.replace(/의$/, "");
 
   const invitationLines = config.invitation.lines
     .map((line, i) => {
-      const margin = i === 3 ? "mt-8 m-0" : "m-0";
+      const margin = i === 3 ? "mt-6 m-0" : "m-0";
       return `<p class="${margin}">${line}</p>`;
     })
     .join("");
@@ -54,91 +56,106 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
     />
 
     <section class="text-center" aria-label="신랑 신부">
-      <p class="m-0 font-dm text-[0.92rem] tracking-[0.08em]">
-        ${config.couple.groomEn} &amp; ${config.couple.brideEn}
+      <p class="m-0 inline-flex items-baseline justify-center gap-x-[14px] font-questrial text-[14px] leading-normal tracking-[0.05em] text-black">
+        <span>${config.couple.groomEn}</span>
+        <span class="font-sans tracking-[0.05em]">&amp;</span>
+        <span>${config.couple.brideEn}</span>
       </p>
       <p
-        class="mt-[0.65rem] font-noto text-[0.88rem] leading-relaxed tracking-[0.18em]"
+        class="mt-[16px] inline-flex items-baseline justify-center gap-x-[28px] font-noto text-[17px] leading-[24px] tracking-[-0.01em] text-black"
       >
-        신랑 ${config.couple.groomKo}&nbsp;&nbsp;&nbsp;신부 ${config.couple.brideKo}
+        <span class="inline-flex items-baseline gap-x-[9px]">
+          <span class="font-bold">신랑</span>
+          <span>${config.couple.groomKo}</span>
+        </span>
+        <span class="inline-flex items-baseline gap-x-[9px]">
+          <span class="font-bold">신부</span>
+          <span>${config.couple.brideKo}</span>
+        </span>
       </p>
     </section>
 
     <div
-      class="mx-auto my-[1.35rem] mb-[1.15rem] h-9 w-px bg-[#111111]"
+      class="mx-auto mt-[57px] h-[70px] w-px bg-[#111111]"
       aria-hidden="true"
     ></div>
 
-    <section class="text-center" aria-label="예식 일시·장소">
-      <div class="flex flex-wrap items-baseline justify-center gap-1.5">
-        <span class="font-dm text-[0.72rem] font-medium tracking-[0.22em]"
-          >SAVE</span
-        >
-        <span
-          class="font-great -translate-y-[0.05em] text-[1.05rem] tracking-wide"
-          >the</span
-        >
-        <span class="font-dm text-[0.72rem] font-medium tracking-[0.22em]"
-          >DATE</span
-        >
-      </div>
+    <section class="mt-[33px] text-center" aria-label="예식 일시·장소">
+      <img
+        class="mx-auto block h-[68px] w-[262px]"
+        src="${themeImageUrl(themeId, "date.png")}"
+        alt="SAVE the DATE"
+        width="524"
+        height="136"
+        decoding="async"
+      />
       <p
-        class="mt-[0.85rem] font-cormorant text-[clamp(2.1rem,10.5vw,2.85rem)] leading-tight tracking-wide"
+        class="mt-[14px] font-milchella text-[33px] font-[400] leading-[1.1] tracking-[0.03em]"
       >
         <span class="block">${config.dateDisplay.shortDate}</span>
-        <span class="mt-[0.12em] block">${config.dateDisplay.time}</span>
+        <span class="mt-[6px] block">${config.dateDisplay.time}</span>
       </p>
       <div
-        class="mt-[1.35rem] font-noto text-[0.76rem] leading-[1.75] tracking-tight"
+        class="mt-[48px] font-noto text-[14px] leading-[24px] tracking-normal"
       >
         <p class="m-0">${config.dateDisplay.fullDateKo}</p>
         <p class="m-0">${config.dateDisplay.venueShort}</p>
       </div>
     </section>
 
-    <section class="mt-20 text-center font-noto" aria-label="초대 인사">
+    <section class="mt-[35px] text-center font-noto" aria-label="초대 인사">
       <div
-        class="mx-auto h-[60px] w-px bg-[#d4d4d4]"
+        class="mx-auto h-[70px] w-px bg-[#d4d4d4]"
         aria-hidden="true"
       ></div>
 
       <div
-        class="mx-auto mt-6 flex h-7 w-[8.75rem] items-center justify-center rounded-[50%] border border-[#111111]"
+        class="mx-auto mt-[60px] flex h-[22px] w-[78px] items-center justify-center rounded-[50%] border-[0.5px] border-[#111111]"
       >
-        <span class="font-dm text-[0.62rem] font-normal tracking-[0.22em]"
+        <span class="font-sans text-[7.5px] font-normal uppercase tracking-[0.13em]"
           >INVITATION</span
         >
       </div>
 
       <h2
-        class="mt-8 text-[1rem] font-medium tracking-tight text-[#111111]"
+        class="mt-[16px] text-[18px] font-normal leading-[20px] tracking-normal text-[#111111]"
       >
         소중한 분들을 초대합니다
       </h2>
 
       <div
-        class="mt-8 text-[0.84rem] font-extralight leading-[2.1] tracking-tight text-[#333333]"
+        class="mt-[38px] text-[13px] font-normal leading-[24px] tracking-[-0.01em] text-black"
       >
         ${invitationLines}
       </div>
 
       <div
-        class="mx-auto mt-10 h-px w-10 bg-[#d4d4d4]"
+        class="mx-auto mt-[40px] h-px w-[50px] bg-[#d4d4d4]"
         aria-hidden="true"
       ></div>
 
       <div
-        class="mt-10 space-y-3 text-[0.86rem] font-extralight tracking-tight text-[#111111]"
+        class="mt-[39px] space-y-[3px] text-[13px] font-normal leading-[20px] tracking-[-0.01em] text-[#111111]"
       >
-        <p class="m-0 flex flex-wrap items-baseline justify-center gap-x-6">
-          <span>${config.invitation.groomParents.parents}</span>
-          <span>${config.invitation.groomParents.relation}</span>
-          <span>${config.invitation.groomParents.name}</span>
+        <p class="m-0 flex flex-wrap items-baseline justify-center gap-x-[24px]">
+          <span>
+            <span class="font-medium">${groomParentNames}</span>
+            <span class="text-[#6e6e6e]">의</span>
+          </span>
+          <span class="inline-flex items-baseline gap-x-[14px]">
+            <span class="text-[#6e6e6e]">${config.invitation.groomParents.relation}</span>
+            <span class="font-medium">${config.invitation.groomParents.name}</span>
+          </span>
         </p>
-        <p class="m-0 flex flex-wrap items-baseline justify-center gap-x-6">
-          <span>${config.invitation.brideParents.parents}</span>
-          <span>${config.invitation.brideParents.relation}</span>
-          <span>${config.invitation.brideParents.name}</span>
+        <p class="m-0 flex flex-wrap items-baseline justify-center gap-x-[24px]">
+          <span>
+            <span class="font-medium">${brideParentNames}</span>
+            <span class="text-[#6e6e6e]">의</span>
+          </span>
+          <span class="inline-flex items-baseline gap-x-[14px]">
+            <span class="text-[#6e6e6e]">${config.invitation.brideParents.relation}</span>
+            <span class="font-medium">${config.invitation.brideParents.name}</span>
+          </span>
         </p>
       </div>
 

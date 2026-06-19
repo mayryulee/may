@@ -22,7 +22,7 @@ const buildClientId = import.meta.env.VITE_CLIENT_ID as string;
 const initialClientId: PreviewClientId =
   buildClientId in previewClients
     ? (buildClientId as PreviewClientId)
-    : "sample02";
+    : "sample01";
 
 const appEl = document.querySelector<HTMLDivElement>("#app");
 if (!appEl) throw new Error("#app not found");
