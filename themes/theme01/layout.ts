@@ -65,11 +65,11 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
         class="mt-[16px] inline-flex items-baseline justify-center gap-x-[28px] font-noto text-[17px] leading-[24px] tracking-[-0.01em] text-black"
       >
         <span class="inline-flex items-baseline gap-x-[9px]">
-          <span class="font-bold">신랑</span>
+          <span class="font-[300]">신랑</span>
           <span>${config.couple.groomKo}</span>
         </span>
         <span class="inline-flex items-baseline gap-x-[9px]">
-          <span class="font-bold">신부</span>
+          <span class="font-[300]">신부</span>
           <span>${config.couple.brideKo}</span>
         </span>
       </p>
