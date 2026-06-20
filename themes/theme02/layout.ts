@@ -17,13 +17,6 @@ const enc = (s: string) => encodeURIComponent(s);
 export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
   const { venue } = config;
 
-  const invitationLines = config.invitation.lines
-    .map((line, i) => {
-      const margin = i === 3 ? "mt-8 m-0" : "m-0";
-      return `<p class="${margin}">${line}</p>`;
-    })
-    .join("");
-
   const heroTitleLines =
     config.header.heroTitleLines ?? [config.header.titleImageAlt];
   const heroSubtitleLines =
