@@ -72,8 +72,8 @@ const config: ClientConfig = {
       relation: "딸",
       name: "박채현",
     },
-    subImage: "sub01.png",
-    subImageAlt: "웨딩 사진",
+    subImage: "",
+    subImageAlt: "",
   },
 
   dateDisplay: {
