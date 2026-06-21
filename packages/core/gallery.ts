@@ -93,7 +93,7 @@ export function renderGalleryHtml(
         <button
           type="button"
           data-gallery-prev
-          class="absolute top-1/2 left-1 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70"
+          class="absolute top-1/2 left-4 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70"
           aria-label="이전 사진"
         >
           ‹
@@ -101,41 +101,13 @@ export function renderGalleryHtml(
         <button
           type="button"
           data-gallery-next
-          class="absolute top-1/2 right-1 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70"
+          class="absolute top-1/2 right-4 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70"
           aria-label="다음 사진"
         >
           ›
         </button>
         <img
           id="gallery-lightbox-image"
-          class="max-h-[min(85vh,720px)] w-full object-contain"
-          alt=""
-          decoding="async"
-        />
-      </div>
-    </div>
-
-    <div
-      id="gallery-popup-lightbox"
-      class="fixed inset-0 z-[100] hidden"
-      aria-hidden="true"
-      role="dialog"
-      aria-modal="true"
-      aria-label="갤러리 더보기"
-    >
-      <div
-        class="relative mx-auto flex h-full max-w-[430px] items-center justify-center bg-black/90 px-4 py-12"
-      >
-        <button
-          type="button"
-          data-gallery-popup-close
-          class="absolute top-4 right-4 z-10 inline-flex h-10 w-10 items-center justify-center border-0 bg-transparent p-0 text-[1.75rem] leading-none text-white/80"
-          aria-label="닫기"
-        >
-          ×
-        </button>
-        <img
-          id="gallery-popup-image"
           class="max-h-[min(85vh,720px)] w-full object-contain"
           alt=""
           decoding="async"
@@ -178,16 +150,13 @@ export function initGallery(
   const lightbox = root.querySelector<HTMLElement>("#gallery-lightbox");
   const imageEl = root.querySelector<HTMLImageElement>("#gallery-lightbox-image");
   const moreBtn = root.querySelector<HTMLButtonElement>("#gallery-more");
-  const popupLightbox = root.querySelector<HTMLElement>("#gallery-popup-lightbox");
-  const popupImageEl = root.querySelector<HTMLImageElement>("#gallery-popup-image");
-  if (!section || !lightbox || !imageEl || !moreBtn || !popupLightbox || !popupImageEl) {
+  if (!section || !lightbox || !imageEl || !moreBtn) {
     return;
   }
 
   const lb = lightbox;
   const img = imageEl;
-  const popupLb = popupLightbox;
-  const popupImg = popupImageEl;
+  const more = moreBtn;
   const resolved = images.map((image) => ({
     src: clientImageUrl(clientId, image.src),
     alt: image.alt,
@@ -195,15 +164,38 @@ export function initGallery(
 
   let activeIndex = 0;
   let touchStartX = 0;
-  let popupUrls: string[] | null = null;
-  let popupIndex = 0;
+  let popupUrls: string[] = [];
+  let popupReady = false;
+
+  function allSlides(): { src: string; alt: string }[] {
+    const popupSlides = popupUrls.map((src, i) => ({
+      src,
+      alt: `갤러리 사진 ${resolved.length + i + 1}`,
+    }));
+    return [...resolved, ...popupSlides];
+  }
+
+  function totalCount(): number {
+    return resolved.length + (popupReady ? popupUrls.length : 0);
+  }
+
+  async function ensurePopupUrls(): Promise<string[]> {
+    if (!popupReady) {
+      popupUrls = await discoverPopupImages(clientId);
+      popupReady = true;
+      more.hidden = popupUrls.length === 0;
+    }
+    return popupUrls;
+  }
 
   function showImage(index: number): void {
-    const total = resolved.length;
-    activeIndex = (index + total) % total;
-    const image = resolved[activeIndex];
-    img.src = image.src;
-    img.alt = image.alt;
+    const total = totalCount();
+    if (total === 0) return;
+
+    activeIndex = ((index % total) + total) % total;
+    const slide = allSlides()[activeIndex];
+    img.src = slide.src;
+    img.alt = slide.alt;
   }
 
   function openLightbox(index: number): void {
@@ -220,55 +212,7 @@ export function initGallery(
     img.removeAttribute("src");
   }
 
-  function closePopup(): void {
-    popupLb.classList.add("hidden");
-    popupLb.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("overflow-hidden");
-    popupImg.removeAttribute("src");
-    popupIndex = 0;
-  }
-
-  function showPopupImage(): void {
-    if (!popupUrls || popupIndex >= popupUrls.length) {
-      closePopup();
-      return;
-    }
-
-    popupImg.src = popupUrls[popupIndex];
-    popupImg.alt = `갤러리 사진 ${popupIndex + 1}`;
-  }
-
-  function openPopup(): void {
-    void (async () => {
-      if (!popupUrls) {
-        popupUrls = await discoverPopupImages(clientId);
-      }
-      if (popupUrls.length === 0) return;
-
-      popupIndex = 0;
-      popupLb.classList.remove("hidden");
-      popupLb.setAttribute("aria-hidden", "false");
-      document.body.classList.add("overflow-hidden");
-      showPopupImage();
-    })();
-  }
-
-  function advancePopup(): void {
-    if (!popupUrls || popupUrls.length === 0) {
-      closePopup();
-      return;
-    }
-
-    if (popupIndex >= popupUrls.length - 1) {
-      closePopup();
-      return;
-    }
-
-    popupIndex += 1;
-    showPopupImage();
-  }
-
-  popupImg.addEventListener("error", closePopup);
+  void ensurePopupUrls();
 
   section.querySelectorAll<HTMLButtonElement>("[data-gallery-open]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -278,7 +222,13 @@ export function initGallery(
     });
   });
 
-  moreBtn.addEventListener("click", openPopup);
+  more.addEventListener("click", () => {
+    void (async () => {
+      const urls = await ensurePopupUrls();
+      if (urls.length === 0) return;
+      openLightbox(resolved.length);
+    })();
+  });
 
   lb.querySelectorAll("[data-gallery-close]").forEach((el) => {
     el.addEventListener("click", closeLightbox);
@@ -290,19 +240,6 @@ export function initGallery(
 
   lb.querySelector("[data-gallery-next]")?.addEventListener("click", () => {
     showImage(activeIndex + 1);
-  });
-
-  popupLb.querySelector("[data-gallery-popup-close]")?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    closePopup();
-  });
-
-  popupLb.addEventListener("click", (e) => {
-    const target = e.target;
-    if (!(target instanceof HTMLElement)) return;
-    if (target.closest("[data-gallery-popup-close]")) return;
-    if (target.id === "gallery-popup-image") return;
-    advancePopup();
   });
 
   lb.addEventListener(
@@ -326,11 +263,6 @@ export function initGallery(
   );
 
   window.addEventListener("keydown", (e) => {
-    if (!popupLb.classList.contains("hidden")) {
-      if (e.key === "Escape") closePopup();
-      return;
-    }
-
     if (lb.classList.contains("hidden")) return;
     if (e.key === "Escape") closeLightbox();
     if (e.key === "ArrowLeft") showImage(activeIndex - 1);

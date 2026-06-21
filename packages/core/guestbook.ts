@@ -14,6 +14,12 @@ type ModalName = (typeof MODALS)[number];
 const SUBMIT_BTN =
   "guestbook-submit mt-2 w-full rounded-lg border-0 bg-[#111111] py-3.5 font-pretendard text-[0.9rem] font-normal tracking-tight text-white transition-colors duration-200";
 
+const GUESTBOOK_FIELD =
+  "w-full rounded-lg border-0 bg-[#F7F7F7] px-4 py-3.5 text-base font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
+
+const GUESTBOOK_TEXTAREA =
+  "min-h-[7.5rem] w-full resize-none rounded-lg border-0 bg-[#F7F7F7] px-4 py-3.5 text-base font-extralight leading-[1.75] tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
+
 let deleteTargetId: string | null = null;
 
 function modalEl(root: ParentNode, name: ModalName): HTMLElement | null {
@@ -254,7 +260,7 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
               maxlength="30"
               required
               placeholder="성함을 남겨주세요"
-              class="w-full rounded-lg border-0 bg-[#F7F7F7] px-4 py-3.5 text-[0.78rem] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
+              class="${GUESTBOOK_FIELD}"
             />
             <input
               name="password"
@@ -262,7 +268,7 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
               maxlength="20"
               required
               placeholder="비밀번호를 입력해 주세요"
-              class="w-full rounded-lg border-0 bg-[#F7F7F7] px-4 py-3.5 text-[0.78rem] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
+              class="${GUESTBOOK_FIELD}"
             />
             <textarea
               name="message"
@@ -270,7 +276,7 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
               required
               rows="4"
               placeholder="200자 이내로 작성해 주세요"
-              class="min-h-[7.5rem] w-full resize-none rounded-lg border-0 bg-[#F7F7F7] px-4 py-3.5 text-[0.78rem] font-extralight leading-[1.75] tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
+              class="${GUESTBOOK_TEXTAREA}"
             ></textarea>
             <p
               id="guestbook-write-error"
@@ -369,7 +375,7 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
               type="password"
               required
               placeholder="비밀번호를 입력해 주세요"
-              class="w-full rounded-lg border-0 bg-white px-4 py-3.5 text-[0.78rem] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
+              class="w-full rounded-lg border-0 bg-white px-4 py-3.5 text-base font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
             />
             <p
               id="guestbook-delete-error"
