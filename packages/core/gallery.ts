@@ -4,17 +4,29 @@ import { sectionTitleEnClass, theme02MelodramaTitleClass, themeBodyFontClass } f
 
 const POPUP_IMAGE_MAX = 99;
 
-const GALLERY_ARROW_PREV_CLASS =
-  "absolute top-1/2 left-4 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70";
+const GALLERY_ARROW_BASE =
+  "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-white/90";
 
-const GALLERY_ARROW_NEXT_CLASS =
-  "absolute top-1/2 right-4 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70";
+const GALLERY_ARROW_PREV_CLASS = `${GALLERY_ARROW_BASE} left-1`;
+const GALLERY_ARROW_NEXT_CLASS = `${GALLERY_ARROW_BASE} right-1`;
+const GALLERY_ARROW_PREV_HIDDEN_CLASS =
+  "opacity-0 pointer-events-none transition-opacity duration-200";
 
-const THEME02_GALLERY_ARROW_PREV_CLASS =
-  "absolute top-1/2 left-1 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70";
-
-const THEME02_GALLERY_ARROW_NEXT_CLASS =
-  "absolute top-1/2 right-1 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70";
+function galleryArrowIcon(direction: "prev" | "next"): string {
+  const path = direction === "next" ? "M9 6l6 6-6 6" : "M15 6l-6 6 6 6";
+  return `<svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="${path}" />
+          </svg>`;
+}
 
 function renderGalleryThumb(
   clientId: string,
@@ -47,7 +59,6 @@ function renderTheme02GalleryHtml(
   const first = images[0];
   const firstSrc = first ? clientImageUrl(clientId, first.src) : "";
   const firstAlt = first?.alt ?? "";
-  const hideNext = images.length <= 1;
 
   return `
     <section
@@ -63,34 +74,34 @@ function renderTheme02GalleryHtml(
         </p>
       </header>
 
-      <div class="relative w-full" data-gallery-carousel>
-        <button
-          type="button"
-          data-gallery-prev
-          class="${THEME02_GALLERY_ARROW_PREV_CLASS}"
-          aria-label="이전 사진"
-          hidden
-        >
-          ‹
-        </button>
+      <div class="relative w-full">
+        <div class="relative z-0" data-gallery-carousel>
+          <img
+            id="gallery-carousel-image"
+            class="block aspect-[3/4] w-full object-cover object-center"
+            src="${firstSrc}"
+            alt="${firstAlt}"
+            loading="lazy"
+            decoding="async"
+            draggable="false"
+          />
+        </div>
         <button
           type="button"
           data-gallery-next
-          class="${THEME02_GALLERY_ARROW_NEXT_CLASS}"
+          class="${GALLERY_ARROW_NEXT_CLASS}"
           aria-label="다음 사진"
-          ${hideNext ? "hidden" : ""}
         >
-          ›
+          ${galleryArrowIcon("next")}
         </button>
-        <img
-          id="gallery-carousel-image"
-          class="block aspect-[3/4] w-full object-cover object-center"
-          src="${firstSrc}"
-          alt="${firstAlt}"
-          loading="lazy"
-          decoding="async"
-          draggable="false"
-        />
+        <button
+          type="button"
+          data-gallery-prev
+          class="${GALLERY_ARROW_PREV_CLASS} ${GALLERY_ARROW_PREV_HIDDEN_CLASS}"
+          aria-label="이전 사진"
+        >
+          ${galleryArrowIcon("prev")}
+        </button>
       </div>
     </section>`;
 }
@@ -147,7 +158,7 @@ function renderTheme01GalleryHtml(
         data-gallery-close
       ></div>
       <div
-        class="relative mx-auto flex h-full max-w-[430px] items-center justify-center px-4 py-12"
+        class="relative mx-auto flex h-full max-w-[430px] items-center justify-center py-12"
       >
         <button
           type="button"
@@ -160,10 +171,10 @@ function renderTheme01GalleryHtml(
         <button
           type="button"
           data-gallery-prev
-          class="${GALLERY_ARROW_PREV_CLASS}"
+          class="${GALLERY_ARROW_PREV_CLASS} ${GALLERY_ARROW_PREV_HIDDEN_CLASS}"
           aria-label="이전 사진"
         >
-          ‹
+          ${galleryArrowIcon("prev")}
         </button>
         <button
           type="button"
@@ -171,11 +182,11 @@ function renderTheme01GalleryHtml(
           class="${GALLERY_ARROW_NEXT_CLASS}"
           aria-label="다음 사진"
         >
-          ›
+          ${galleryArrowIcon("next")}
         </button>
         <img
           id="gallery-lightbox-image"
-          class="max-h-[min(85vh,720px)] w-full object-contain"
+          class="relative z-0 max-h-[min(85vh,720px)] w-full object-contain"
           alt=""
           decoding="async"
         />
@@ -245,14 +256,18 @@ function initTheme02Gallery(
   let touchStartX = 0;
 
   function updateArrows(): void {
-    prev.hidden = activeIndex === 0;
-    next.hidden = activeIndex === resolved.length - 1;
+    const hasMultiple = resolved.length > 1;
+    const showPrev = hasMultiple && activeIndex > 0;
+    prev.classList.toggle("opacity-0", !showPrev);
+    prev.classList.toggle("pointer-events-none", !showPrev);
+    next.classList.toggle("opacity-0", !hasMultiple);
+    next.classList.toggle("pointer-events-none", !hasMultiple);
   }
 
   function showImage(index: number): void {
-    if (index < 0 || index >= resolved.length) return;
+    if (resolved.length === 0) return;
 
-    activeIndex = index;
+    activeIndex = ((index % resolved.length) + resolved.length) % resolved.length;
     const slide = resolved[activeIndex];
     img.src = slide.src;
     img.alt = slide.alt;
@@ -306,6 +321,8 @@ function initTheme01Gallery(
   const lb = lightbox;
   const img = imageEl;
   const more = moreBtn;
+  const prevBtn = lb.querySelector<HTMLButtonElement>("[data-gallery-prev]");
+  const nextBtn = lb.querySelector<HTMLButtonElement>("[data-gallery-next]");
   const resolved = images.map((image) => ({
     src: clientImageUrl(clientId, image.src),
     alt: image.alt,
@@ -333,8 +350,20 @@ function initTheme01Gallery(
       popupUrls = await discoverPopupImages(clientId);
       popupReady = true;
       more.hidden = popupUrls.length === 0;
+      updateArrows();
     }
     return popupUrls;
+  }
+
+  function updateArrows(): void {
+    if (!prevBtn || !nextBtn) return;
+    const total = totalCount();
+    const hasMultiple = total > 1;
+    const showPrev = hasMultiple && activeIndex > 0;
+    prevBtn.classList.toggle("opacity-0", !showPrev);
+    prevBtn.classList.toggle("pointer-events-none", !showPrev);
+    nextBtn.classList.toggle("opacity-0", !hasMultiple);
+    nextBtn.classList.toggle("pointer-events-none", !hasMultiple);
   }
 
   function showImage(index: number): void {
@@ -345,6 +374,7 @@ function initTheme01Gallery(
     const slide = allSlides()[activeIndex];
     img.src = slide.src;
     img.alt = slide.alt;
+    updateArrows();
   }
 
   function openLightbox(index: number): void {
