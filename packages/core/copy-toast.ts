@@ -37,7 +37,7 @@ function renderCopyToastHtml(): string {
         </span>
         <p
           data-copy-toast-message
-          class="m-0 font-noto text-[0.78rem] font-normal leading-none tracking-tight text-[#111111]"
+          class="m-0 font-pretendard text-[0.78rem] font-normal leading-none tracking-tight text-[#111111]"
         ></p>
       </div>
     </div>`;

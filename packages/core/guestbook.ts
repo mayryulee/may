@@ -5,14 +5,14 @@ import {
   listGuestbookEntries,
   type GuestbookEntry,
 } from "./guestbook-store";
-import type { ThemeId } from "./types";
-import { themeIconUrl } from "./types";
+import { sectionTitleEnClass } from "./section-heading";
+import { themeIconUrl, type ThemeId } from "./types";
 
 const MODALS = ["write", "list", "delete"] as const;
 type ModalName = (typeof MODALS)[number];
 
 const SUBMIT_BTN =
-  "guestbook-submit mt-2 w-full rounded-md border-0 py-3.5 font-noto text-[0.82rem] font-normal tracking-tight text-white transition-colors duration-200";
+  "guestbook-submit mt-2 w-full rounded-lg border-0 bg-[#111111] py-3.5 font-pretendard text-[0.9rem] font-normal tracking-tight text-white transition-colors duration-200";
 
 let deleteTargetId: string | null = null;
 
@@ -131,12 +131,12 @@ function renderEntryCard(entry: GuestbookEntry): string {
         ×
       </button>
       <p
-        class="m-0 pr-6 font-noto text-[0.82rem] font-normal leading-[1.85] tracking-tight text-[#333333]"
+        class="m-0 pr-6 font-pretendard text-[0.82rem] font-normal leading-[1.85] tracking-tight text-[#333333]"
       >
         ${escapeHtml(entry.message)}
       </p>
       <div
-        class="mt-5 flex items-end justify-between gap-3 font-noto text-[0.68rem] font-extralight text-[#999999]"
+        class="mt-5 flex items-end justify-between gap-3 font-pretendard text-[0.68rem] font-extralight tracking-tight text-[#999999]"
       >
         <span>From ${escapeHtml(entry.name)}</span>
         <span class="shrink-0 tabular-nums">${formatGuestbookDate(entry.createdAt)}</span>
@@ -158,7 +158,7 @@ async function refreshList(root: ParentNode, clientId: string): Promise<void> {
   const entries = await listGuestbookEntries(clientId);
   if (entries.length === 0) {
     list.innerHTML = `
-      <p class="m-0 py-10 text-center font-noto text-[0.78rem] font-extralight text-[#999999]">
+      <p class="m-0 py-10 text-center font-pretendard text-[0.78rem] font-extralight tracking-tight text-[#999999]">
         아직 남겨진 방명록이 없습니다.
       </p>`;
     return;
@@ -170,27 +170,22 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
   return `
     <section
       id="guestbook"
-      class="mt-16 pb-14 text-center font-noto"
+      class="mt-32 pb-14 text-center font-noto"
       aria-label="방명록"
     >
-      <div
-        class="mx-auto h-px w-10 bg-[#d4d4d4]"
-        aria-hidden="true"
-      ></div>
-
       <p
-        class="m-0 mt-8 font-cormorant text-[1.05rem] font-normal uppercase tracking-[0.38em] text-[#111111]"
+        class="${sectionTitleEnClass(themeId)}"
       >
         Message
       </p>
       <p
-        class="m-0 mt-2.5 text-[0.72rem] font-extralight tracking-[0.06em] text-[#666666]"
+        class="m-0 mt-2.5 text-[0.9rem] tracking-noraml text-[#5D5D5D]"
       >
         저희 둘에게 따뜻한 방명록을 남겨주세요
       </p>
 
       <img
-        class="mx-auto mt-8 block h-auto w-[9.5rem] max-w-[60%]"
+        class="mx-auto my-20 block h-auto w-[11rem] max-w-[60%]"
         src="${themeIconUrl(themeId, "message.svg")}"
         alt=""
         width="194"
@@ -203,14 +198,14 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
         <button
           type="button"
           id="guestbook-open-write"
-          class="block w-full rounded-sm border-0 bg-[#111111] py-3.5 font-noto text-[0.82rem] font-normal tracking-tight text-white"
+          class="block w-full rounded-lg border-0 bg-[#111111] py-3.5 font-pretendard text-[0.9rem] font-normal tracking-tight text-white"
         >
           메시지 남기기
         </button>
         <button
           type="button"
           id="guestbook-open-list"
-          class="block w-full rounded-sm border border-[#111111] bg-white py-3.5 font-noto text-[0.82rem] font-normal tracking-tight text-[#111111]"
+          class="block w-full rounded-lg border border-[#111111] bg-white py-3.5 font-pretendard text-[0.9rem] font-normal tracking-tight text-[#111111]"
         >
           방명록 전체보기
         </button>
@@ -232,18 +227,18 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
       <div
         class="relative mx-auto flex h-full max-w-[430px] items-center px-6 py-10"
       >
-        <div class="relative w-full rounded-xl bg-white px-6 py-8 text-center shadow-lg">
+        <div class="relative w-full rounded-lg bg-white px-6 py-8 text-center font-pretendard tracking-tight shadow-lg">
           <button
             type="button"
             data-guestbook-close
-            class="absolute top-4 right-4 inline-flex h-8 w-8 items-center justify-center border-0 bg-transparent p-0 text-[1.25rem] text-[#999999]"
+            class="absolute top-4 right-4 inline-flex h-8 w-8 items-center justify-center border-0 bg-transparent p-0 font-pretendard text-[1.25rem] tracking-tight text-[#999999]"
             aria-label="닫기"
           >
             ×
           </button>
           <h2
             id="guestbook-write-title"
-            class="m-0 font-noto text-[1rem] font-medium tracking-tight text-[#111111]"
+            class="m-0 text-[1rem] font-medium tracking-tight text-[#111111]"
           >
             축하 메시지 작성하기
           </h2>
@@ -259,7 +254,7 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
               maxlength="30"
               required
               placeholder="성함을 남겨주세요"
-              class="w-full rounded-md border-0 bg-[#F5F5F5] px-4 py-3.5 font-noto text-[0.78rem] font-extralight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
+              class="w-full rounded-lg border-0 bg-[#F7F7F7] px-4 py-3.5 text-[0.78rem] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
             />
             <input
               name="password"
@@ -267,7 +262,7 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
               maxlength="20"
               required
               placeholder="비밀번호를 입력해 주세요"
-              class="w-full rounded-md border-0 bg-[#F5F5F5] px-4 py-3.5 font-noto text-[0.78rem] font-extralight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
+              class="w-full rounded-lg border-0 bg-[#F7F7F7] px-4 py-3.5 text-[0.78rem] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
             />
             <textarea
               name="message"
@@ -275,11 +270,11 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
               required
               rows="4"
               placeholder="200자 이내로 작성해 주세요"
-              class="min-h-[7.5rem] w-full resize-none rounded-md border-0 bg-[#F5F5F5] px-4 py-3.5 font-noto text-[0.78rem] font-extralight leading-[1.75] text-[#111111] outline-none placeholder:text-[#aaaaaa]"
+              class="min-h-[7.5rem] w-full resize-none rounded-lg border-0 bg-[#F7F7F7] px-4 py-3.5 text-[0.78rem] font-extralight leading-[1.75] tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
             ></textarea>
             <p
               id="guestbook-write-error"
-              class="m-0 hidden text-center text-[0.68rem] text-[#c44]"
+              class="m-0 hidden text-center text-[0.68rem] tracking-tight text-[#c44]"
             ></p>
             <button
               type="submit"
@@ -309,19 +304,19 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
         class="relative mx-auto flex h-full max-w-[430px] items-center px-6 py-10"
       >
         <div
-          class="relative flex max-h-[min(85vh,34rem)] w-full flex-col rounded-xl bg-[#F5F5F5] px-5 py-6 shadow-lg"
+          class="relative flex max-h-[min(85vh,34rem)] w-full flex-col rounded-lg bg-[#F7F7F7] px-5 py-6 font-pretendard tracking-tight shadow-lg"
         >
           <button
             type="button"
             data-guestbook-close
-            class="absolute top-4 right-4 z-10 inline-flex h-8 w-8 items-center justify-center border-0 bg-transparent p-0 text-[1.25rem] text-[#999999]"
+            class="absolute top-4 right-4 z-10 inline-flex h-8 w-8 items-center justify-center border-0 bg-transparent p-0 font-pretendard text-[1.25rem] tracking-tight text-[#999999]"
             aria-label="닫기"
           >
             ×
           </button>
           <h2
             id="guestbook-list-title"
-            class="m-0 shrink-0 text-center font-noto text-[1rem] font-medium tracking-tight text-[#111111]"
+            class="m-0 shrink-0 text-center text-[1rem] font-medium tracking-tight text-[#111111]"
           >
             방명록 전체보기
           </h2>
@@ -348,18 +343,18 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
       <div
         class="relative mx-auto flex h-full max-w-[430px] items-center px-6 py-10"
       >
-        <div class="relative w-full rounded-xl bg-[#F5F5F5] px-6 py-8 text-center shadow-lg">
+        <div class="relative w-full rounded-lg bg-[#F7F7F7] px-6 py-8 text-center font-pretendard tracking-tight shadow-lg">
           <button
             type="button"
             data-guestbook-close
-            class="absolute top-4 right-4 inline-flex h-8 w-8 items-center justify-center border-0 bg-transparent p-0 text-[1.25rem] text-[#999999]"
+            class="absolute top-4 right-4 inline-flex h-8 w-8 items-center justify-center border-0 bg-transparent p-0 font-pretendard text-[1.25rem] tracking-tight text-[#999999]"
             aria-label="닫기"
           >
             ×
           </button>
           <h2
             id="guestbook-delete-title"
-            class="m-0 font-noto text-[1rem] font-medium tracking-tight text-[#111111]"
+            class="m-0 text-[1rem] font-medium tracking-tight text-[#111111]"
           >
             글 삭제
           </h2>
@@ -374,11 +369,11 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
               type="password"
               required
               placeholder="비밀번호를 입력해 주세요"
-              class="w-full rounded-md border-0 bg-white px-4 py-3.5 font-noto text-[0.78rem] font-extralight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
+              class="w-full rounded-lg border-0 bg-white px-4 py-3.5 text-[0.78rem] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
             />
             <p
               id="guestbook-delete-error"
-              class="m-0 hidden text-center text-[0.68rem] text-[#c44]"
+              class="m-0 hidden text-center text-[0.68rem] tracking-tight text-[#c44]"
             ></p>
             <button
               type="submit"

@@ -7,23 +7,26 @@
   --font-snell: "Snell Roundhand", "SnellRoundhand", "Zapfino", "Pinyon Script",
     cursive;
   --font-dm: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-zalando-sans: "Zalando Sans", ui-sans-serif, sans-serif;
   --font-cormorant: "Cormorant Garamond", ui-serif, serif;
   --font-great: "Great Vibes", cursive;
   --font-milchella: "Milchella", sans-serif;
   --font-noto: "Noto Serif KR", ui-serif, serif;
+  --font-jeju: "Jeju Myeongjo", ui-serif, serif;
   --font-ultra: "Ultra", ui-serif, serif;
   --font-questrial: "Questrial", ui-sans-serif, sans-serif;
   --font-quattrocento: "Quattrocento", ui-serif, serif;
   --font-pretendard: "Pretendard", ui-sans-serif, system-ui, sans-serif;
 
   /* 캘린더 섹션 글자 크기 (main.ts 에서 이름만 쓰면 됨) */
-  --text-dday-label: 0.62rem;
+  --text-dday-label: 0.9rem;
   --text-dday-num: 1.75rem;
   --text-dday-colon: 1.35rem;
 }
 
-.guestbook-submit {
-  background-color: #9ba4bd;
+.font-zalando-sans {
+  font-optical-sizing: auto;
+  font-variation-settings: "wdth" 100;
 }
 
 .guestbook-submit:disabled {

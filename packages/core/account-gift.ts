@@ -11,22 +11,22 @@ function accountCopyLine(account: GiftAccount): string {
 function renderAccountCard(account: GiftAccount, themeId: ThemeId): string {
   const copyLine = accountCopyLine(account);
   return `
-        <div class="rounded-lg bg-white px-4 py-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <div class="rounded-lg bg-white px-5 py-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
           <div
             class="mb-3 flex items-baseline justify-between font-noto text-[0.82rem] tracking-tight text-[#111111]"
           >
-            <span class="font-extralight text-[#666666]">${account.relation}</span>
+            <span class="font-normal">${account.relation}</span>
             <span class="font-normal">${account.name}</span>
           </div>
           <div
-            class="flex items-center justify-between gap-3 rounded-md bg-[#F5F5F5] px-4 py-3.5"
+            class="flex items-center justify-between gap-3 rounded-md bg-[#F7F7F7] px-4 py-3.5"
           >
-            <div class="min-w-0 text-left font-noto">
-              <p class="m-0 text-[0.78rem] font-extralight text-[#666666]">
+            <div class="min-w-0 text-left font-pretendard text-[#5D5D5D]">
+              <p class="m-0 text-[0.78rem]">
                 ${account.bank}
               </p>
               <p
-                class="m-0 mt-1 text-[0.88rem] font-normal tabular-nums tracking-tight text-[#111111]"
+                class="m-0 mt-1 text-[0.88rem] font-normal tabular-nums tracking-tight"
               >
                 ${account.number}
               </p>
@@ -60,11 +60,11 @@ export function renderGiftAccountsHtml(
   return `
     <section
       id="gift-accounts"
-      class="mt-16 pb-14 text-center font-noto"
+      class="mt-32 pb-14 text-center font-noto"
       aria-label="마음 전하실 곳"
     >
       <div
-        class="mx-auto h-px w-10 bg-[#d4d4d4]"
+        class="mx-auto h-px w-10 bg-[#000000]"
         aria-hidden="true"
       ></div>
 
@@ -75,7 +75,7 @@ export function renderGiftAccountsHtml(
       </h2>
 
       <div
-        class="mx-auto mt-4 max-w-[280px] text-[0.72rem] font-extralight leading-[1.85] tracking-tight text-[#888888]"
+        class="mx-auto mt-4 max-w-[280px] text-[0.9rem] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]"
       >
         <p class="m-0">참석이 어려우신 분들을 위해 기재했습니다.</p>
         <p class="m-0">너그러운 마음으로 양해 부탁드립니다.</p>
@@ -91,7 +91,7 @@ export function renderGiftAccountsHtml(
           role="tab"
           data-gift-tab="groom"
           aria-selected="true"
-          class="flex-1 border-b-2 border-[#111111] py-3 text-[0.82rem] font-medium tracking-tight text-[#111111]"
+          class="flex-1 border-b-2 border-[#111111] py-3 text-[0.9rem] font-medium tracking-tight text-[#111111]"
         >
           신랑측에게
         </button>
@@ -100,7 +100,7 @@ export function renderGiftAccountsHtml(
           role="tab"
           data-gift-tab="bride"
           aria-selected="false"
-          class="flex-1 border-b-2 border-transparent py-3 text-[0.82rem] font-extralight tracking-tight text-[#999999]"
+          class="flex-1 border-b-2 border-transparent py-3 text-[0.9rem] font-extralight tracking-tight text-[#ABABAB]"
         >
           신부측에게
         </button>
@@ -123,7 +123,7 @@ function setActiveTab(root: ParentNode, side: GiftSide): void {
     btn.classList.toggle("text-[#111111]", active);
     btn.classList.toggle("font-medium", active);
     btn.classList.toggle("border-transparent", !active);
-    btn.classList.toggle("text-[#999999]", !active);
+    btn.classList.toggle("text-[#ABABAB]", !active);
     btn.classList.toggle("font-extralight", !active);
   });
 

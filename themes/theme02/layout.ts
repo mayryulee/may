@@ -9,10 +9,33 @@ import {
 import { initLocation, renderTransportHtml } from "../../packages/core/location";
 import { renderQuoteHtml } from "../../packages/core/quote";
 import { initShare, renderShareHtml } from "../../packages/core/share";
-import type { ClientConfig, ThemeId } from "../../packages/core/types";
+import type { ClientConfig, ThemeId, VenueTransport } from "../../packages/core/types";
 import { clientImageUrl, themeIconUrl, themeImageUrl } from "../../packages/core/types";
 
 const enc = (s: string) => encodeURIComponent(s);
+
+function renderTheme02TransportHtml(transport: readonly VenueTransport[]): string {
+  return `
+    <div
+      class="mt-10 space-y-0 border-t border-[#dddddd] text-left font-noto text-[0.76rem] font-extralight leading-[1.85] tracking-tight text-[#333333]"
+    >
+      ${renderTransportHtml(transport, {
+        sectionClass: (i, total) =>
+          i < total - 1 ? "border-b border-[#dddddd] py-6" : "pt-6",
+        renderTitle: (title) =>
+          `<p class="m-0 font-medium text-[#111111]">${title}</p>`,
+        linesClass: "m-0 mt-2",
+        lineClass: "m-0",
+        busLineClass: {
+          trunk: "tracking-wide text-[#111111]",
+          branch: "tracking-wide text-[#333333]",
+          general: "text-[#555555]",
+          express: "tracking-wide text-[#111111]",
+          village: "text-[#555555]",
+        },
+      })}
+    </div>`;
+}
 
 export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
   const { venue } = config;
@@ -246,7 +269,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
       -->
     </section>
 
-    ${renderGalleryHtml(config.id, config.gallery)}
+    ${renderGalleryHtml(config.id, config.gallery, themeId)}
 
     <section
       class="-mx-[46px] bg-[#F7F7F7] px-[25px] py-12 text-center"
@@ -261,11 +284,11 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
       </header>
 
       <div class="font-noto text-[#111111]">
-        <p class="m-0 text-[0.92rem] font-normal tracking-tight">
+        <p class="m-0 text-[0.9rem] font-normal tracking-tight">
           ${venue.name}
         </p>
         <p
-          class="m-0 mt-3 flex flex-wrap items-center justify-center gap-x-1.5 text-[0.78rem] font-extralight tracking-tight text-[#333333]"
+          class="m-0 mt-3 flex flex-wrap items-center justify-center gap-x-1.5 text-[0.9rem] font-extralight tracking-tight text-[#333333]"
         >
           <span>${venue.address}</span>
           <button
@@ -292,25 +315,25 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
 
       <div
         id="venue-map"
-        class="mt-6 h-[220px] w-full overflow-hidden rounded-sm bg-[#e8edf2]"
+        class="mt-6 h-[220px] w-full overflow-hidden rounded-sm bg-[#F7F7F7]"
         role="img"
         aria-label="${venue.name} 위치 지도"
       ></div>
 
-      <div class="mt-3 grid grid-cols-3 gap-2">
+      <div class="mt-3 grid grid-cols-3 gap-1.5">
         <a
           data-map="kakao"
           href="https://map.kakao.com/?q=${enc(venue.name)}"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex flex-col items-center justify-center gap-1.5 rounded-md bg-white py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] no-underline"
+          class="flex h-10 items-center justify-center gap-1 rounded-[4px] bg-white no-underline"
         >
           <span
-            class="flex h-7 w-7 items-center justify-center rounded bg-[#FEE500] text-[0.55rem] font-bold text-[#3B1E1E]"
+            class="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] bg-[#FEE500] text-[0.45rem] font-bold leading-none text-[#3B1E1E]"
             aria-hidden="true"
             >K</span
           >
-          <span class="font-noto text-[0.72rem] font-extralight text-[#111111]"
+          <span class="font-zalando-sans text-[0.72rem] font-extralight text-[#111111]"
             >카카오</span
           >
         </a>
@@ -319,14 +342,14 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
           href="https://map.naver.com/p/search/${enc(venue.name)}/place/${venue.naverPlaceId}"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex flex-col items-center justify-center gap-1.5 rounded-md bg-white py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] no-underline"
+          class="flex h-10 items-center justify-center gap-1 rounded-[4px] bg-white no-underline"
         >
           <span
-            class="flex h-7 w-7 items-center justify-center rounded bg-[#03C75A] text-[0.7rem] font-bold text-white"
+            class="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] bg-[#03C75A] text-[0.55rem] font-bold leading-none text-white"
             aria-hidden="true"
             >N</span
           >
-          <span class="font-noto text-[0.72rem] font-extralight text-[#111111]"
+          <span class="font-zalando-sans text-[0.72rem] font-extralight text-[#111111]"
             >네이버</span
           >
         </a>
@@ -334,29 +357,25 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
           data-map="tmap"
           href="tmap://route?goalname=${enc(venue.name)}&amp;goalx=${venue.lng}&amp;goaly=${venue.lat}"
           rel="noopener noreferrer"
-          class="flex flex-col items-center justify-center gap-1.5 rounded-md bg-white py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] no-underline"
+          class="flex h-10 items-center justify-center gap-1 rounded-[4px] bg-white no-underline"
         >
           <span
-            class="flex h-7 w-7 items-center justify-center rounded bg-[#E4002B] text-[0.65rem] font-bold text-white"
+            class="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] bg-[#E4002B] text-[0.5rem] font-bold leading-none text-white"
             aria-hidden="true"
             >T</span
           >
-          <span class="font-noto text-[0.72rem] font-extralight text-[#111111]"
+          <span class="font-zalando-sans text-[0.72rem] font-extralight text-[#111111]"
             >T MAP</span
           >
         </a>
       </div>
 
-      <div
-        class="mt-10 space-y-0 border-t border-[#dddddd] text-left font-noto text-[0.76rem] font-extralight leading-[1.85] tracking-tight text-[#333333]"
-      >
-        ${renderTransportHtml(venue.transport)}
-      </div>
+      ${renderTheme02TransportHtml(venue.transport)}
     </section>
 
     ${renderGiftAccountsHtml(config.accounts, themeId)}
 
-    ${renderInformationHtml(config.information)}
+    ${renderInformationHtml(config.information, themeId)}
 
     ${renderGuestbookHtml(themeId)}
 

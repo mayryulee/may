@@ -159,6 +159,26 @@ async function shareViaKakaoTalk(
   });
 }
 
+function copyrightLogoAttrs(themeId: ThemeId): {
+  className: string;
+  width: number;
+  height: number;
+} {
+  if (themeId === "theme01") {
+    return {
+      className: "theme-toggle-target mx-auto mt-10 block h-auto w-[12.5625rem]",
+      width: 201,
+      height: 12,
+    };
+  }
+
+  return {
+    className: "theme-toggle-target mx-auto mt-10 block h-auto w-[5.875rem]",
+    width: 94,
+    height: 19,
+  };
+}
+
 async function shareFallback(share: ShareConfig): Promise<void> {
   const url = sharePageUrl();
   if (navigator.share) {
@@ -174,24 +194,26 @@ async function shareFallback(share: ShareConfig): Promise<void> {
 }
 
 export function renderShareHtml(themeId: ThemeId): string {
+  const copyrightLogo = copyrightLogoAttrs(themeId);
+
   return `
     <section
       id="share"
-      class="mt-12 pb-8 text-center font-noto"
+      class="mt-12 pb-8 text-center font-pretendard"
       aria-label="청첩장 공유"
     >
-      <div class="space-y-2.5">
+      <div class="mx-auto max-w-full space-y-2.5">
         <button
           type="button"
           id="share-kakao"
-          class="block w-full rounded-lg border-0 bg-[#FEE500] py-4 font-noto text-[0.82rem] font-medium tracking-tight text-[#191919]"
+          class="block w-full rounded-lg border-0 bg-[#FCE777] py-3.5 font-pretendard text-[0.9rem] font-medium tracking-tight text-[#191919]"
         >
           카카오톡으로 청첩장 전하기
         </button>
         <button
           type="button"
           id="share-copy-link"
-          class="inline-flex w-full items-center justify-center gap-2 rounded-lg border-0 bg-[#F5F5F5] py-4 font-noto text-[0.82rem] font-normal tracking-tight text-[#111111]"
+          class="flex w-full items-center justify-center gap-2 rounded-lg border-0 bg-[#F7F7F7] py-3.5 font-pretendard text-[0.9rem] font-normal tracking-tight text-[#111111]"
         >
           청첩장 링크 복사하기
           <img
@@ -206,11 +228,11 @@ export function renderShareHtml(themeId: ThemeId): string {
         </button>
       </div>
       <img
-        class="theme-toggle-target mx-auto mt-10 block h-auto w-[5.875rem]"
+        class="${copyrightLogo.className}"
         src="${themeIconUrl(themeId, "copyright.svg")}"
         alt="© FOR MAY"
-        width="94"
-        height="19"
+        width="${copyrightLogo.width}"
+        height="${copyrightLogo.height}"
         decoding="async"
         draggable="false"
         data-theme-toggle

@@ -9,10 +9,46 @@ import {
 import { initLocation, renderTransportHtml } from "../../packages/core/location";
 import { renderQuoteHtml } from "../../packages/core/quote";
 import { initShare, renderShareHtml } from "../../packages/core/share";
-import type { ClientConfig, ThemeId } from "../../packages/core/types";
+import type { ClientConfig, ThemeId, VenueTransport } from "../../packages/core/types";
 import { clientImageUrl, themeImageUrl, themeIconUrl } from "../../packages/core/types";
+import { sectionTitleEnClass } from "../../packages/core/section-heading";
 
 const enc = (s: string) => encodeURIComponent(s);
+
+const TRANSPORT_TITLE_SUFFIXES = [" 이용 시", " 안내"] as const;
+
+function renderTheme01TransportTitle(title: string): string {
+  for (const suffix of TRANSPORT_TITLE_SUFFIXES) {
+    if (title.endsWith(suffix)) {
+      const label = title.slice(0, -suffix.length);
+      return `<p class="m-0 text-[1.0rem] text-[#111111]"><span class="font-medium">${label}</span><span class="font-extralight">${suffix}</span></p>`;
+    }
+  }
+
+  return `<p class="m-0 font-medium text-[1.0rem] text-[#111111]">${title}</p>`;
+}
+
+function renderTheme01TransportHtml(transport: readonly VenueTransport[]): string {
+  return `
+    <div
+      class="mt-10 mx-8 space-y-0 text-left font-noto text-[0.86rem] leading-[1.85]"
+    >
+      ${renderTransportHtml(transport, {
+        sectionClass: (i, total) =>
+          i < total - 1 ? "border-b border-[#dddddd] py-8" : "pt-6",
+        renderTitle: renderTheme01TransportTitle,
+        linesClass: "m-0 mt-2",
+        lineClass: "m-0",
+        busLineClass: {
+          trunk: "text-[0.78rem] mt-2",
+          branch: "text-[0.78rem]",
+          general: "text-[0.78rem]",
+          express: "text-[0.78rem]",
+          village: "text-[0.78rem]",
+        },
+      })}
+    </div>`;
+}
 
 export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
   const { venue } = config;
@@ -62,14 +98,14 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
         <span>${config.couple.brideEn}</span>
       </p>
       <p
-        class="mt-[16px] inline-flex items-baseline justify-center gap-x-[28px] font-noto text-[17px] leading-[24px] tracking-[-0.01em] text-black"
+        class="mt-[16px] inline-flex items-baseline justify-center gap-x-[28px] font-jeju text-[17px] font-[300] leading-[24px] tracking-[-0.01em] text-black"
       >
         <span class="inline-flex items-baseline gap-x-[9px]">
-          <span class="font-[300]">신랑</span>
+          <span class="font-bold">신랑</span>
           <span>${config.couple.groomKo}</span>
         </span>
         <span class="inline-flex items-baseline gap-x-[9px]">
-          <span class="font-[300]">신부</span>
+          <span class="font-bold">신부</span>
           <span>${config.couple.brideKo}</span>
         </span>
       </p>
@@ -160,7 +196,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
       </div>
 
       <img
-        class="-mx-[46px] mt-16 mb-0 block w-[calc(100%+92px)] max-w-none"
+        class="-mx-[46px] mt-32 mb-0 block w-[calc(100%+92px)] max-w-none"
         src="${clientImageUrl(config.id, config.invitation.subImage)}"
         alt="${config.invitation.subImageAlt}"
         loading="lazy"
@@ -196,65 +232,65 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
           aria-atomic="true"
         >
           <div
-            class="grid w-full grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-end justify-items-center gap-x-1"
+            class="grid w-full grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-end justify-items-center gap-x-2"
           >
             <div class="w-full text-center">
               <p
-                class="m-0 font-cormorant text-dday-label font-normal uppercase tracking-[0.22em] text-[#999999]"
+                class="m-0 font-optima text-dday-label font-normal uppercase tracking-tight text-[#6E6E6E]"
               >
                 Days
               </p>
               <p
                 id="count-days"
-                class="m-0 mt-1 w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
+                class="m-0 mt-2 w-full font-zalando-sans text-dday-num font-[500] leading-none text-[#111111] transition-opacity duration-300"
               >
                 000
               </p>
             </div>
-            <span class="pb-1 font-dm text-dday-colon leading-none text-[#111111]"
+            <span class="pb-1 font-optima text-dday-colon leading-none text-[#111111]"
               >:</span
             >
             <div class="w-full text-center">
               <p
-                class="m-0 font-cormorant text-dday-label font-normal uppercase tracking-[0.22em] text-[#999999]"
+                class="m-0 font-optima text-dday-label font-normal uppercase tracking-tight text-[#6E6E6E]"
               >
                 Hour
               </p>
               <p
                 id="count-hours"
-                class="m-0 mt-1 w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
+                class="m-0 mt-2 w-full font-zalando-sans text-dday-num font-[500] leading-none text-[#111111] transition-opacity duration-300"
               >
                 00
               </p>
             </div>
-            <span class="pb-1 font-dm text-dday-colon leading-none text-[#111111]"
+            <span class="pb-1 font-optima text-dday-colon leading-none text-[#111111]"
               >:</span
             >
             <div class="w-full text-center">
               <p
-                class="m-0 font-cormorant text-dday-label font-normal uppercase tracking-[0.22em] text-[#999999]"
+                class="m-0 font-optima text-dday-label font-normal uppercase tracking-tight text-[#6E6E6E]"
               >
                 Min
               </p>
               <p
                 id="count-mins"
-                class="m-0 mt-1 w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
+                class="m-0 mt-2 w-full font-zalando-sans text-dday-num font-[500] leading-none text-[#111111] transition-opacity duration-300"
               >
                 00
               </p>
             </div>
-            <span class="pb-1 font-dm text-dday-colon leading-none text-[#111111]"
+            <span class="pb-1 font-optima text-dday-colon leading-none text-[#111111]"
               >:</span
             >
             <div class="w-full text-center">
               <p
-                class="m-0 font-cormorant text-dday-label font-normal uppercase tracking-[0.22em] text-[#999999]"
+                class="m-0 font-optima text-dday-label font-normal uppercase tracking-tight text-[#6E6E6E]"
               >
                 Sec
               </p>
               <p
                 id="count-secs"
-                class="m-0 mt-1 w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
+                class="m-0 mt-2 w-full font-zalando-sans text-dday-num font-[500] leading-none text-[#111111] transition-opacity duration-300"
               >
                 00
               </p>
@@ -263,19 +299,19 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
         </div>
       </div>
 
-      <div class="w-full px-[69px] pt-10 text-center">
+      <div class="w-full px-[50px] pt-10 text-center">
         <p
-          class="m-0 w-full font-noto text-[calc(1.03rem-2px)] leading-snug tracking-tight text-[#111111]"
+          class="m-0 w-full font-jeju text-[calc((1.03rem-2px)*1.2)] leading-snug tracking-tighter text-[#111111]"
         >
           ${config.couple.ddayLabel}
           결혼식이
-          <span id="d-day-count" class="font-medium text-[#4a6fa5]">0</span>일
+          <span id="d-day-count" class="font-zalando-sans font-[500] text-[#4a6fa5]">0</span>일
           남았습니다.
         </p>
       </div>
     </section>
 
-    ${renderGalleryHtml(config.id, config.gallery)}
+    ${renderGalleryHtml(config.id, config.gallery, themeId)}
 
     <section
       class="-mx-[46px] bg-[#F7F7F7] px-[25px] py-12 text-center"
@@ -283,109 +319,109 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
     >
       <header class="pb-8">
         <p
-          class="m-0 font-cormorant text-[1.05rem] font-normal uppercase tracking-[0.38em] text-[#111111]"
+          class="${sectionTitleEnClass(themeId)}"
         >
           Location
         </p>
       </header>
 
       <div class="font-noto text-[#111111]">
-        <p class="m-0 text-[0.92rem] font-normal tracking-tight">
+        <p class="m-0 mb-3 text-[0.9rem] font-normal tracking-tight">
           ${venue.name}
         </p>
         <p
-          class="m-0 mt-3 flex flex-wrap items-center justify-center gap-x-1.5 text-[0.78rem] font-extralight tracking-tight text-[#333333]"
+          class="m-0 mt-2 flex flex-wrap items-center justify-center gap-x-1.5 text-[0.9rem] font-extralight tracking-tight text-[#5D5D5D]"
         >
           <span>${venue.address}</span>
           <button
             id="copy-address"
             type="button"
-            class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded border-0 bg-transparent p-0"
+            class="inline-flex shrink-0 items-center justify-center rounded border-0 bg-transparent p-0"
             aria-label="주소 복사"
           >
             <img
               src="${themeIconUrl(themeId, "copy.svg")}"
               alt=""
-              width="17"
-              height="17"
-              class="block h-[17px] w-[17px]"
+              class="block h-[13px] w-[13px] mx-1"
               decoding="async"
               aria-hidden="true"
             />
           </button>
         </p>
-        <p class="m-0 mt-2 text-[0.76rem] font-extralight tracking-tight text-[#666666]">
+        <p class="m-0 mt-1 font-zalando-sans text-[0.9rem] font-extralight tracking-tight text-[#666666]">
           Tel. ${venue.tel}
         </p>
       </div>
 
       <div
         id="venue-map"
-        class="mt-6 h-[220px] w-full overflow-hidden rounded-sm bg-[#e8edf2]"
+        class="mt-6 h-[220px] w-full overflow-hidden rounded-sm bg-[#F7F7F7]"
         role="img"
         aria-label="${venue.name} 위치 지도"
       ></div>
 
-      <div class="mt-3 grid grid-cols-3 gap-2">
+      <div class="mt-3 flex items-center justify-center gap-4">
         <a
           data-map="kakao"
           href="https://map.kakao.com/?q=${enc(venue.name)}"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex flex-col items-center justify-center gap-1.5 rounded-md bg-white py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] no-underline"
+          class="flex h-10 w-[6.8rem] shrink-0 items-center justify-center rounded-md bg-white no-underline"
+          aria-label="카카오맵"
         >
-          <span
-            class="flex h-7 w-7 items-center justify-center rounded bg-[#FEE500] text-[0.55rem] font-bold text-[#3B1E1E]"
+          <img
+            src="${themeIconUrl(themeId, "navi-kakao.svg")}"
+            alt=""
+            width="69"
+            height="24"
+            class="block h-6 w-auto max-w-full object-contain"
+            decoding="async"
             aria-hidden="true"
-            >K</span
-          >
-          <span class="font-noto text-[0.72rem] font-extralight text-[#111111]"
-            >카카오</span
-          >
+          />
         </a>
         <a
           data-map="naver"
           href="https://map.naver.com/p/search/${enc(venue.name)}/place/${venue.naverPlaceId}"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex flex-col items-center justify-center gap-1.5 rounded-md bg-white py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] no-underline"
+          class="flex h-10 w-[6.8rem] shrink-0 items-center justify-center rounded-md bg-white no-underline"
+          aria-label="네이버 지도"
         >
-          <span
-            class="flex h-7 w-7 items-center justify-center rounded bg-[#03C75A] text-[0.7rem] font-bold text-white"
+          <img
+            src="${themeIconUrl(themeId, "navi-naver.svg")}"
+            alt=""
+            width="69"
+            height="24"
+            class="block h-6 w-auto max-w-full object-contain"
+            decoding="async"
             aria-hidden="true"
-            >N</span
-          >
-          <span class="font-noto text-[0.72rem] font-extralight text-[#111111]"
-            >네이버</span
-          >
+          />
         </a>
         <a
           data-map="tmap"
           href="tmap://route?goalname=${enc(venue.name)}&amp;goalx=${venue.lng}&amp;goaly=${venue.lat}"
           rel="noopener noreferrer"
-          class="flex flex-col items-center justify-center gap-1.5 rounded-md bg-white py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.08)] no-underline"
+          class="flex h-10 w-[6.8rem] shrink-0 items-center justify-center rounded-md bg-white no-underline"
+          aria-label="T MAP"
         >
-          <span
-            class="flex h-7 w-7 items-center justify-center rounded bg-[#E4002B] text-[0.65rem] font-bold text-white"
+          <img
+            src="${themeIconUrl(themeId, "navi-tmap.svg")}"
+            alt=""
+            width="74"
+            height="24"
+            class="block h-6 w-auto max-w-full object-contain"
+            decoding="async"
             aria-hidden="true"
-            >T</span
-          >
-          <span class="font-noto text-[0.72rem] font-extralight text-[#111111]"
-            >T MAP</span
-          >
+          />
         </a>
       </div>
 
-      <div
-        class="mt-10 space-y-0 border-t border-[#dddddd] text-left font-noto text-[0.76rem] font-extralight leading-[1.85] tracking-tight text-[#333333]"
-      >
-        ${renderTransportHtml(venue.transport)}
-      </div>
+      ${renderTheme01TransportHtml(venue.transport)}
     </section>
 
     ${renderGiftAccountsHtml(config.accounts, themeId)}
 
-    ${renderInformationHtml(config.information)}
+    ${renderInformationHtml(config.information, themeId)}
 
     ${renderGuestbookHtml(themeId)}
 

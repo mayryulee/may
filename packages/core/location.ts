@@ -184,7 +184,7 @@ function initMapFallback(container: HTMLElement, webUrl: string): void {
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   link.className =
-    "flex h-full min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-[#e8edf2] font-noto text-[0.78rem] font-extralight text-[#666666] no-underline";
+    "flex h-full min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-[#F7F7F7] font-noto text-[0.78rem] font-extralight text-[#666666] no-underline";
   link.innerHTML = `
     <span class="text-[1.5rem]" aria-hidden="true">📍</span>
     <span>지도 보기 (카카오맵)</span>
@@ -225,22 +225,69 @@ export function initLocation(root: ParentNode, venue: Venue): void {
   }
 }
 
+/** 버스 노선 유형 — lines 텍스트 "간선 : …" 접두어 기준 */
+export type BusLineCategory =
+  | "trunk" // 간선 (343, 401 등)
+  | "branch" // 지선 (4319 등)
+  | "general" // 일반 (11-3, 917 등)
+  | "express" // 직행 (500-2, 9407 등)
+  | "village"; // 마을 (강남01, 강남06 등)
+
+const BUS_LINE_PREFIXES: Record<string, BusLineCategory> = {
+  간선: "trunk",
+  지선: "branch",
+  일반: "general",
+  직행: "express",
+  마을: "village",
+};
+
+export function getBusLineCategory(line: string): BusLineCategory | null {
+  const match = line.match(/^(간선|지선|일반|직행|마을)\s*:/);
+  if (!match) return null;
+  return BUS_LINE_PREFIXES[match[1]] ?? null;
+}
+
+export type BusLineClassNames = {
+  trunk: string;
+  branch: string;
+  general: string;
+  express: string;
+  village: string;
+};
+
+export type TransportHtmlStyles = {
+  sectionClass: (index: number, total: number) => string;
+  renderTitle: (title: string) => string;
+  linesClass: string;
+  lineClass: string;
+  /** 버스 노선 유형별 추가 클래스 — 미지정 유형은 lineClass만 적용 */
+  busLineClass?: Partial<BusLineClassNames>;
+};
+
+function resolveLineClass(line: string, styles: TransportHtmlStyles): string {
+  const category = getBusLineCategory(line);
+  if (!category) return styles.lineClass;
+
+  const busClass = styles.busLineClass?.[category];
+  return busClass ? `${styles.lineClass} ${busClass}`.trim() : styles.lineClass;
+}
+
 export function renderTransportHtml(
   transport: readonly Venue["transport"][number][],
+  styles: TransportHtmlStyles,
 ): string {
+  const total = transport.length;
+
   return transport
     .map((section, i) => {
-      const border =
-        i < transport.length - 1
-          ? "border-b border-[#dddddd] py-5"
-          : "pt-5";
       const lines = section.lines
-        .map((line) => `<p class="m-0">${line}</p>`)
+        .map((line) => `<p class="${resolveLineClass(line, styles)}">${line}</p>`)
         .join("");
+
       return `
-        <div class="${border}">
-          <p class="m-0 font-medium text-[#111111]">${section.title}</p>
-          <div class="m-0 mt-2">${lines}</div>
+        <div class="${styles.sectionClass(i, total)}">
+          ${styles.renderTitle(section.title)}
+          <div class="${styles.linesClass}">${lines}</div>
         </div>`;
     })
     .join("");

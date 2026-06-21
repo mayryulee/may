@@ -1,9 +1,10 @@
-import type { InformationSlide } from "./types";
+import type { InformationSlide, ThemeId } from "./types";
+import { sectionTitleEnClass } from "./section-heading";
 
 function renderSlide(slide: InformationSlide, index: number): string {
   const body =
     slide.lines.length > 0
-      ? `<div class="mt-5 space-y-0.5 font-noto text-[0.76rem] font-extralight leading-[1.85] tracking-tight text-[#666666]">
+      ? `<div class="mt-5 space-y-0.5 font-noto text-[0.76rem] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]">
           ${slide.lines.map((line) => `<p class="m-0">${line}</p>`).join("")}
         </div>`
       : "";
@@ -21,7 +22,10 @@ function renderSlide(slide: InformationSlide, index: number): string {
     </div>`;
 }
 
-export function renderInformationHtml(slides: readonly InformationSlide[]): string {
+export function renderInformationHtml(
+  slides: readonly InformationSlide[],
+  themeId: ThemeId,
+): string {
   const slideHtml = slides.map(renderSlide).join("");
 
   return `
@@ -32,12 +36,12 @@ export function renderInformationHtml(slides: readonly InformationSlide[]): stri
     >
       <header>
         <p
-          class="m-0 font-cormorant text-[1.05rem] font-normal uppercase tracking-[0.38em] text-[#111111]"
+          class="${sectionTitleEnClass(themeId)}"
         >
           Information
         </p>
         <p
-          class="m-0 mt-2.5 font-noto text-[0.72rem] font-extralight tracking-[0.06em] text-[#666666]"
+          class="m-0 mt-2.5 font-noto text-[0.9rem] tracking-noraml text-[#5D5D5D]"
         >
           결혼식에 관련하여 사전 안내 드립니다
         </p>
@@ -45,7 +49,7 @@ export function renderInformationHtml(slides: readonly InformationSlide[]): stri
 
       <div class="relative mx-auto mt-8 max-w-full">
         <div
-          class="min-h-[11.5rem] overflow-hidden rounded-lg bg-white shadow-[0_2px_14px_rgba(0,0,0,0.06)]"
+          class="min-h-[11.5rem] overflow-hidden rounded-sm bg-white shadow-[0_1px_4px_rgba(0,0,0,0.02)]"
         >
           <div
             id="info-track"

@@ -12,14 +12,14 @@ export function renderQuoteHtml(quote: ClientConfig["quote"]): string {
 
   return `
     <section
-      class="-mx-[46px] bg-[#1E2531] px-[25px] py-14 text-center font-noto text-white"
+      class="-mx-[46px] bg-[#1E2531] px-[25px] py-16 text-center font-noto text-white"
       aria-label="명언"
     >
-      <div class="space-y-5 text-[0.78rem] font-normal leading-[1.95] tracking-tight">
+      <div class="space-y-5 text-[0.9rem] font-normal leading-[1.8] tracking-tight">
         ${stanzas}
       </div>
       <p
-        class="m-0 mt-10 text-[0.68rem] font-normal tracking-tight text-white/70"
+        class="m-0 mt-10 text-[0.9rem] font-normal tracking-tight text-white/70"
       >
         ${quote.attribution}
       </p>
