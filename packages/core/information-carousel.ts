@@ -1,10 +1,10 @@
 import type { InformationSlide, ThemeId } from "./types";
-import { sectionTitleEnClass } from "./section-heading";
+import { sectionTitleEnClass, theme02MelodramaTitleClass, themeBodyFontClass } from "./section-heading";
 
-function renderSlide(slide: InformationSlide, index: number): string {
+function renderSlide(slide: InformationSlide, index: number, themeId: ThemeId): string {
   const body =
     slide.lines.length > 0
-      ? `<div class="mt-5 space-y-0.5 font-noto text-[0.76rem] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]">
+      ? `<div class="mt-5 space-y-0.5 ${themeBodyFontClass(themeId)} text-[0.76rem] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]">
           ${slide.lines.map((line) => `<p class="m-0">${line}</p>`).join("")}
         </div>`
       : "";
@@ -15,7 +15,7 @@ function renderSlide(slide: InformationSlide, index: number): string {
       data-info-slide="${index}"
       aria-hidden="${index === 0 ? "false" : "true"}"
     >
-      <p class="m-0 font-noto text-[0.88rem] font-medium tracking-tight text-[#111111]">
+      <p class="m-0 ${themeBodyFontClass(themeId)} text-[0.88rem] font-medium tracking-tight text-[#111111]">
         ${slide.title}
       </p>
       ${body}
@@ -26,25 +26,35 @@ export function renderInformationHtml(
   slides: readonly InformationSlide[],
   themeId: ThemeId,
 ): string {
-  const slideHtml = slides.map(renderSlide).join("");
+  const slideHtml = slides.map((slide, index) => renderSlide(slide, index, themeId)).join("");
+
+  const isTheme02 = themeId === "theme02";
+  const sectionClass = isTheme02
+    ? "-mx-[46px] bg-[#F9F8F2] px-8 py-12 text-center"
+    : "-mx-[46px] bg-[#F7F7F7] px-[25px] py-12 text-center";
+  const titleClass = isTheme02
+    ? theme02MelodramaTitleClass()
+    : sectionTitleEnClass(themeId);
+  const headerClass = isTheme02 ? "pb-10 text-center" : "";
+  const subtitleHtml = `
+        <p
+          class="m-0 mt-2.5 ${themeBodyFontClass(themeId)} text-[0.9rem] tracking-noraml text-[#5D5D5D]"
+        >
+          결혼식에 관련하여 사전 안내 드립니다
+        </p>`;
 
   return `
     <section
       id="information"
-      class="-mx-[46px] bg-[#F7F7F7] px-[25px] py-12 text-center"
+      class="${sectionClass}"
       aria-label="안내 사항"
     >
-      <header>
+      <header class="${headerClass}">
         <p
-          class="${sectionTitleEnClass(themeId)}"
+          class="${titleClass}"
         >
           Information
-        </p>
-        <p
-          class="m-0 mt-2.5 font-noto text-[0.9rem] tracking-noraml text-[#5D5D5D]"
-        >
-          결혼식에 관련하여 사전 안내 드립니다
-        </p>
+        </p>${subtitleHtml}
       </header>
 
       <div class="relative mx-auto mt-8 max-w-full">

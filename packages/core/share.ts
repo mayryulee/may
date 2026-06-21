@@ -173,9 +173,9 @@ function copyrightLogoAttrs(themeId: ThemeId): {
   }
 
   return {
-    className: "theme-toggle-target mx-auto mt-10 block h-auto w-[5.875rem]",
-    width: 94,
-    height: 19,
+    className: "theme-toggle-target mx-auto mt-20 block h-auto w-[12.5625rem]",
+    width: 201,
+    height: 12,
   };
 }
 
@@ -195,25 +195,36 @@ async function shareFallback(share: ShareConfig): Promise<void> {
 
 export function renderShareHtml(themeId: ThemeId): string {
   const copyrightLogo = copyrightLogoAttrs(themeId);
+  const isTheme02 = themeId === "theme02";
+  const sectionClass = isTheme02
+    ? "mt-12 text-center font-pretendard"
+    : "mt-12 pb-8 text-center font-pretendard";
+  const kakaoButtonClass = isTheme02
+    ? "block w-full border border-[#111111] bg-transparent py-3.5 font-pretendard text-[0.9rem] font-normal tracking-tight text-[#111111]"
+    : "block w-full rounded-lg border-0 bg-[#FCE777] py-3.5 font-pretendard text-[0.9rem] font-medium tracking-tight text-[#191919]";
+  const copyButtonClass = isTheme02
+    ? "flex w-full items-center justify-center gap-2 border-0 bg-white py-3.5 font-pretendard text-[0.9rem] font-normal tracking-tight text-[#111111]"
+    : "flex w-full items-center justify-center gap-2 rounded-lg border-0 bg-[#F7F7F7] py-3.5 font-pretendard text-[0.9rem] font-normal tracking-tight text-[#111111]";
+  const kakaoLabel = isTheme02 ? "카카오톡 공유하기" : "카카오톡으로 청첩장 전하기";
 
   return `
     <section
       id="share"
-      class="mt-12 pb-8 text-center font-pretendard"
+      class="${sectionClass}"
       aria-label="청첩장 공유"
     >
       <div class="mx-auto max-w-full space-y-2.5">
         <button
           type="button"
           id="share-kakao"
-          class="block w-full rounded-lg border-0 bg-[#FCE777] py-3.5 font-pretendard text-[0.9rem] font-medium tracking-tight text-[#191919]"
+          class="${kakaoButtonClass}"
         >
-          카카오톡으로 청첩장 전하기
+          ${kakaoLabel}
         </button>
         <button
           type="button"
           id="share-copy-link"
-          class="flex w-full items-center justify-center gap-2 rounded-lg border-0 bg-[#F7F7F7] py-3.5 font-pretendard text-[0.9rem] font-normal tracking-tight text-[#111111]"
+          class="${copyButtonClass}"
         >
           청첩장 링크 복사하기
           <img

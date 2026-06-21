@@ -1,5 +1,6 @@
 import { copyText, COPY_TOAST, showCopyToast } from "./copy-toast";
-import type { Venue } from "./types";
+import { themeBodyFontClass } from "./section-heading";
+import type { ThemeId, Venue } from "./types";
 
 const enc = (s: string) => encodeURIComponent(s);
 
@@ -178,13 +179,17 @@ function initKakaoMap(
   );
 }
 
-function initMapFallback(container: HTMLElement, webUrl: string): void {
+function initMapFallback(
+  container: HTMLElement,
+  webUrl: string,
+  themeId: ThemeId,
+): void {
   const link = document.createElement("a");
   link.href = webUrl;
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   link.className =
-    "flex h-full min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-[#F7F7F7] font-noto text-[0.78rem] font-extralight text-[#666666] no-underline";
+    `flex h-full min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-[#F7F7F7] ${themeBodyFontClass(themeId)} text-[0.78rem] font-extralight text-[#666666] no-underline`;
   link.innerHTML = `
     <span class="text-[1.5rem]" aria-hidden="true">📍</span>
     <span>지도 보기 (카카오맵)</span>
@@ -193,7 +198,7 @@ function initMapFallback(container: HTMLElement, webUrl: string): void {
   container.replaceChildren(link);
 }
 
-export function initLocation(root: ParentNode, venue: Venue): void {
+export function initLocation(root: ParentNode, venue: Venue, themeId: ThemeId): void {
   const siteAppName =
     import.meta.env.VITE_SITE_APP_NAME?.trim() || "formayletter.netlify.app";
   const links = buildMapLinks(venue, siteAppName);
@@ -205,10 +210,10 @@ export function initLocation(root: ParentNode, venue: Venue): void {
     const appKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY as string | undefined;
     if (appKey?.trim()) {
       initKakaoMap(mapEl, appKey.trim(), venue).catch(() =>
-        initMapFallback(mapEl, links.kakao.web),
+        initMapFallback(mapEl, links.kakao.web, themeId),
       );
     } else {
-      initMapFallback(mapEl, links.kakao.web);
+      initMapFallback(mapEl, links.kakao.web, themeId);
     }
   }
 
@@ -262,6 +267,10 @@ export type TransportHtmlStyles = {
   lineClass: string;
   /** 버스 노선 유형별 추가 클래스 — 미지정 유형은 lineClass만 적용 */
   busLineClass?: Partial<BusLineClassNames>;
+  /** 버스 노선(간선·지선 등)을 / 구분 인라인으로 묶어 표시 */
+  groupBusLinesInline?: boolean;
+  /** 해당 유형 노선 직전에서 줄바꿈 (예: 직행 직전) */
+  busLineSplitBefore?: readonly BusLineCategory[];
 };
 
 function resolveLineClass(line: string, styles: TransportHtmlStyles): string {
@@ -272,6 +281,57 @@ function resolveLineClass(line: string, styles: TransportHtmlStyles): string {
   return busClass ? `${styles.lineClass} ${busClass}`.trim() : styles.lineClass;
 }
 
+function inlineBusLineClass(line: string, styles: TransportHtmlStyles): string {
+  const category = getBusLineCategory(line);
+  if (!category) return styles.lineClass.replace(/\bm-0\b/g, "").trim();
+
+  const busClass = styles.busLineClass?.[category];
+  const base = styles.lineClass.replace(/\bm-0\b/g, "").trim();
+  return busClass ? `${base} ${busClass}`.trim() : base;
+}
+
+export function renderGroupedTransportLinesHtml(
+  lines: readonly string[],
+  styles: Pick<TransportHtmlStyles, "lineClass" | "busLineClass" | "busLineSplitBefore">,
+): string {
+  const styleCtx = styles as TransportHtmlStyles;
+  const chunks: string[] = [];
+  let busRun: string[] = [];
+
+  const flushBusRun = () => {
+    if (busRun.length === 0) return;
+
+    const inner = busRun
+      .map((line, index) => {
+        const sep = index === 0 ? "" : `<span aria-hidden="true"> / </span>`;
+        return `${sep}<span class="${inlineBusLineClass(line, styleCtx)}">${line}</span>`;
+      })
+      .join("");
+
+    chunks.push(`<p class="${styles.lineClass}">${inner}</p>`);
+    busRun = [];
+  };
+
+  for (const line of lines) {
+    const busCategory = getBusLineCategory(line);
+    if (busCategory) {
+      if (
+        busRun.length > 0 &&
+        styles.busLineSplitBefore?.includes(busCategory)
+      ) {
+        flushBusRun();
+      }
+      busRun.push(line);
+    } else {
+      flushBusRun();
+      chunks.push(`<p class="${styles.lineClass}">${line}</p>`);
+    }
+  }
+
+  flushBusRun();
+  return chunks.join("");
+}
+
 export function renderTransportHtml(
   transport: readonly Venue["transport"][number][],
   styles: TransportHtmlStyles,
@@ -280,9 +340,11 @@ export function renderTransportHtml(
 
   return transport
     .map((section, i) => {
-      const lines = section.lines
-        .map((line) => `<p class="${resolveLineClass(line, styles)}">${line}</p>`)
-        .join("");
+      const lines = styles.groupBusLinesInline
+        ? renderGroupedTransportLinesHtml(section.lines, styles)
+        : section.lines
+            .map((line) => `<p class="${resolveLineClass(line, styles)}">${line}</p>`)
+            .join("");
 
       return `
         <div class="${styles.sectionClass(i, total)}">

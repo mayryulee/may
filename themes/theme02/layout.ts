@@ -1,7 +1,6 @@
 import { initAccountGift, renderGiftAccountsHtml } from "../../packages/core/account-gift";
 import { initCalendarCountdown } from "../../packages/core/calendar-countdown";
 import { initGallery, renderGalleryHtml } from "../../packages/core/gallery";
-import { initGuestbook, renderGuestbookHtml } from "../../packages/core/guestbook";
 import {
   initInformationCarousel,
   renderInformationHtml,
@@ -9,31 +8,108 @@ import {
 import { initLocation, renderTransportHtml } from "../../packages/core/location";
 import { renderQuoteHtml } from "../../packages/core/quote";
 import { initShare, renderShareHtml } from "../../packages/core/share";
-import type { ClientConfig, ThemeId, VenueTransport } from "../../packages/core/types";
+import { theme02MelodramaTitleClass } from "../../packages/core/section-heading";
+import type { ClientConfig, ThemeId, Venue, VenueTransport } from "../../packages/core/types";
 import { clientImageUrl, themeIconUrl, themeImageUrl } from "../../packages/core/types";
 
 const enc = (s: string) => encodeURIComponent(s);
 
+function formatTheme02TransportTitle(title: string): string {
+  return title.replace(/\s*이용\s*시\s*$/, "").replace(/\s*안내\s*$/, "");
+}
+
+const SUBWAY_LINE_BREAK = /^(.*?전방에서)\s*(.+)$/;
+
+function prepareTheme02Transport(transport: readonly VenueTransport[]): VenueTransport[] {
+  return transport.map((section) => {
+    if (!section.title.includes("지하철")) {
+      return section;
+    }
+
+    const breakIndex = section.lines.findIndex((line) => line.includes("전방에서"));
+    if (breakIndex === -1) {
+      return section;
+    }
+
+    const breakLine = section.lines[breakIndex];
+    const match = breakLine.match(SUBWAY_LINE_BREAK);
+    if (!match) {
+      return section;
+    }
+
+    const head = match[1];
+    const tailParts = [match[2], ...section.lines.slice(breakIndex + 1)].filter(
+      (part) => part.trim().length > 0,
+    );
+    const tail = tailParts.join(" ");
+
+    return {
+      ...section,
+      lines: tail ? [head, tail] : [head],
+    };
+  });
+}
+
 function renderTheme02TransportHtml(transport: readonly VenueTransport[]): string {
+  const preparedTransport = prepareTheme02Transport(transport);
+
   return `
     <div
-      class="mt-10 space-y-0 border-t border-[#dddddd] text-left font-noto text-[0.76rem] font-extralight leading-[1.85] tracking-tight text-[#333333]"
+      class="mt-10 space-y-1 text-left text-[0.9rem] font-light leading-[1.6] tracking-tight text-[#111111]"
     >
-      ${renderTransportHtml(transport, {
-        sectionClass: (i, total) =>
-          i < total - 1 ? "border-b border-[#dddddd] py-6" : "pt-6",
+      ${renderTransportHtml(preparedTransport, {
+        sectionClass: () => "flex items-start gap-x-5 py-3",
         renderTitle: (title) =>
-          `<p class="m-0 font-medium text-[#111111]">${title}</p>`,
-        linesClass: "m-0 mt-2",
-        lineClass: "m-0",
+          `<p class="m-0 w-[3rem] shrink-0 font-medium text-[#111111]">${formatTheme02TransportTitle(title)}</p>`,
+        linesClass: "m-0 min-w-0 flex-1 text-[#111111]",
+        lineClass: "m-0 text-[#111111]",
+        groupBusLinesInline: true,
+        busLineSplitBefore: ["express"],
         busLineClass: {
-          trunk: "tracking-wide text-[#111111]",
-          branch: "tracking-wide text-[#333333]",
-          general: "text-[#555555]",
-          express: "tracking-wide text-[#111111]",
-          village: "text-[#555555]",
+          trunk: "tracking-wide text-[0.7rem]",
+          branch: "tracking-wide text-[0.7rem]",
+          general: "text-[0.7rem]",
+          express: "tracking-wide text-[0.7rem]",
+          village: "text-[0.7rem]",
         },
       })}
+    </div>`;
+}
+
+function renderTheme02MapNavHtml(venue: Venue): string {
+  const linkClass =
+    "block w-full border-b border-[#6D6D6D]/50 py-2 text-right text-[0.9rem] font-light tracking-tight text-[#6D6D6D] no-underline";
+
+  return `
+    <div class="mt-8 flex justify-end">
+      <div class="inline-grid mb-12">
+      <a
+        data-map="naver"
+        href="https://map.naver.com/p/search/${enc(venue.name)}/place/${venue.naverPlaceId}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="${linkClass}"
+      >
+        네이버 지도
+      </a>
+      <a
+        data-map="kakao"
+        href="https://map.kakao.com/?q=${enc(venue.name)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="${linkClass}"
+      >
+        카카오맵
+      </a>
+      <a
+        data-map="tmap"
+        href="tmap://route?goalname=${enc(venue.name)}&amp;goalx=${venue.lng}&amp;goaly=${venue.lat}"
+        rel="noopener noreferrer"
+        class="${linkClass}"
+      >
+        티맵
+      </a>
+      </div>
     </div>`;
 }
 
@@ -60,14 +136,16 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
   const saveTheDateLines =
     config.invitation.introLines ?? config.invitation.lines.slice(0, 4);
   const saveTheDateHtml = saveTheDateLines
-    .map((line) => `<p class="m-0">${line}</p>`)
+    .map((line, i) =>
+      `<p class="m-0${i === 0 ? " mb-2" : ""}">${line}</p>`,
+    )
     .join("");
 
   const formatParentsLine = (parents: string, relation: string) =>
     `${parents.replace(/ · /g, ' <span class="font-medium">·</span> ')} ${relation}`;
 
   return `
-  <article>
+  <article class="font-pretendard">
     <section
       class="-mx-[46px] -mt-7 relative w-[calc(100%+92px)]"
       aria-label="메인"
@@ -90,7 +168,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
       >
         <header aria-label="청첩장 타이틀">
           <h1
-            class="m-0 font-ultra text-[clamp(2rem,6.8vw,1.75rem)] leading-[1.05] tracking-[-0.01em]"
+            class="mt-20 mb-0 mx-0 font-ultra text-[clamp(2rem,6.8vw,1.75rem)] leading-[1.05] tracking-[-0.01em]"
           >
             ${heroTitleHtml}
           </h1>
@@ -117,41 +195,41 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
 
     <section
       class="-mx-[46px] flex min-h-[560px] w-[calc(100%+92px)] flex-col justify-center bg-cover bg-center px-8 py-32 text-center font-pretendard text-[#111111]"
-      style="background-image: url('${themeImageUrl(themeId, "background.png")}')"
+      style="background-image: url('${themeImageUrl(themeId, "background01.png")}')"
       aria-label="예식 안내"
     >
       <h2
-        class="m-0 mb-14 font-quattrocento text-[0.72rem] font-bold uppercase tracking-[0.1em]"
+        class="m-0 mb-14 font-quattrocento text-[0.8rem] font-bold uppercase tracking-[0.1em]"
       >
         Save the Date
       </h2>
 
       <div
-        class="mb-16 space-y-1 text-[0.82rem] font-medium leading-[1.85] tracking-tight"
+        class="mb-16 space-y-1 text-[0.82rem] leading-[1.85] tracking-tight"
       >
         ${saveTheDateHtml}
       </div>
 
       <div
-        class="mb-16 grid grid-cols-2 gap-4 text-[0.82rem] font-medium leading-[1.75] tracking-tight"
+        class="mb-16 grid grid-cols-2 gap-4 text-[0.82rem] font-light leading-[1.75] tracking-tight"
         aria-label="신랑 신부"
       >
         <div>
           <p class="m-0 mb-2">
             ${formatParentsLine(config.invitation.groomParents.parents, config.invitation.groomParents.relation)}
           </p>
-          <p class="m-0">신랑 ${config.invitation.groomParents.name}</p>
+          <p class="m-0">신랑 <span class="text-[1rem] font-normal ml-1">${config.invitation.groomParents.name}</span></p>
         </div>
         <div>
           <p class="m-0 mb-2">
             ${formatParentsLine(config.invitation.brideParents.parents, config.invitation.brideParents.relation)}
           </p>
-          <p class="m-0">신부 ${config.invitation.brideParents.name}</p>
+          <p class="m-0">신부 <span class="text-[1rem] font-normal ml-1">${config.invitation.brideParents.name}</span></p>
         </div>
       </div>
 
       <div
-        class="space-y-1 text-[0.78rem] font-normal leading-[1.75] tracking-tight"
+        class="space-y-1 text-[0.82rem] font-normal leading-[1.75] tracking-tight"
         aria-label="예식 일시·장소"
       >
         <p class="m-0">${config.venue.address}</p>
@@ -166,7 +244,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
     >
       <div class="w-full px-[69px] text-center">
         <img
-          class="mx-auto block w-full h-auto"
+          class="mx-auto my-24 block w-full h-auto"
           src="${clientImageUrl(config.id, config.calendar.image)}"
           alt="${config.calendar.alt}"
           width="777"
@@ -272,116 +350,73 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
     ${renderGalleryHtml(config.id, config.gallery, themeId)}
 
     <section
-      class="-mx-[46px] bg-[#F7F7F7] px-[25px] py-12 text-center"
+      class="-mx-[46px] mt-32 mb-32 bg-[#F9F8F2] px-8 py-12 text-left"
       aria-label="오시는 길"
     >
-      <header class="pb-8">
+      <header class="pb-8 mt-12">
         <p
-          class="m-0 font-cormorant text-[1.05rem] font-normal uppercase tracking-[0.38em] text-[#111111]"
+          class="${theme02MelodramaTitleClass()}"
         >
           Location
         </p>
       </header>
 
-      <div class="font-noto text-[#111111]">
-        <p class="m-0 text-[0.9rem] font-normal tracking-tight">
+      <div class="text-right text-[#111111]">
+        <p class="m-0 text-[1rem] font-medium tracking-tight">
           ${venue.name}
         </p>
         <p
-          class="m-0 mt-3 flex flex-wrap items-center justify-center gap-x-1.5 text-[0.9rem] font-extralight tracking-tight text-[#333333]"
+          class="m-0 mt-2 flex flex-wrap items-center justify-end gap-x-1.5 text-[1rem] tracking-tight text-[#5D5D5D]"
         >
           <span>${venue.address}</span>
           <button
             id="copy-address"
             type="button"
-            class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded border-0 bg-transparent p-0"
+            class="inline-flex shrink-0 items-center justify-center rounded border-0 bg-transparent p-0"
             aria-label="주소 복사"
           >
             <img
               src="${themeIconUrl(themeId, "copy.svg")}"
               alt=""
-              width="17"
-              height="17"
-              class="block h-[17px] w-[17px]"
+              class="block h-[12px] w-[12px] opacity-80"
               decoding="async"
               aria-hidden="true"
             />
           </button>
         </p>
-        <p class="m-0 mt-2 text-[0.76rem] font-extralight tracking-tight text-[#666666]">
+        <p class="m-0 mt-1 text-[0.9rem] tracking-tight text-[#5D5D5D]">
           Tel. ${venue.tel}
         </p>
       </div>
 
       <div
         id="venue-map"
-        class="mt-6 h-[220px] w-full overflow-hidden rounded-sm bg-[#F7F7F7]"
+        class="h-[220px] w-full overflow-hidden rounded-sm bg-[#F7F7F7]"
         role="img"
         aria-label="${venue.name} 위치 지도"
       ></div>
 
-      <div class="mt-3 grid grid-cols-3 gap-1.5">
-        <a
-          data-map="kakao"
-          href="https://map.kakao.com/?q=${enc(venue.name)}"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex h-10 items-center justify-center gap-1 rounded-[4px] bg-white no-underline"
-        >
-          <span
-            class="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] bg-[#FEE500] text-[0.45rem] font-bold leading-none text-[#3B1E1E]"
-            aria-hidden="true"
-            >K</span
-          >
-          <span class="font-zalando-sans text-[0.72rem] font-extralight text-[#111111]"
-            >카카오</span
-          >
-        </a>
-        <a
-          data-map="naver"
-          href="https://map.naver.com/p/search/${enc(venue.name)}/place/${venue.naverPlaceId}"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex h-10 items-center justify-center gap-1 rounded-[4px] bg-white no-underline"
-        >
-          <span
-            class="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] bg-[#03C75A] text-[0.55rem] font-bold leading-none text-white"
-            aria-hidden="true"
-            >N</span
-          >
-          <span class="font-zalando-sans text-[0.72rem] font-extralight text-[#111111]"
-            >네이버</span
-          >
-        </a>
-        <a
-          data-map="tmap"
-          href="tmap://route?goalname=${enc(venue.name)}&amp;goalx=${venue.lng}&amp;goaly=${venue.lat}"
-          rel="noopener noreferrer"
-          class="flex h-10 items-center justify-center gap-1 rounded-[4px] bg-white no-underline"
-        >
-          <span
-            class="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[3px] bg-[#E4002B] text-[0.5rem] font-bold leading-none text-white"
-            aria-hidden="true"
-            >T</span
-          >
-          <span class="font-zalando-sans text-[0.72rem] font-extralight text-[#111111]"
-            >T MAP</span
-          >
-        </a>
-      </div>
-
       ${renderTheme02TransportHtml(venue.transport)}
+
+      ${renderTheme02MapNavHtml(venue)}
     </section>
 
     ${renderGiftAccountsHtml(config.accounts, themeId)}
 
     ${renderInformationHtml(config.information, themeId)}
 
-    ${renderGuestbookHtml(themeId)}
+    <div class="relative -mx-[46px] w-[calc(100%+92px)]">
+      <div
+        class="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat opacity-80"
+        style="background-image: url('${themeImageUrl(themeId, "background02.png")}')"
+        aria-hidden="true"
+      ></div>
+      <div class="relative px-[25px] pt-24 pb-12">
+        ${renderQuoteHtml(config.quote, themeId)}
 
-    ${renderQuoteHtml(config.quote)}
-
-    ${renderShareHtml(themeId)}
+        ${renderShareHtml(themeId)}
+      </div>
+    </div>
   </article>
 `;
 }
@@ -389,15 +424,14 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
 export function initPage(
   root: ParentNode,
   config: ClientConfig,
-  _themeId: ThemeId,
+  themeId: ThemeId,
 ): void {
   const weddingAt = new Date(config.weddingAt);
 
   initCalendarCountdown(root, weddingAt);
-  initGallery(root, config.id, config.gallery);
-  initLocation(root, config.venue);
+  initGallery(root, config.id, config.gallery, themeId);
+  initLocation(root, config.venue, themeId);
   initAccountGift(root);
   initInformationCarousel(root, config.information);
-  initGuestbook(root, config.id);
   initShare(config.id, config.share);
 }

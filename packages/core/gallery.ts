@@ -1,8 +1,20 @@
 import type { GalleryImage, ThemeId } from "./types";
 import { clientImageUrl } from "./types";
-import { sectionTitleEnClass } from "./section-heading";
+import { sectionTitleEnClass, theme02MelodramaTitleClass, themeBodyFontClass } from "./section-heading";
 
 const POPUP_IMAGE_MAX = 99;
+
+const GALLERY_ARROW_PREV_CLASS =
+  "absolute top-1/2 left-4 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70";
+
+const GALLERY_ARROW_NEXT_CLASS =
+  "absolute top-1/2 right-4 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70";
+
+const THEME02_GALLERY_ARROW_PREV_CLASS =
+  "absolute top-1/2 left-1 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70";
+
+const THEME02_GALLERY_ARROW_NEXT_CLASS =
+  "absolute top-1/2 right-1 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70";
 
 function renderGalleryThumb(
   clientId: string,
@@ -28,7 +40,62 @@ function renderGalleryThumb(
     </button>`;
 }
 
-export function renderGalleryHtml(
+function renderTheme02GalleryHtml(
+  clientId: string,
+  images: readonly GalleryImage[],
+): string {
+  const first = images[0];
+  const firstSrc = first ? clientImageUrl(clientId, first.src) : "";
+  const firstAlt = first?.alt ?? "";
+  const hideNext = images.length <= 1;
+
+  return `
+    <section
+      id="gallery"
+      class="-mx-[46px] mt-32 px-8 text-left"
+      aria-label="갤러리"
+    >
+      <header class="pb-10">
+        <p
+          class="${theme02MelodramaTitleClass()}"
+        >
+          Gallery
+        </p>
+      </header>
+
+      <div class="relative w-full" data-gallery-carousel>
+        <button
+          type="button"
+          data-gallery-prev
+          class="${THEME02_GALLERY_ARROW_PREV_CLASS}"
+          aria-label="이전 사진"
+          hidden
+        >
+          ‹
+        </button>
+        <button
+          type="button"
+          data-gallery-next
+          class="${THEME02_GALLERY_ARROW_NEXT_CLASS}"
+          aria-label="다음 사진"
+          ${hideNext ? "hidden" : ""}
+        >
+          ›
+        </button>
+        <img
+          id="gallery-carousel-image"
+          class="block aspect-[3/4] w-full object-cover object-center"
+          src="${firstSrc}"
+          alt="${firstAlt}"
+          loading="lazy"
+          decoding="async"
+          draggable="false"
+        />
+      </div>
+    </section>`;
+}
+
+function renderTheme01GalleryHtml(
   clientId: string,
   images: readonly GalleryImage[],
   themeId: ThemeId,
@@ -48,7 +115,7 @@ export function renderGalleryHtml(
           Gallery
         </p>
         <p
-          class="m-0 mt-2.5 font-noto text-[1rem] tracking-tight"
+          class="m-0 mt-2.5 ${themeBodyFontClass(themeId)} text-[1rem] tracking-tight"
         >
           갤러리
         </p>
@@ -93,7 +160,7 @@ export function renderGalleryHtml(
         <button
           type="button"
           data-gallery-prev
-          class="absolute top-1/2 left-4 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70"
+          class="${GALLERY_ARROW_PREV_CLASS}"
           aria-label="이전 사진"
         >
           ‹
@@ -101,7 +168,7 @@ export function renderGalleryHtml(
         <button
           type="button"
           data-gallery-next
-          class="absolute top-1/2 right-4 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[2rem] leading-none text-white/70"
+          class="${GALLERY_ARROW_NEXT_CLASS}"
           aria-label="다음 사진"
         >
           ›
@@ -114,6 +181,17 @@ export function renderGalleryHtml(
         />
       </div>
     </div>`;
+}
+
+export function renderGalleryHtml(
+  clientId: string,
+  images: readonly GalleryImage[],
+  themeId: ThemeId,
+): string {
+  if (themeId === "theme02") {
+    return renderTheme02GalleryHtml(clientId, images);
+  }
+  return renderTheme01GalleryHtml(clientId, images, themeId);
 }
 
 function popupImageUrl(clientId: string, index: number): string {
@@ -141,7 +219,78 @@ async function discoverPopupImages(clientId: string): Promise<string[]> {
   return urls;
 }
 
-export function initGallery(
+function initTheme02Gallery(
+  root: ParentNode,
+  clientId: string,
+  images: readonly GalleryImage[],
+): void {
+  const section = root.querySelector("#gallery");
+  const carousel = root.querySelector<HTMLElement>("[data-gallery-carousel]");
+  const imageEl = root.querySelector<HTMLImageElement>("#gallery-carousel-image");
+  const prevBtn = root.querySelector<HTMLButtonElement>("[data-gallery-prev]");
+  const nextBtn = root.querySelector<HTMLButtonElement>("[data-gallery-next]");
+  if (!section || !carousel || !imageEl || !prevBtn || !nextBtn || images.length === 0) {
+    return;
+  }
+
+  const img = imageEl;
+  const prev = prevBtn;
+  const next = nextBtn;
+  const resolved = images.map((image) => ({
+    src: clientImageUrl(clientId, image.src),
+    alt: image.alt,
+  }));
+
+  let activeIndex = 0;
+  let touchStartX = 0;
+
+  function updateArrows(): void {
+    prev.hidden = activeIndex === 0;
+    next.hidden = activeIndex === resolved.length - 1;
+  }
+
+  function showImage(index: number): void {
+    if (index < 0 || index >= resolved.length) return;
+
+    activeIndex = index;
+    const slide = resolved[activeIndex];
+    img.src = slide.src;
+    img.alt = slide.alt;
+    updateArrows();
+  }
+
+  prev.addEventListener("click", () => {
+    showImage(activeIndex - 1);
+  });
+
+  next.addEventListener("click", () => {
+    showImage(activeIndex + 1);
+  });
+
+  carousel.addEventListener(
+    "touchstart",
+    (e) => {
+      touchStartX = e.changedTouches[0]?.clientX ?? 0;
+    },
+    { passive: true },
+  );
+
+  carousel.addEventListener(
+    "touchend",
+    (e) => {
+      const touchEndX = e.changedTouches[0]?.clientX ?? 0;
+      const delta = touchEndX - touchStartX;
+      if (Math.abs(delta) < 40) return;
+      if (delta > 0) showImage(activeIndex - 1);
+      else showImage(activeIndex + 1);
+    },
+    { passive: true },
+  );
+
+  updateArrows();
+}
+
+function initTheme01Gallery(
   root: ParentNode,
   clientId: string,
   images: readonly GalleryImage[],
@@ -268,4 +417,17 @@ export function initGallery(
     if (e.key === "ArrowLeft") showImage(activeIndex - 1);
     if (e.key === "ArrowRight") showImage(activeIndex + 1);
   });
+}
+
+export function initGallery(
+  root: ParentNode,
+  clientId: string,
+  images: readonly GalleryImage[],
+  themeId: ThemeId,
+): void {
+  if (themeId === "theme02") {
+    initTheme02Gallery(root, clientId, images);
+    return;
+  }
+  initTheme01Gallery(root, clientId, images);
 }

@@ -5,7 +5,7 @@ import {
   listGuestbookEntries,
   type GuestbookEntry,
 } from "./guestbook-store";
-import { sectionTitleEnClass } from "./section-heading";
+import { sectionTitleEnClass, themeBodyFontClass } from "./section-heading";
 import { themeIconUrl, type ThemeId } from "./types";
 
 const MODALS = ["write", "list", "delete"] as const;
@@ -176,7 +176,7 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
   return `
     <section
       id="guestbook"
-      class="mt-32 pb-14 text-center font-noto"
+      class="mt-32 pb-14 text-center ${themeBodyFontClass(themeId)}"
       aria-label="방명록"
     >
       <p

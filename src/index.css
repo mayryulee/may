@@ -17,6 +17,7 @@
   --font-questrial: "Questrial", ui-sans-serif, sans-serif;
   --font-quattrocento: "Quattrocento", ui-serif, serif;
   --font-pretendard: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+  --font-melodrama: "Melodrama", ui-serif, serif;
 
   /* 캘린더 섹션 글자 크기 (main.ts 에서 이름만 쓰면 됨) */
   --text-dday-label: 0.9rem;

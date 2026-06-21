@@ -425,7 +425,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
 
     ${renderGuestbookHtml(themeId)}
 
-    ${renderQuoteHtml(config.quote)}
+    ${renderQuoteHtml(config.quote, themeId)}
 
     ${renderShareHtml(themeId)}
   </article>
@@ -435,13 +435,13 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
 export function initPage(
   root: ParentNode,
   config: ClientConfig,
-  _themeId: ThemeId,
+  themeId: ThemeId,
 ): void {
   const weddingAt = new Date(config.weddingAt);
 
   initCalendarCountdown(root, weddingAt);
-  initGallery(root, config.id, config.gallery);
-  initLocation(root, config.venue);
+  initGallery(root, config.id, config.gallery, themeId);
+  initLocation(root, config.venue, themeId);
   initAccountGift(root);
   initInformationCarousel(root, config.information);
   initGuestbook(root, config.id);

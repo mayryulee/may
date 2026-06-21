@@ -1,4 +1,5 @@
 import { copyText, COPY_TOAST, showCopyToast } from "./copy-toast";
+import { themeBodyFontClass } from "./section-heading";
 import type { GiftAccount, GiftAccounts, ThemeId } from "./types";
 import { themeIconUrl } from "./types";
 
@@ -10,16 +11,18 @@ function accountCopyLine(account: GiftAccount): string {
 
 function renderAccountCard(account: GiftAccount, themeId: ThemeId): string {
   const copyLine = accountCopyLine(account);
+  const headerClass = `mb-5 flex items-baseline justify-between ${themeBodyFontClass(themeId)} text-[0.82rem] tracking-tight text-[#111111]`;
+
   return `
         <div class="rounded-lg bg-white px-5 py-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
           <div
-            class="mb-3 flex items-baseline justify-between font-noto text-[0.82rem] tracking-tight text-[#111111]"
+            class="${headerClass}"
           >
             <span class="font-normal">${account.relation}</span>
             <span class="font-normal">${account.name}</span>
           </div>
           <div
-            class="flex items-center justify-between gap-3 rounded-md bg-[#F7F7F7] px-4 py-3.5"
+            class="flex items-center justify-between gap-2 rounded-md bg-[#F7F7F7] pl-4 pr-4 py-3.5"
           >
             <div class="min-w-0 text-left font-pretendard text-[#5D5D5D]">
               <p class="m-0 text-[0.78rem]">
@@ -34,15 +37,13 @@ function renderAccountCard(account: GiftAccount, themeId: ThemeId): string {
             <button
               type="button"
               data-copy-account="${copyLine}"
-              class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded border-0 bg-transparent p-0 text-[#888888] active:text-[#111111]"
+              class="inline-flex shrink-0 items-center justify-center border-0 bg-transparent p-0"
               aria-label="계좌번호 복사"
             >
               <img
                 src="${themeIconUrl(themeId, "copy.svg")}"
                 alt=""
-                width="17"
-                height="17"
-                class="block h-[17px] w-[17px]"
+                class="block h-[17px] w-[17px] opacity-80"
                 decoding="async"
                 aria-hidden="true"
               />
@@ -57,10 +58,65 @@ export function renderGiftAccountsHtml(
 ): string {
   const groomCards = accounts.groom.map((a) => renderAccountCard(a, themeId)).join("");
   const brideCards = accounts.bride.map((a) => renderAccountCard(a, themeId)).join("");
+
+  if (themeId === "theme02") {
+    return `
+    <section
+      id="gift-accounts"
+      class="mt-24 mb-24 text-center ${themeBodyFontClass(themeId)}"
+      aria-label="마음 전하실 곳"
+    >
+      <h2
+        class="m-0 text-[1rem] font-medium tracking-tight text-[#111111]"
+      >
+        마음 전하실 곳
+      </h2>
+
+      <div
+        class="mx-auto mt-4 max-w-[280px] text-[0.9rem] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]"
+      >
+        <p class="m-0">축하의 마음을 전해주시는 모든 분들께</p>
+        <p class="m-0">깊은 감사의 마음을 전합니다.</p>
+      </div>
+
+      <div
+        class="mt-8 flex border-b border-[#eeeeee]"
+        role="tablist"
+        aria-label="계좌 안내 대상"
+      >
+        <button
+          type="button"
+          role="tab"
+          data-gift-tab="groom"
+          aria-selected="true"
+          class="flex-1 border-b-2 border-[#111111] py-3 text-[0.9rem] font-medium tracking-tight text-[#111111]"
+        >
+          신랑측에게
+        </button>
+        <button
+          type="button"
+          role="tab"
+          data-gift-tab="bride"
+          aria-selected="false"
+          class="flex-1 border-b-2 border-transparent py-3 text-[0.9rem] font-extralight tracking-tight text-[#ABABAB]"
+        >
+          신부측에게
+        </button>
+      </div>
+
+      <div class="mt-10 space-y-3 text-left" data-gift-panel="groom">
+        ${groomCards}
+      </div>
+      <div class="mt-10 space-y-3 text-left" data-gift-panel="bride" hidden>
+        ${brideCards}
+      </div>
+    </section>`;
+  }
+
   return `
     <section
       id="gift-accounts"
-      class="mt-32 pb-14 text-center font-noto"
+      class="mt-32 pb-14 text-center ${themeBodyFontClass(themeId)}"
       aria-label="마음 전하실 곳"
     >
       <div
@@ -106,10 +162,10 @@ export function renderGiftAccountsHtml(
         </button>
       </div>
 
-      <div class="mt-6 space-y-3 text-left" data-gift-panel="groom">
+      <div class="mt-10 space-y-3 text-left" data-gift-panel="groom">
         ${groomCards}
       </div>
-      <div class="mt-6 space-y-3 text-left" data-gift-panel="bride" hidden>
+      <div class="mt-10 space-y-3 text-left" data-gift-panel="bride" hidden>
         ${brideCards}
       </div>
     </section>`;
