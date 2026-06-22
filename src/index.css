@@ -20,9 +20,9 @@
   --font-melodrama: "Melodrama", ui-serif, serif;
 
   /* 캘린더 섹션 글자 크기 (main.ts 에서 이름만 쓰면 됨) */
-  --text-dday-label: 0.9rem;
-  --text-dday-num: 1.75rem;
-  --text-dday-colon: 1.35rem;
+  --text-dday-label: 14px;
+  --text-dday-num: 28px;
+  --text-dday-colon: 22px;
 }
 
 .font-zalando-sans {

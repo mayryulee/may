@@ -4,7 +4,7 @@ import { sectionTitleEnClass, theme02MelodramaTitleClass, themeBodyFontClass } f
 function renderSlide(slide: InformationSlide, index: number, themeId: ThemeId): string {
   const body =
     slide.lines.length > 0
-      ? `<div class="mt-5 space-y-0.5 ${themeBodyFontClass(themeId)} text-[0.76rem] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]">
+      ? `<div class="mt-5 space-y-0.5 ${themeBodyFontClass(themeId)} text-[12px] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]">
           ${slide.lines.map((line) => `<p class="m-0">${line}</p>`).join("")}
         </div>`
       : "";
@@ -15,7 +15,7 @@ function renderSlide(slide: InformationSlide, index: number, themeId: ThemeId): 
       data-info-slide="${index}"
       aria-hidden="${index === 0 ? "false" : "true"}"
     >
-      <p class="m-0 ${themeBodyFontClass(themeId)} text-[0.88rem] font-medium tracking-tight text-[#111111]">
+      <p class="m-0 ${themeBodyFontClass(themeId)} text-[16px] font-semibold tracking-tight text-[#111111]">
         ${slide.title}
       </p>
       ${body}
@@ -30,15 +30,18 @@ export function renderInformationHtml(
 
   const isTheme02 = themeId === "theme02";
   const sectionClass = isTheme02
-    ? "-mx-[46px] bg-[#F9F8F2] px-8 py-12 text-center"
+    ? "-mx-[46px] bg-[#F9F8F2] px-8 pt-[93px] pb-[126px] text-center"
     : "-mx-[46px] bg-[#F7F7F7] px-[25px] py-12 text-center";
   const titleClass = isTheme02
-    ? theme02MelodramaTitleClass()
+    ? "mb-0 mx-0 font-melodrama text-[38px] uppercase leading-none tracking-widest text-[#111111]"
     : sectionTitleEnClass(themeId);
-  const headerClass = isTheme02 ? "pb-10 text-center" : "";
+  const headerClass = isTheme02 ? "pb-[35px] text-center" : "";
+  const carouselWrapClass = isTheme02
+    ? "relative mx-auto max-w-full"
+    : "relative mx-auto mt-8 max-w-full";
   const subtitleHtml = `
         <p
-          class="m-0 mt-2.5 ${themeBodyFontClass(themeId)} text-[0.9rem] tracking-noraml text-[#5D5D5D]"
+          class="m-0 mt-2.5 ${themeBodyFontClass(themeId)} text-[16px] tracking-noraml text-[#5D5D5D]"
         >
           결혼식에 관련하여 사전 안내 드립니다
         </p>`;
@@ -57,9 +60,9 @@ export function renderInformationHtml(
         </p>${subtitleHtml}
       </header>
 
-      <div class="relative mx-auto mt-8 max-w-full">
+      <div class="${carouselWrapClass}">
         <div
-          class="min-h-[11.5rem] overflow-hidden rounded-sm bg-white shadow-[0_1px_4px_rgba(0,0,0,0.02)]"
+          class="min-h-[184px] overflow-hidden rounded-sm bg-white shadow-[0_1px_4px_rgba(0,0,0,0.02)]"
         >
           <div
             id="info-track"

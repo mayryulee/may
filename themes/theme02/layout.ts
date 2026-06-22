@@ -55,22 +55,22 @@ function renderTheme02TransportHtml(transport: readonly VenueTransport[]): strin
 
   return `
     <div
-      class="mt-10 space-y-1 text-left text-[0.9rem] font-light leading-[1.6] tracking-tight text-[#111111]"
+      class="mt-10 space-y-1 text-left text-[14px] font-light leading-[1.6] tracking-tight text-[#111111]"
     >
       ${renderTransportHtml(preparedTransport, {
         sectionClass: () => "flex items-start gap-x-5 py-3",
         renderTitle: (title) =>
-          `<p class="m-0 w-[3rem] shrink-0 font-medium text-[#111111]">${formatTheme02TransportTitle(title)}</p>`,
+          `<p class="m-0 w-[48px] shrink-0 font-medium text-[#111111]">${formatTheme02TransportTitle(title)}</p>`,
         linesClass: "m-0 min-w-0 flex-1 text-[#111111]",
         lineClass: "m-0 text-[#111111]",
         groupBusLinesInline: true,
         busLineSplitBefore: ["express"],
         busLineClass: {
-          trunk: "tracking-wide text-[0.7rem]",
-          branch: "tracking-wide text-[0.7rem]",
-          general: "text-[0.7rem]",
-          express: "tracking-wide text-[0.7rem]",
-          village: "text-[0.7rem]",
+          trunk: "tracking-wide text-[12px]",
+          branch: "tracking-wide text-[12px]",
+          general: "text-[12px]",
+          express: "tracking-wide text-[12px]",
+          village: "text-[12px]",
         },
       })}
     </div>`;
@@ -78,7 +78,7 @@ function renderTheme02TransportHtml(transport: readonly VenueTransport[]): strin
 
 function renderTheme02MapNavHtml(venue: Venue): string {
   const linkClass =
-    "block w-full border-b border-[#6D6D6D]/50 py-2 text-right text-[0.9rem] font-light tracking-tight text-[#6D6D6D] no-underline";
+    "block w-full border-b border-[#6D6D6D]/50 py-2 text-right text-[14px] font-light tracking-tight text-[#6D6D6D] no-underline";
 
   return `
     <div class="mt-8 flex justify-end">
@@ -135,11 +135,17 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
 
   const saveTheDateLines =
     config.invitation.introLines ?? config.invitation.lines.slice(0, 4);
-  const saveTheDateHtml = saveTheDateLines
-    .map((line, i) =>
-      `<p class="m-0${i === 0 ? " mb-2" : ""}">${line}</p>`,
-    )
-    .join("");
+  const saveTheDateHtml =
+    saveTheDateLines.length > 0
+      ? `<p class="m-0 mb-[8px]">${saveTheDateLines[0]}</p>${
+          saveTheDateLines.length > 1
+            ? `<div class="space-y-1">${saveTheDateLines
+                .slice(1)
+                .map((line) => `<p class="m-0">${line}</p>`)
+                .join("")}</div>`
+            : ""
+        }`
+      : "";
 
   const formatParentsLine = (parents: string, relation: string) =>
     `${parents.replace(/ · /g, ' <span class="font-medium">·</span> ')} ${relation}`;
@@ -158,22 +164,18 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
         height="573"
         decoding="async"
       />
-      <div
-        class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.08)_38%,rgba(0,0,0,0.08)_62%,rgba(0,0,0,0.62)_100%)]"
-        aria-hidden="true"
-      ></div>
 
       <div
-        class="pointer-events-none absolute inset-0 px-7 pt-9 pb-10 text-[#FFF4C2]"
+        class="pointer-events-none absolute inset-0 pb-10 text-[#FFF4C2]"
       >
         <header aria-label="청첩장 타이틀">
           <h1
-            class="mt-20 mb-0 mx-0 font-ultra text-[clamp(2rem,6.8vw,1.75rem)] leading-[1.05] tracking-[-0.01em]"
+            class="mt-[76px] mb-0 mx-[35px] font-ultra text-[clamp(32px,6.8vw,28px)] leading-[1.05] tracking-[-0.01em]"
           >
             ${heroTitleHtml}
           </h1>
           <div
-            class="mt-5 space-y-1 font-questrial text-[1rem] leading-[1.55] tracking-[0.02em]"
+            class="mt-[18px] mx-[35px] space-y-1 font-questrial text-[16px] leading-[1.55] tracking-[0.02em]"
             aria-label="예식 일시·장소"
           >
             ${heroSubtitleHtml}
@@ -182,11 +184,11 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
       </div>
 
       <section
-        class="pointer-events-none absolute inset-x-0 bottom-0 px-7 pb-10 text-center text-[#FFF4C2]"
+        class="pointer-events-none absolute inset-x-0 bottom-0 pb-[58px] text-center text-[#FFF4C2]"
         aria-label="신랑 신부"
       >
         <p
-          class="m-0 font-quattrocento text-[1rem] font-bold tracking-[0.06em]"
+          class="m-0 font-quattrocento text-[16px] font-bold tracking-[0.06em]"
         >
           ${coupleEnHtml}
         </p>
@@ -199,37 +201,37 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
       aria-label="예식 안내"
     >
       <h2
-        class="m-0 mb-14 font-quattrocento text-[0.8rem] font-bold uppercase tracking-[0.1em]"
+        class="m-0 mb-14 font-quattrocento text-[12px] font-bold uppercase tracking-[0.1em]"
       >
         Save the Date
       </h2>
 
       <div
-        class="mb-16 space-y-1 text-[0.82rem] leading-[1.85] tracking-tight"
+        class="mb-16 text-[13px] leading-[1.85] tracking-tight"
       >
         ${saveTheDateHtml}
       </div>
 
       <div
-        class="mb-16 grid grid-cols-2 gap-4 text-[0.82rem] font-light leading-[1.75] tracking-tight"
+        class="mb-16 grid grid-cols-2 gap-4 text-[13px] font-light leading-[1.75] tracking-tight"
         aria-label="신랑 신부"
       >
         <div>
-          <p class="m-0 mb-2">
+          <p class="m-0 mb-[6px]">
             ${formatParentsLine(config.invitation.groomParents.parents, config.invitation.groomParents.relation)}
           </p>
-          <p class="m-0">신랑 <span class="text-[1rem] font-normal ml-1">${config.invitation.groomParents.name}</span></p>
+          <p class="m-0">신랑 <span class="text-[16px] font-normal ml-1">${config.invitation.groomParents.name}</span></p>
         </div>
         <div>
-          <p class="m-0 mb-2">
+          <p class="m-0 mb-[6px]">
             ${formatParentsLine(config.invitation.brideParents.parents, config.invitation.brideParents.relation)}
           </p>
-          <p class="m-0">신부 <span class="text-[1rem] font-normal ml-1">${config.invitation.brideParents.name}</span></p>
+          <p class="m-0">신부 <span class="text-[16px] font-normal ml-1">${config.invitation.brideParents.name}</span></p>
         </div>
       </div>
 
       <div
-        class="space-y-1 text-[0.82rem] font-normal leading-[1.75] tracking-tight"
+        class="space-y-1 text-[13px] font-normal leading-[1.75] tracking-tight"
         aria-label="예식 일시·장소"
       >
         <p class="m-0">${config.venue.address}</p>
@@ -336,7 +338,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
 
       <div class="w-full px-[69px] pt-10 text-center">
         <p
-          class="m-0 w-full font-noto text-[calc(1.03rem-2px)] leading-snug tracking-tight text-[#111111]"
+          class="m-0 w-full font-noto text-[14px] leading-snug tracking-tight text-[#111111]"
         >
           ${config.couple.ddayLabel}
           결혼식이
@@ -362,11 +364,11 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
       </header>
 
       <div class="text-right text-[#111111]">
-        <p class="m-0 text-[1rem] font-medium tracking-tight">
+        <p class="m-0 text-[16px] font-medium tracking-tight">
           ${venue.name}
         </p>
         <p
-          class="m-0 mt-2 flex flex-wrap items-center justify-end gap-x-1.5 text-[1rem] tracking-tight text-[#5D5D5D]"
+          class="m-0 mt-2 flex flex-wrap items-center justify-end gap-x-1.5 text-[16px] tracking-tight text-[#5D5D5D]"
         >
           <span>${venue.address}</span>
           <button
@@ -384,7 +386,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
             />
           </button>
         </p>
-        <p class="m-0 mt-1 text-[0.9rem] tracking-tight text-[#5D5D5D]">
+        <p class="m-0 mt-1 text-[14px] tracking-tight text-[#5D5D5D]">
           Tel. ${venue.tel}
         </p>
       </div>

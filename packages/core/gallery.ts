@@ -126,7 +126,7 @@ function renderTheme01GalleryHtml(
           Gallery
         </p>
         <p
-          class="m-0 mt-2.5 ${themeBodyFontClass(themeId)} text-[1rem] tracking-tight"
+          class="m-0 mt-2.5 ${themeBodyFontClass(themeId)} text-[16px] tracking-tight"
         >
           갤러리
         </p>
@@ -139,7 +139,7 @@ function renderTheme01GalleryHtml(
       <button
         type="button"
         id="gallery-more"
-        class="mt-10 border-0 bg-transparent p-0 font-pretendard text-[0.9rem] tracking-normal"
+        class="mt-10 border-0 bg-transparent p-0 font-pretendard text-[14px] tracking-normal"
       >
         더보기 +
       </button>
@@ -163,7 +163,7 @@ function renderTheme01GalleryHtml(
         <button
           type="button"
           data-gallery-close
-          class="absolute top-4 right-4 z-10 inline-flex h-10 w-10 items-center justify-center border-0 bg-transparent p-0 text-[1.75rem] leading-none text-white/80"
+          class="absolute top-4 right-4 z-10 inline-flex h-10 w-10 items-center justify-center border-0 bg-transparent p-0 text-[28px] leading-none text-white/80"
           aria-label="닫기"
         >
           ×

@@ -11,7 +11,7 @@ function accountCopyLine(account: GiftAccount): string {
 
 function renderAccountCard(account: GiftAccount, themeId: ThemeId): string {
   const copyLine = accountCopyLine(account);
-  const headerClass = `mb-5 flex items-baseline justify-between ${themeBodyFontClass(themeId)} text-[0.82rem] tracking-tight text-[#111111]`;
+  const headerClass = `mb-5 flex items-baseline justify-between ${themeBodyFontClass(themeId)} text-[13px] tracking-tight text-[#111111]`;
 
   return `
         <div class="rounded-lg bg-white px-5 py-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
@@ -25,11 +25,11 @@ function renderAccountCard(account: GiftAccount, themeId: ThemeId): string {
             class="flex items-center justify-between gap-2 rounded-md bg-[#F7F7F7] pl-4 pr-4 py-3.5"
           >
             <div class="min-w-0 text-left font-pretendard text-[#5D5D5D]">
-              <p class="m-0 text-[0.78rem]">
+              <p class="m-0 text-[12px]">
                 ${account.bank}
               </p>
               <p
-                class="m-0 mt-1 text-[0.88rem] font-normal tabular-nums tracking-tight"
+                class="m-0 mt-1 text-[14px] font-normal tabular-nums tracking-tight"
               >
                 ${account.number}
               </p>
@@ -67,13 +67,13 @@ export function renderGiftAccountsHtml(
       aria-label="마음 전하실 곳"
     >
       <h2
-        class="m-0 text-[1rem] font-medium tracking-tight text-[#111111]"
+        class="m-0 text-[16px] font-medium tracking-tight text-[#111111]"
       >
         마음 전하실 곳
       </h2>
 
       <div
-        class="mx-auto mt-4 max-w-[280px] text-[0.9rem] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]"
+        class="mx-auto mt-4 max-w-[280px] text-[14px] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]"
       >
         <p class="m-0">축하의 마음을 전해주시는 모든 분들께</p>
         <p class="m-0">깊은 감사의 마음을 전합니다.</p>
@@ -89,7 +89,7 @@ export function renderGiftAccountsHtml(
           role="tab"
           data-gift-tab="groom"
           aria-selected="true"
-          class="flex-1 border-b-2 border-[#111111] py-3 text-[0.9rem] font-medium tracking-tight text-[#111111]"
+          class="flex-1 border-b-2 border-[#111111] py-3 text-[14px] font-medium tracking-tight text-[#111111]"
         >
           신랑측에게
         </button>
@@ -98,7 +98,7 @@ export function renderGiftAccountsHtml(
           role="tab"
           data-gift-tab="bride"
           aria-selected="false"
-          class="flex-1 border-b-2 border-transparent py-3 text-[0.9rem] font-extralight tracking-tight text-[#ABABAB]"
+          class="flex-1 border-b-2 border-transparent py-3 text-[14px] font-extralight tracking-tight text-[#ABABAB]"
         >
           신부측에게
         </button>
@@ -125,13 +125,13 @@ export function renderGiftAccountsHtml(
       ></div>
 
       <h2
-        class="mt-8 text-[1rem] font-medium tracking-tight text-[#111111]"
+        class="mt-8 text-[16px] font-medium tracking-tight text-[#111111]"
       >
         마음 전하실 곳
       </h2>
 
       <div
-        class="mx-auto mt-4 max-w-[280px] text-[0.9rem] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]"
+        class="mx-auto mt-4 max-w-[280px] text-[14px] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]"
       >
         <p class="m-0">참석이 어려우신 분들을 위해 기재했습니다.</p>
         <p class="m-0">너그러운 마음으로 양해 부탁드립니다.</p>
@@ -147,7 +147,7 @@ export function renderGiftAccountsHtml(
           role="tab"
           data-gift-tab="groom"
           aria-selected="true"
-          class="flex-1 border-b-2 border-[#111111] py-3 text-[0.9rem] font-medium tracking-tight text-[#111111]"
+          class="flex-1 border-b-2 border-[#111111] py-3 text-[14px] font-medium tracking-tight text-[#111111]"
         >
           신랑측에게
         </button>
@@ -156,7 +156,7 @@ export function renderGiftAccountsHtml(
           role="tab"
           data-gift-tab="bride"
           aria-selected="false"
-          class="flex-1 border-b-2 border-transparent py-3 text-[0.9rem] font-extralight tracking-tight text-[#ABABAB]"
+          class="flex-1 border-b-2 border-transparent py-3 text-[14px] font-extralight tracking-tight text-[#ABABAB]"
         >
           신부측에게
         </button>

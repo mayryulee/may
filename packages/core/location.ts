@@ -189,11 +189,11 @@ function initMapFallback(
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   link.className =
-    `flex h-full min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-[#F7F7F7] ${themeBodyFontClass(themeId)} text-[0.78rem] font-extralight text-[#666666] no-underline`;
+    `flex h-full min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-[#F7F7F7] ${themeBodyFontClass(themeId)} text-[12px] font-extralight text-[#666666] no-underline`;
   link.innerHTML = `
-    <span class="text-[1.5rem]" aria-hidden="true">📍</span>
+    <span class="text-[24px]" aria-hidden="true">📍</span>
     <span>지도 보기 (카카오맵)</span>
-    <span class="text-[0.68rem] text-[#999999]">VITE_KAKAO_MAP_APP_KEY 설정 시 이 영역에 지도가 표시됩니다</span>
+    <span class="text-[11px] text-[#999999]">VITE_KAKAO_MAP_APP_KEY 설정 시 이 영역에 지도가 표시됩니다</span>
   `;
   container.replaceChildren(link);
 }

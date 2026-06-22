@@ -21,17 +21,17 @@ function renderTheme01TransportTitle(title: string): string {
   for (const suffix of TRANSPORT_TITLE_SUFFIXES) {
     if (title.endsWith(suffix)) {
       const label = title.slice(0, -suffix.length);
-      return `<p class="m-0 text-[1.0rem] text-[#111111]"><span class="font-medium">${label}</span><span class="font-extralight">${suffix}</span></p>`;
+      return `<p class="m-0 text-[16px] text-[#111111]"><span class="font-medium">${label}</span><span class="font-extralight">${suffix}</span></p>`;
     }
   }
 
-  return `<p class="m-0 font-medium text-[1.0rem] text-[#111111]">${title}</p>`;
+  return `<p class="m-0 font-medium text-[16px] text-[#111111]">${title}</p>`;
 }
 
 function renderTheme01TransportHtml(transport: readonly VenueTransport[]): string {
   return `
     <div
-      class="mt-10 mx-8 space-y-0 text-left font-noto text-[0.86rem] leading-[1.85]"
+      class="mt-10 mx-8 space-y-0 text-left font-noto text-[14px] leading-[1.85]"
     >
       ${renderTransportHtml(transport, {
         sectionClass: (i, total) =>
@@ -40,11 +40,11 @@ function renderTheme01TransportHtml(transport: readonly VenueTransport[]): strin
         linesClass: "m-0 mt-2",
         lineClass: "m-0",
         busLineClass: {
-          trunk: "text-[0.78rem] mt-2",
-          branch: "text-[0.78rem]",
-          general: "text-[0.78rem]",
-          express: "text-[0.78rem]",
-          village: "text-[0.78rem]",
+          trunk: "text-[12px] mt-2",
+          branch: "text-[12px]",
+          general: "text-[12px]",
+          express: "text-[12px]",
+          village: "text-[12px]",
         },
       })}
     </div>`;
@@ -74,7 +74,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
         decoding="async"
       />
       <div
-        class="absolute right-0 bottom-3 flex flex-col items-end font-cabinet text-[0.8rem] leading-normal font-normal tracking-[0.16em] text-[#111111]"
+        class="absolute right-0 bottom-3 flex flex-col items-end font-cabinet text-[13px] leading-normal font-normal tracking-[0.16em] text-[#111111]"
         aria-label="예식 연월일"
       >
         <span class="block">${config.header.year}</span>
@@ -83,7 +83,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
     </header>
 
     <img
-      class="mt-[3.3rem] mb-6 block aspect-[3/4] w-full object-cover object-center"
+      class="mt-[53px] mb-6 block aspect-[3/4] w-full object-cover object-center"
       src="${clientImageUrl(config.id, config.hero.image)}"
       alt="${config.hero.alt}"
       width="430"
@@ -301,7 +301,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
 
       <div class="w-full px-[50px] pt-10 text-center">
         <p
-          class="m-0 w-full font-jeju text-[calc((1.03rem-2px)*1.2)] leading-snug tracking-tighter text-[#111111]"
+          class="m-0 w-full font-jeju text-[17px] leading-snug tracking-tighter text-[#111111]"
         >
           ${config.couple.ddayLabel}
           결혼식이
@@ -326,11 +326,11 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
       </header>
 
       <div class="font-noto text-[#111111]">
-        <p class="m-0 mb-3 text-[0.9rem] font-normal tracking-tight">
+        <p class="m-0 mb-3 text-[14px] font-normal tracking-tight">
           ${venue.name}
         </p>
         <p
-          class="m-0 mt-2 flex flex-wrap items-center justify-center gap-x-1.5 text-[0.9rem] font-extralight tracking-tight text-[#5D5D5D]"
+          class="m-0 mt-2 flex flex-wrap items-center justify-center gap-x-1.5 text-[14px] font-extralight tracking-tight text-[#5D5D5D]"
         >
           <span>${venue.address}</span>
           <button
@@ -348,7 +348,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
             />
           </button>
         </p>
-        <p class="m-0 mt-1 font-zalando-sans text-[0.9rem] font-extralight tracking-tight text-[#666666]">
+        <p class="m-0 mt-1 font-zalando-sans text-[14px] font-extralight tracking-tight text-[#666666]">
           Tel. ${venue.tel}
         </p>
       </div>
@@ -366,7 +366,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
           href="https://map.kakao.com/?q=${enc(venue.name)}"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex h-10 w-[6.8rem] shrink-0 items-center justify-center rounded-md bg-white no-underline"
+          class="flex h-10 w-[109px] shrink-0 items-center justify-center rounded-md bg-white no-underline"
           aria-label="카카오맵"
         >
           <img
@@ -384,7 +384,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
           href="https://map.naver.com/p/search/${enc(venue.name)}/place/${venue.naverPlaceId}"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex h-10 w-[6.8rem] shrink-0 items-center justify-center rounded-md bg-white no-underline"
+          class="flex h-10 w-[109px] shrink-0 items-center justify-center rounded-md bg-white no-underline"
           aria-label="네이버 지도"
         >
           <img
@@ -401,7 +401,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
           data-map="tmap"
           href="tmap://route?goalname=${enc(venue.name)}&amp;goalx=${venue.lng}&amp;goaly=${venue.lat}"
           rel="noopener noreferrer"
-          class="flex h-10 w-[6.8rem] shrink-0 items-center justify-center rounded-md bg-white no-underline"
+          class="flex h-10 w-[109px] shrink-0 items-center justify-center rounded-md bg-white no-underline"
           aria-label="T MAP"
         >
           <img

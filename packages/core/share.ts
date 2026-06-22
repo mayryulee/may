@@ -166,14 +166,14 @@ function copyrightLogoAttrs(themeId: ThemeId): {
 } {
   if (themeId === "theme01") {
     return {
-      className: "theme-toggle-target mx-auto mt-10 block h-auto w-[12.5625rem]",
+      className: "theme-toggle-target mx-auto mt-10 block h-auto w-[201px]",
       width: 201,
       height: 12,
     };
   }
 
   return {
-    className: "theme-toggle-target mx-auto mt-20 block h-auto w-[12.5625rem]",
+    className: "theme-toggle-target mx-auto mt-20 block h-auto w-[201px]",
     width: 201,
     height: 12,
   };
@@ -200,11 +200,14 @@ export function renderShareHtml(themeId: ThemeId): string {
     ? "mt-12 text-center font-pretendard"
     : "mt-12 pb-8 text-center font-pretendard";
   const kakaoButtonClass = isTheme02
-    ? "block w-full border border-[#111111] bg-transparent py-3.5 font-pretendard text-[0.9rem] font-normal tracking-tight text-[#111111]"
-    : "block w-full rounded-lg border-0 bg-[#FCE777] py-3.5 font-pretendard text-[0.9rem] font-medium tracking-tight text-[#191919]";
+    ? "block w-full border border-[#75818D] bg-transparent py-3.5 font-pretendard text-[14px] font-normal tracking-tight text-[#343A40]"
+    : "block w-full rounded-lg border-0 bg-[#FCE777] py-3.5 font-pretendard text-[14px] font-medium tracking-tight text-[#191919]";
   const copyButtonClass = isTheme02
-    ? "flex w-full items-center justify-center gap-2 border-0 bg-white py-3.5 font-pretendard text-[0.9rem] font-normal tracking-tight text-[#111111]"
-    : "flex w-full items-center justify-center gap-2 rounded-lg border-0 bg-[#F7F7F7] py-3.5 font-pretendard text-[0.9rem] font-normal tracking-tight text-[#111111]";
+    ? "flex w-full items-center justify-center gap-2 bg-white py-3.5 font-pretendard text-[14px] font-normal tracking-tight text-[#343A40]"
+    : "flex w-full items-center justify-center gap-2 rounded-lg border-0 bg-[#F7F7F7] py-3.5 font-pretendard text-[14px] font-normal tracking-tight text-[#111111]";
+  const buttonsWrapClass = isTheme02
+    ? "mx-auto max-w-full space-y-4"
+    : "mx-auto max-w-full space-y-2.5";
   const kakaoLabel = isTheme02 ? "카카오톡 공유하기" : "카카오톡으로 청첩장 전하기";
 
   return `
@@ -213,7 +216,7 @@ export function renderShareHtml(themeId: ThemeId): string {
       class="${sectionClass}"
       aria-label="청첩장 공유"
     >
-      <div class="mx-auto max-w-full space-y-2.5">
+      <div class="${buttonsWrapClass}">
         <button
           type="button"
           id="share-kakao"

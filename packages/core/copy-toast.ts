@@ -21,13 +21,13 @@ function renderCopyToastHtml(): string {
   return `
     <div
       id="${TOAST_ID}"
-      class="pointer-events-none fixed inset-x-0 bottom-[calc(2.75rem+env(safe-area-inset-bottom))] z-[200] flex justify-center px-6 opacity-0 translate-y-3"
+      class="pointer-events-none fixed inset-x-0 bottom-[calc(44px+env(safe-area-inset-bottom))] z-[200] flex justify-center px-6 opacity-0 translate-y-3"
       role="status"
       aria-live="polite"
       hidden
     >
       <div
-        class="flex max-w-[min(100%,20rem)] items-center gap-2.5 rounded-[10px] border border-[#e6e6e6] bg-white px-4 py-3 shadow-[0_2px_14px_rgba(0,0,0,0.08)]"
+        class="flex max-w-[min(100%,320px)] items-center gap-2.5 rounded-[10px] border border-[#e6e6e6] bg-white px-4 py-3 shadow-[0_2px_14px_rgba(0,0,0,0.08)]"
       >
         <span
           class="inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#111111]"
@@ -37,7 +37,7 @@ function renderCopyToastHtml(): string {
         </span>
         <p
           data-copy-toast-message
-          class="m-0 font-pretendard text-[0.78rem] font-normal leading-none tracking-tight text-[#111111]"
+          class="m-0 font-pretendard text-[12px] font-normal leading-none tracking-tight text-[#111111]"
         ></p>
       </div>
     </div>`;
