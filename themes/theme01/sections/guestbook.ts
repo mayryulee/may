@@ -4,9 +4,9 @@ import {
   formatGuestbookDate,
   listGuestbookEntries,
   type GuestbookEntry,
-} from "./guestbook-store";
-import { sectionTitleEnClass, themeBodyFontClass } from "./section-heading";
-import { themeIconUrl, type ThemeId } from "./types";
+} from "../../../packages/shared/guestbook-store";
+import { themeIconUrl } from "../../../packages/shared/types";
+import { bodyFontClass, sectionTitleEnClass } from "../tokens";
 
 const MODALS = ["write", "list", "delete"] as const;
 type ModalName = (typeof MODALS)[number];
@@ -136,14 +136,10 @@ function renderEntryCard(entry: GuestbookEntry): string {
       >
         ×
       </button>
-      <p
-        class="m-0 pr-6 font-pretendard text-[13px] font-normal leading-[1.85] tracking-tight text-[#333333]"
-      >
+      <p class="m-0 pr-6 font-pretendard text-[13px] font-normal leading-[1.85] tracking-tight text-[#333333]">
         ${escapeHtml(entry.message)}
       </p>
-      <div
-        class="mt-5 flex items-end justify-between gap-3 font-pretendard text-[11px] font-extralight tracking-tight text-[#999999]"
-      >
+      <div class="mt-5 flex items-end justify-between gap-3 font-pretendard text-[11px] font-extralight tracking-tight text-[#999999]">
         <span>From ${escapeHtml(entry.name)}</span>
         <span class="shrink-0 tabular-nums">${formatGuestbookDate(entry.createdAt)}</span>
       </div>
@@ -172,27 +168,21 @@ async function refreshList(root: ParentNode, clientId: string): Promise<void> {
   list.innerHTML = entries.map(renderEntryCard).join("");
 }
 
-export function renderGuestbookHtml(themeId: ThemeId): string {
+export function renderGuestbookHtml(): string {
   return `
     <section
       id="guestbook"
-      class="mt-32 pb-14 text-center ${themeBodyFontClass(themeId)}"
+      class="mt-32 pb-14 text-center ${bodyFontClass}"
       aria-label="방명록"
     >
-      <p
-        class="${sectionTitleEnClass(themeId)}"
-      >
-        Message
-      </p>
-      <p
-        class="m-0 mt-2.5 text-[14px] tracking-noraml text-[#5D5D5D]"
-      >
+      <p class="${sectionTitleEnClass}">Message</p>
+      <p class="m-0 mt-2.5 text-[14px] tracking-noraml text-[#5D5D5D]">
         저희 둘에게 따뜻한 방명록을 남겨주세요
       </p>
 
       <img
         class="mx-auto my-20 block h-auto w-[176px] max-w-[60%]"
-        src="${themeIconUrl(themeId, "message.svg")}"
+        src="${themeIconUrl("theme01", "message.svg")}"
         alt=""
         width="194"
         height="93"
@@ -226,13 +216,8 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
       aria-modal="true"
       aria-labelledby="guestbook-write-title"
     >
-      <div
-        class="absolute inset-0 bg-black/35"
-        data-guestbook-backdrop="write"
-      ></div>
-      <div
-        class="relative mx-auto flex h-full max-w-[430px] items-center px-6 py-10"
-      >
+      <div class="absolute inset-0 bg-black/35" data-guestbook-backdrop="write"></div>
+      <div class="relative mx-auto flex h-full max-w-[430px] items-center px-6 py-10">
         <div class="relative w-full rounded-lg bg-white px-6 py-8 text-center font-pretendard tracking-tight shadow-lg">
           <button
             type="button"
@@ -242,53 +227,18 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
           >
             ×
           </button>
-          <h2
-            id="guestbook-write-title"
-            class="m-0 text-[16px] font-medium tracking-tight text-[#111111]"
-          >
+          <h2 id="guestbook-write-title" class="m-0 text-[16px] font-medium tracking-tight text-[#111111]">
             축하 메시지 작성하기
           </h2>
-          <p
-            class="m-0 mt-2 text-[12px] font-extralight tracking-tight text-[#888888]"
-          >
+          <p class="m-0 mt-2 text-[12px] font-extralight tracking-tight text-[#888888]">
             저희 둘의 결혼을 함께 축하해 주세요
           </p>
           <form id="guestbook-write-form" class="mt-6 space-y-2.5 text-left">
-            <input
-              name="name"
-              type="text"
-              maxlength="30"
-              required
-              placeholder="성함을 남겨주세요"
-              class="${GUESTBOOK_FIELD}"
-            />
-            <input
-              name="password"
-              type="password"
-              maxlength="20"
-              required
-              placeholder="비밀번호를 입력해 주세요"
-              class="${GUESTBOOK_FIELD}"
-            />
-            <textarea
-              name="message"
-              maxlength="200"
-              required
-              rows="4"
-              placeholder="200자 이내로 작성해 주세요"
-              class="${GUESTBOOK_TEXTAREA}"
-            ></textarea>
-            <p
-              id="guestbook-write-error"
-              class="m-0 hidden text-center text-[11px] tracking-tight text-[#c44]"
-            ></p>
-            <button
-              type="submit"
-              disabled
-              class="${SUBMIT_BTN}"
-            >
-              작성 완료
-            </button>
+            <input name="name" type="text" maxlength="30" required placeholder="성함을 남겨주세요" class="${GUESTBOOK_FIELD}" />
+            <input name="password" type="password" maxlength="20" required placeholder="비밀번호를 입력해 주세요" class="${GUESTBOOK_FIELD}" />
+            <textarea name="message" maxlength="200" required rows="4" placeholder="200자 이내로 작성해 주세요" class="${GUESTBOOK_TEXTAREA}"></textarea>
+            <p id="guestbook-write-error" class="m-0 hidden text-center text-[11px] tracking-tight text-[#c44]"></p>
+            <button type="submit" disabled class="${SUBMIT_BTN}">작성 완료</button>
           </form>
         </div>
       </div>
@@ -302,16 +252,9 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
       aria-modal="true"
       aria-labelledby="guestbook-list-title"
     >
-      <div
-        class="absolute inset-0 bg-black/35"
-        data-guestbook-backdrop="list"
-      ></div>
-      <div
-        class="relative mx-auto flex h-full max-w-[430px] items-center px-6 py-10"
-      >
-        <div
-          class="relative flex max-h-[min(85vh,544px)] w-full flex-col rounded-lg bg-[#F7F7F7] px-5 py-6 font-pretendard tracking-tight shadow-lg"
-        >
+      <div class="absolute inset-0 bg-black/35" data-guestbook-backdrop="list"></div>
+      <div class="relative mx-auto flex h-full max-w-[430px] items-center px-6 py-10">
+        <div class="relative flex max-h-[min(85vh,544px)] w-full flex-col rounded-lg bg-[#F7F7F7] px-5 py-6 font-pretendard tracking-tight shadow-lg">
           <button
             type="button"
             data-guestbook-close
@@ -320,16 +263,10 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
           >
             ×
           </button>
-          <h2
-            id="guestbook-list-title"
-            class="m-0 shrink-0 text-center text-[16px] font-medium tracking-tight text-[#111111]"
-          >
+          <h2 id="guestbook-list-title" class="m-0 shrink-0 text-center text-[16px] font-medium tracking-tight text-[#111111]">
             방명록 전체보기
           </h2>
-          <div
-            id="guestbook-list"
-            class="mt-5 min-h-0 flex-1 space-y-3 overflow-y-auto pb-1"
-          ></div>
+          <div id="guestbook-list" class="mt-5 min-h-0 flex-1 space-y-3 overflow-y-auto pb-1"></div>
         </div>
       </div>
     </div>
@@ -342,13 +279,8 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
       aria-modal="true"
       aria-labelledby="guestbook-delete-title"
     >
-      <div
-        class="absolute inset-0 bg-black/35"
-        data-guestbook-backdrop="delete"
-      ></div>
-      <div
-        class="relative mx-auto flex h-full max-w-[430px] items-center px-6 py-10"
-      >
+      <div class="absolute inset-0 bg-black/35" data-guestbook-backdrop="delete"></div>
+      <div class="relative mx-auto flex h-full max-w-[430px] items-center px-6 py-10">
         <div class="relative w-full rounded-lg bg-[#F7F7F7] px-6 py-8 text-center font-pretendard tracking-tight shadow-lg">
           <button
             type="button"
@@ -358,15 +290,10 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
           >
             ×
           </button>
-          <h2
-            id="guestbook-delete-title"
-            class="m-0 text-[16px] font-medium tracking-tight text-[#111111]"
-          >
+          <h2 id="guestbook-delete-title" class="m-0 text-[16px] font-medium tracking-tight text-[#111111]">
             글 삭제
           </h2>
-          <p
-            class="m-0 mt-2 text-[12px] font-extralight leading-relaxed tracking-tight text-[#888888]"
-          >
+          <p class="m-0 mt-2 text-[12px] font-extralight leading-relaxed tracking-tight text-[#888888]">
             관리자 및 작성자만 글을 삭제하실 수 있습니다
           </p>
           <form id="guestbook-delete-form" class="mt-6 space-y-2.5 text-left">
@@ -377,17 +304,8 @@ export function renderGuestbookHtml(themeId: ThemeId): string {
               placeholder="비밀번호를 입력해 주세요"
               class="w-full rounded-lg border-0 bg-white px-4 py-3.5 text-base font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
             />
-            <p
-              id="guestbook-delete-error"
-              class="m-0 hidden text-center text-[11px] tracking-tight text-[#c44]"
-            ></p>
-            <button
-              type="submit"
-              disabled
-              class="${SUBMIT_BTN}"
-            >
-              삭제하기
-            </button>
+            <p id="guestbook-delete-error" class="m-0 hidden text-center text-[11px] tracking-tight text-[#c44]"></p>
+            <button type="submit" disabled class="${SUBMIT_BTN}">삭제하기</button>
           </form>
         </div>
       </div>
@@ -403,12 +321,10 @@ export function initGuestbook(root: ParentNode, clientId: string): void {
   const deleteForm = root.querySelector<HTMLFormElement>("#guestbook-delete-form");
   const deleteError = root.querySelector<HTMLElement>("#guestbook-delete-error");
 
-  root
-    .querySelector("#guestbook-open-write")
-    ?.addEventListener("click", () => {
-      openModal(root, "write");
-      syncWriteSubmit(root);
-    });
+  root.querySelector("#guestbook-open-write")?.addEventListener("click", () => {
+    openModal(root, "write");
+    syncWriteSubmit(root);
+  });
 
   root.querySelector("#guestbook-open-list")?.addEventListener("click", async () => {
     await refreshList(root, clientId);
@@ -462,16 +378,14 @@ export function initGuestbook(root: ParentNode, clientId: string): void {
     closeModals(root);
   });
 
-  root
-    .querySelector("#guestbook-list")
-    ?.addEventListener("click", (e) => {
-      const target = (e.target as HTMLElement).closest<HTMLButtonElement>(
-        "[data-entry-delete]",
-      );
-      if (!target) return;
-      deleteTargetId = target.dataset.entryDelete ?? null;
-      openDeleteOverlay(root);
-    });
+  root.querySelector("#guestbook-list")?.addEventListener("click", (e) => {
+    const target = (e.target as HTMLElement).closest<HTMLButtonElement>(
+      "[data-entry-delete]",
+    );
+    if (!target) return;
+    deleteTargetId = target.dataset.entryDelete ?? null;
+    openDeleteOverlay(root);
+  });
 
   deleteForm?.addEventListener("submit", async (e) => {
     e.preventDefault();

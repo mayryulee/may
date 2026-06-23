@@ -1,121 +1,17 @@
-import { initAccountGift, renderGiftAccountsHtml } from "../../packages/core/account-gift";
-import { initCalendarCountdown } from "../../packages/core/calendar-countdown";
-import { initGallery, renderGalleryHtml } from "../../packages/core/gallery";
+import { initAccountGift, renderGiftAccountsHtml } from "./sections/account-gift";
+import { initCalendarCountdown } from "../../packages/shared/calendar-countdown";
+import { initGallery, renderGalleryHtml } from "./sections/gallery";
 import {
   initInformationCarousel,
   renderInformationHtml,
-} from "../../packages/core/information-carousel";
-import { initLocation, renderTransportHtml } from "../../packages/core/location";
-import { renderQuoteHtml } from "../../packages/core/quote";
-import { initShare, renderShareHtml } from "../../packages/core/share";
-import { theme02MelodramaTitleClass } from "../../packages/core/section-heading";
-import type { ClientConfig, ThemeId, Venue, VenueTransport } from "../../packages/core/types";
-import { clientImageUrl, themeIconUrl, themeImageUrl } from "../../packages/core/types";
-
-const enc = (s: string) => encodeURIComponent(s);
-
-function formatTheme02TransportTitle(title: string): string {
-  return title.replace(/\s*이용\s*시\s*$/, "").replace(/\s*안내\s*$/, "");
-}
-
-const SUBWAY_LINE_BREAK = /^(.*?전방에서)\s*(.+)$/;
-
-function prepareTheme02Transport(transport: readonly VenueTransport[]): VenueTransport[] {
-  return transport.map((section) => {
-    if (!section.title.includes("지하철")) {
-      return section;
-    }
-
-    const breakIndex = section.lines.findIndex((line) => line.includes("전방에서"));
-    if (breakIndex === -1) {
-      return section;
-    }
-
-    const breakLine = section.lines[breakIndex];
-    const match = breakLine.match(SUBWAY_LINE_BREAK);
-    if (!match) {
-      return section;
-    }
-
-    const head = match[1];
-    const tailParts = [match[2], ...section.lines.slice(breakIndex + 1)].filter(
-      (part) => part.trim().length > 0,
-    );
-    const tail = tailParts.join(" ");
-
-    return {
-      ...section,
-      lines: tail ? [head, tail] : [head],
-    };
-  });
-}
-
-function renderTheme02TransportHtml(transport: readonly VenueTransport[]): string {
-  const preparedTransport = prepareTheme02Transport(transport);
-
-  return `
-    <div
-      class="mt-10 space-y-1 text-left text-[14px] font-light leading-[1.6] tracking-tight text-[#111111]"
-    >
-      ${renderTransportHtml(preparedTransport, {
-        sectionClass: () => "flex items-start gap-x-5 py-3",
-        renderTitle: (title) =>
-          `<p class="m-0 w-[48px] shrink-0 font-medium text-[#111111]">${formatTheme02TransportTitle(title)}</p>`,
-        linesClass: "m-0 min-w-0 flex-1 text-[#111111]",
-        lineClass: "m-0 text-[#111111]",
-        groupBusLinesInline: true,
-        busLineSplitBefore: ["express"],
-        busLineClass: {
-          trunk: "tracking-wide text-[12px]",
-          branch: "tracking-wide text-[12px]",
-          general: "text-[12px]",
-          express: "tracking-wide text-[12px]",
-          village: "text-[12px]",
-        },
-      })}
-    </div>`;
-}
-
-function renderTheme02MapNavHtml(venue: Venue): string {
-  const linkClass =
-    "block w-full border-b border-[#6D6D6D]/50 py-2 text-right text-[14px] font-light tracking-tight text-[#6D6D6D] no-underline";
-
-  return `
-    <div class="mt-8 flex justify-end">
-      <div class="inline-grid mb-12">
-      <a
-        data-map="naver"
-        href="https://map.naver.com/p/search/${enc(venue.name)}/place/${venue.naverPlaceId}"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="${linkClass}"
-      >
-        네이버 지도
-      </a>
-      <a
-        data-map="kakao"
-        href="https://map.kakao.com/?q=${enc(venue.name)}"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="${linkClass}"
-      >
-        카카오맵
-      </a>
-      <a
-        data-map="tmap"
-        href="tmap://route?goalname=${enc(venue.name)}&amp;goalx=${venue.lng}&amp;goaly=${venue.lat}"
-        rel="noopener noreferrer"
-        class="${linkClass}"
-      >
-        티맵
-      </a>
-      </div>
-    </div>`;
-}
+} from "./sections/information";
+import { initLocation, renderLocationHtml } from "./sections/location";
+import { renderQuoteHtml } from "./sections/quote";
+import { initShare, renderShareHtml } from "./sections/share";
+import type { ClientConfig, ThemeId } from "../../packages/shared/types";
+import { clientImageUrl, themeImageUrl } from "../../packages/shared/types";
 
 export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
-  const { venue } = config;
-
   const heroTitleLines =
     config.header.heroTitleLines ?? [config.header.titleImageAlt];
   const heroSubtitleLines =
@@ -349,63 +245,13 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
       -->
     </section>
 
-    ${renderGalleryHtml(config.id, config.gallery, themeId)}
+    ${renderGalleryHtml(config.id, config.gallery)}
 
-    <section
-      class="-mx-[46px] mt-32 mb-32 bg-[#F9F8F2] px-8 py-12 text-left"
-      aria-label="오시는 길"
-    >
-      <header class="pb-8 mt-12">
-        <p
-          class="${theme02MelodramaTitleClass()}"
-        >
-          Location
-        </p>
-      </header>
+    ${renderLocationHtml(config, themeId)}
 
-      <div class="text-right text-[#111111]">
-        <p class="m-0 text-[16px] font-medium tracking-tight">
-          ${venue.name}
-        </p>
-        <p
-          class="m-0 mt-2 flex flex-wrap items-center justify-end gap-x-1.5 text-[16px] tracking-tight text-[#5D5D5D]"
-        >
-          <span>${venue.address}</span>
-          <button
-            id="copy-address"
-            type="button"
-            class="inline-flex shrink-0 items-center justify-center rounded border-0 bg-transparent p-0"
-            aria-label="주소 복사"
-          >
-            <img
-              src="${themeIconUrl(themeId, "copy.svg")}"
-              alt=""
-              class="block h-[12px] w-[12px] opacity-80"
-              decoding="async"
-              aria-hidden="true"
-            />
-          </button>
-        </p>
-        <p class="m-0 mt-1 text-[14px] tracking-tight text-[#5D5D5D]">
-          Tel. ${venue.tel}
-        </p>
-      </div>
+    ${renderGiftAccountsHtml(config.accounts)}
 
-      <div
-        id="venue-map"
-        class="-mx-8 mt-6 h-[220px] w-[calc(100%+4rem)] overflow-hidden bg-[#F7F7F7]"
-        role="img"
-        aria-label="${venue.name} 위치 지도"
-      ></div>
-
-      ${renderTheme02TransportHtml(venue.transport)}
-
-      ${renderTheme02MapNavHtml(venue)}
-    </section>
-
-    ${renderGiftAccountsHtml(config.accounts, themeId)}
-
-    ${renderInformationHtml(config.information, themeId)}
+    ${renderInformationHtml(config.information)}
 
     <div class="relative -mx-[46px] w-[calc(100%+92px)]">
       <div
@@ -414,9 +260,9 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
         aria-hidden="true"
       ></div>
       <div class="relative px-[25px] pt-24 pb-12">
-        ${renderQuoteHtml(config.quote, themeId)}
+        ${renderQuoteHtml(config.quote)}
 
-        ${renderShareHtml(themeId)}
+        ${renderShareHtml()}
       </div>
     </div>
   </article>
@@ -431,8 +277,8 @@ export function initPage(
   const weddingAt = new Date(config.weddingAt);
 
   initCalendarCountdown(root, weddingAt);
-  initGallery(root, config.id, config.gallery, themeId);
-  initLocation(root, config.venue, themeId);
+  initGallery(root, config.id, config.gallery);
+  initLocation(root, config.venue);
   initAccountGift(root);
   initInformationCarousel(root, config.information);
   initShare(config.id, config.share);

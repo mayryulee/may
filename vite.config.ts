@@ -104,7 +104,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@client": clientDir,
-        "@core": resolve(__dirname, "packages/core"),
+        "@shared": resolve(__dirname, "packages/shared"),
         "@themes": resolve(__dirname, "themes"),
       },
     },

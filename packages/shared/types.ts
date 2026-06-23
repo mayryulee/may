@@ -22,9 +22,16 @@ export type InformationSlide = {
   lines: string[];
 };
 
-export type VenueTransport = {
-  title: string;
+/** 테마 디자인에 맞춰 1행씩 나눈 교통편 안내 */
+export type LocationTransportSection = {
+  /** 테마1: "버스 이용 시" / 테마2: "버스" 등 디자인용 라벨 */
+  label: string;
+  /** 화면에 표시할 텍스트 — 각 항목이 한 줄(<p>) */
   lines: string[];
+};
+
+export type ThemeLocationContent = {
+  transport: LocationTransportSection[];
 };
 
 export type Venue = {
@@ -35,8 +42,20 @@ export type Venue = {
   lat: number;
   lng: number;
   naverPlaceId: string;
-  transport: VenueTransport[];
+  /** 테마별 오시는 길·교통편 (디자인에 맞게 행 단위로 저장) */
+  location: Record<ThemeId, ThemeLocationContent>;
 };
+
+export function venueLocationForTheme(
+  venue: Venue,
+  themeId: ThemeId,
+): ThemeLocationContent {
+  const content = venue.location[themeId];
+  if (!content) {
+    throw new Error(`venue.location.${themeId} is not defined`);
+  }
+  return content;
+}
 
 export type ClientMeta = {
   title: string;

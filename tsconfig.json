@@ -17,10 +17,10 @@
     "baseUrl": ".",
     "paths": {
       "@client/*": ["clients/sample01/*"],
-      "@core/*": ["packages/core/*"],
+      "@shared/*": ["packages/shared/*"],
       "@themes/*": ["themes/*"]
     }
   },
-  "include": ["src", "packages/core", "themes", "clients"],
+  "include": ["src", "packages/shared", "themes", "clients"],
   "exclude": ["vite.config.ts"]
 }

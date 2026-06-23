@@ -1,6 +1,5 @@
 import { copyText, COPY_TOAST, showCopyToast } from "./copy-toast";
-import { themeBodyFontClass } from "./section-heading";
-import type { ThemeId, Venue } from "./types";
+import type { Venue } from "./types";
 
 const enc = (s: string) => encodeURIComponent(s);
 
@@ -182,14 +181,14 @@ function initKakaoMap(
 function initMapFallback(
   container: HTMLElement,
   webUrl: string,
-  themeId: ThemeId,
+  fallbackFontClass: string,
 ): void {
   const link = document.createElement("a");
   link.href = webUrl;
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   link.className =
-    `flex h-full min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-[#F7F7F7] ${themeBodyFontClass(themeId)} text-[12px] font-extralight text-[#666666] no-underline`;
+    `flex h-full min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-[#F7F7F7] ${fallbackFontClass} text-[12px] font-extralight text-[#666666] no-underline`;
   link.innerHTML = `
     <span class="text-[24px]" aria-hidden="true">📍</span>
     <span>지도 보기 (카카오맵)</span>
@@ -198,7 +197,17 @@ function initMapFallback(
   container.replaceChildren(link);
 }
 
-export function initLocation(root: ParentNode, venue: Venue, themeId: ThemeId): void {
+export type InitVenueMapOptions = {
+  fallbackFontClass?: string;
+};
+
+/** 지도·내비 링크·주소 복사 — 테마와 무관한 공통 동작 */
+export function initVenueMap(
+  root: ParentNode,
+  venue: Venue,
+  options: InitVenueMapOptions = {},
+): void {
+  const fallbackFontClass = options.fallbackFontClass ?? "font-noto";
   const siteAppName =
     import.meta.env.VITE_SITE_APP_NAME?.trim() || "formayletter.netlify.app";
   const links = buildMapLinks(venue, siteAppName);
@@ -210,10 +219,10 @@ export function initLocation(root: ParentNode, venue: Venue, themeId: ThemeId): 
     const appKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY as string | undefined;
     if (appKey?.trim()) {
       initKakaoMap(mapEl, appKey.trim(), venue).catch(() =>
-        initMapFallback(mapEl, links.kakao.web, themeId),
+        initMapFallback(mapEl, links.kakao.web, fallbackFontClass),
       );
     } else {
-      initMapFallback(mapEl, links.kakao.web, themeId);
+      initMapFallback(mapEl, links.kakao.web, fallbackFontClass);
     }
   }
 
@@ -228,129 +237,4 @@ export function initLocation(root: ParentNode, venue: Venue, themeId: ThemeId): 
       }
     });
   }
-}
-
-/** 버스 노선 유형 — lines 텍스트 "간선 : …" 접두어 기준 */
-export type BusLineCategory =
-  | "trunk" // 간선 (343, 401 등)
-  | "branch" // 지선 (4319 등)
-  | "general" // 일반 (11-3, 917 등)
-  | "express" // 직행 (500-2, 9407 등)
-  | "village"; // 마을 (강남01, 강남06 등)
-
-const BUS_LINE_PREFIXES: Record<string, BusLineCategory> = {
-  간선: "trunk",
-  지선: "branch",
-  일반: "general",
-  직행: "express",
-  마을: "village",
-};
-
-export function getBusLineCategory(line: string): BusLineCategory | null {
-  const match = line.match(/^(간선|지선|일반|직행|마을)\s*:/);
-  if (!match) return null;
-  return BUS_LINE_PREFIXES[match[1]] ?? null;
-}
-
-export type BusLineClassNames = {
-  trunk: string;
-  branch: string;
-  general: string;
-  express: string;
-  village: string;
-};
-
-export type TransportHtmlStyles = {
-  sectionClass: (index: number, total: number) => string;
-  renderTitle: (title: string) => string;
-  linesClass: string;
-  lineClass: string;
-  /** 버스 노선 유형별 추가 클래스 — 미지정 유형은 lineClass만 적용 */
-  busLineClass?: Partial<BusLineClassNames>;
-  /** 버스 노선(간선·지선 등)을 / 구분 인라인으로 묶어 표시 */
-  groupBusLinesInline?: boolean;
-  /** 해당 유형 노선 직전에서 줄바꿈 (예: 직행 직전) */
-  busLineSplitBefore?: readonly BusLineCategory[];
-};
-
-function resolveLineClass(line: string, styles: TransportHtmlStyles): string {
-  const category = getBusLineCategory(line);
-  if (!category) return styles.lineClass;
-
-  const busClass = styles.busLineClass?.[category];
-  return busClass ? `${styles.lineClass} ${busClass}`.trim() : styles.lineClass;
-}
-
-function inlineBusLineClass(line: string, styles: TransportHtmlStyles): string {
-  const category = getBusLineCategory(line);
-  if (!category) return styles.lineClass.replace(/\bm-0\b/g, "").trim();
-
-  const busClass = styles.busLineClass?.[category];
-  const base = styles.lineClass.replace(/\bm-0\b/g, "").trim();
-  return busClass ? `${base} ${busClass}`.trim() : base;
-}
-
-export function renderGroupedTransportLinesHtml(
-  lines: readonly string[],
-  styles: Pick<TransportHtmlStyles, "lineClass" | "busLineClass" | "busLineSplitBefore">,
-): string {
-  const styleCtx = styles as TransportHtmlStyles;
-  const chunks: string[] = [];
-  let busRun: string[] = [];
-
-  const flushBusRun = () => {
-    if (busRun.length === 0) return;
-
-    const inner = busRun
-      .map((line, index) => {
-        const sep = index === 0 ? "" : `<span aria-hidden="true"> / </span>`;
-        return `${sep}<span class="${inlineBusLineClass(line, styleCtx)}">${line}</span>`;
-      })
-      .join("");
-
-    chunks.push(`<p class="${styles.lineClass}">${inner}</p>`);
-    busRun = [];
-  };
-
-  for (const line of lines) {
-    const busCategory = getBusLineCategory(line);
-    if (busCategory) {
-      if (
-        busRun.length > 0 &&
-        styles.busLineSplitBefore?.includes(busCategory)
-      ) {
-        flushBusRun();
-      }
-      busRun.push(line);
-    } else {
-      flushBusRun();
-      chunks.push(`<p class="${styles.lineClass}">${line}</p>`);
-    }
-  }
-
-  flushBusRun();
-  return chunks.join("");
-}
-
-export function renderTransportHtml(
-  transport: readonly Venue["transport"][number][],
-  styles: TransportHtmlStyles,
-): string {
-  const total = transport.length;
-
-  return transport
-    .map((section, i) => {
-      const lines = styles.groupBusLinesInline
-        ? renderGroupedTransportLinesHtml(section.lines, styles)
-        : section.lines
-            .map((line) => `<p class="${resolveLineClass(line, styles)}">${line}</p>`)
-            .join("");
-
-      return `
-        <div class="${styles.sectionClass(i, total)}">
-          ${styles.renderTitle(section.title)}
-          <div class="${styles.linesClass}">${lines}</div>
-        </div>`;
-    })
-    .join("");
 }

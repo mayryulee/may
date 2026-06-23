@@ -1,6 +1,6 @@
-import type { GalleryImage, ThemeId } from "./types";
-import { clientImageUrl } from "./types";
-import { sectionTitleEnClass, theme02MelodramaTitleClass, themeBodyFontClass } from "./section-heading";
+import type { GalleryImage } from "../../../packages/shared/types";
+import { clientImageUrl } from "../../../packages/shared/types";
+import { bodyFontClass, sectionTitleEnClass } from "../tokens";
 
 const POPUP_IMAGE_MAX = 99;
 const GALLERY_MORE_BATCH_SIZE = 4;
@@ -53,64 +53,9 @@ function renderGalleryThumb(
     </button>`;
 }
 
-function renderTheme02GalleryHtml(
+export function renderGalleryHtml(
   clientId: string,
   images: readonly GalleryImage[],
-): string {
-  const first = images[0];
-  const firstSrc = first ? clientImageUrl(clientId, first.src) : "";
-  const firstAlt = first?.alt ?? "";
-
-  return `
-    <section
-      id="gallery"
-      class="-mx-[46px] mt-32 px-8 text-left"
-      aria-label="갤러리"
-    >
-      <header class="pb-10">
-        <p
-          class="${theme02MelodramaTitleClass()}"
-        >
-          Gallery
-        </p>
-      </header>
-
-      <div class="relative w-full">
-        <div class="relative z-0" data-gallery-carousel>
-          <img
-            id="gallery-carousel-image"
-            class="block aspect-[3/4] w-full object-cover object-center"
-            src="${firstSrc}"
-            alt="${firstAlt}"
-            loading="lazy"
-            decoding="async"
-            draggable="false"
-          />
-        </div>
-        <button
-          type="button"
-          data-gallery-next
-          class="${GALLERY_ARROW_NEXT_CLASS}"
-          aria-label="다음 사진"
-        >
-          ${galleryArrowIcon("next")}
-        </button>
-        <button
-          type="button"
-          data-gallery-prev
-          class="${GALLERY_ARROW_PREV_CLASS} ${GALLERY_ARROW_PREV_HIDDEN_CLASS}"
-          aria-label="이전 사진"
-        >
-          ${galleryArrowIcon("prev")}
-        </button>
-      </div>
-    </section>`;
-}
-
-function renderTheme01GalleryHtml(
-  clientId: string,
-  images: readonly GalleryImage[],
-  themeId: ThemeId,
 ): string {
   const thumbs = images.map((img, i) => renderGalleryThumb(clientId, img, i)).join("");
 
@@ -121,14 +66,8 @@ function renderTheme01GalleryHtml(
       aria-label="갤러리"
     >
       <header class="pb-10">
-        <p
-          class="${sectionTitleEnClass(themeId)}"
-        >
-          Gallery
-        </p>
-        <p
-          class="m-0 mt-2.5 ${themeBodyFontClass(themeId)} text-[16px] tracking-tight"
-        >
+        <p class="${sectionTitleEnClass}">Gallery</p>
+        <p class="m-0 mt-2.5 ${bodyFontClass} text-[16px] tracking-tight">
           갤러리
         </p>
       </header>
@@ -154,13 +93,8 @@ function renderTheme01GalleryHtml(
       aria-modal="true"
       aria-label="갤러리 사진 보기"
     >
-      <div
-        class="absolute inset-0 bg-black/90"
-        data-gallery-close
-      ></div>
-      <div
-        class="relative mx-auto flex h-full max-w-[430px] items-center justify-center py-12"
-      >
+      <div class="absolute inset-0 bg-black/90" data-gallery-close></div>
+      <div class="relative mx-auto flex h-full max-w-[430px] items-center justify-center py-12">
         <button
           type="button"
           data-gallery-close
@@ -195,17 +129,6 @@ function renderTheme01GalleryHtml(
     </div>`;
 }
 
-export function renderGalleryHtml(
-  clientId: string,
-  images: readonly GalleryImage[],
-  themeId: ThemeId,
-): string {
-  if (themeId === "theme02") {
-    return renderTheme02GalleryHtml(clientId, images);
-  }
-  return renderTheme01GalleryHtml(clientId, images, themeId);
-}
-
 function popupImageUrl(clientId: string, index: number): string {
   return clientImageUrl(clientId, `galleryp${String(index).padStart(2, "0")}.png`);
 }
@@ -231,82 +154,7 @@ async function discoverPopupImages(clientId: string): Promise<string[]> {
   return urls;
 }
 
-function initTheme02Gallery(
-  root: ParentNode,
-  clientId: string,
-  images: readonly GalleryImage[],
-): void {
-  const section = root.querySelector("#gallery");
-  const carousel = root.querySelector<HTMLElement>("[data-gallery-carousel]");
-  const imageEl = root.querySelector<HTMLImageElement>("#gallery-carousel-image");
-  const prevBtn = root.querySelector<HTMLButtonElement>("[data-gallery-prev]");
-  const nextBtn = root.querySelector<HTMLButtonElement>("[data-gallery-next]");
-  if (!section || !carousel || !imageEl || !prevBtn || !nextBtn || images.length === 0) {
-    return;
-  }
-
-  const img = imageEl;
-  const prev = prevBtn;
-  const next = nextBtn;
-  const resolved = images.map((image) => ({
-    src: clientImageUrl(clientId, image.src),
-    alt: image.alt,
-  }));
-
-  let activeIndex = 0;
-  let touchStartX = 0;
-
-  function updateArrows(): void {
-    const hasMultiple = resolved.length > 1;
-    const showPrev = hasMultiple && activeIndex > 0;
-    prev.classList.toggle("opacity-0", !showPrev);
-    prev.classList.toggle("pointer-events-none", !showPrev);
-    next.classList.toggle("opacity-0", !hasMultiple);
-    next.classList.toggle("pointer-events-none", !hasMultiple);
-  }
-
-  function showImage(index: number): void {
-    if (resolved.length === 0) return;
-
-    activeIndex = ((index % resolved.length) + resolved.length) % resolved.length;
-    const slide = resolved[activeIndex];
-    img.src = slide.src;
-    img.alt = slide.alt;
-    updateArrows();
-  }
-
-  prev.addEventListener("click", () => {
-    showImage(activeIndex - 1);
-  });
-
-  next.addEventListener("click", () => {
-    showImage(activeIndex + 1);
-  });
-
-  carousel.addEventListener(
-    "touchstart",
-    (e) => {
-      touchStartX = e.changedTouches[0]?.clientX ?? 0;
-    },
-    { passive: true },
-  );
-
-  carousel.addEventListener(
-    "touchend",
-    (e) => {
-      const touchEndX = e.changedTouches[0]?.clientX ?? 0;
-      const delta = touchEndX - touchStartX;
-      if (Math.abs(delta) < 40) return;
-      if (delta > 0) showImage(activeIndex - 1);
-      else showImage(activeIndex + 1);
-    },
-    { passive: true },
-  );
-
-  updateArrows();
-}
-
-function initTheme01Gallery(
+export function initGallery(
   root: ParentNode,
   clientId: string,
   images: readonly GalleryImage[],
@@ -481,17 +329,4 @@ function initTheme01Gallery(
     if (e.key === "ArrowLeft") showImage(activeIndex - 1);
     if (e.key === "ArrowRight") showImage(activeIndex + 1);
   });
-}
-
-export function initGallery(
-  root: ParentNode,
-  clientId: string,
-  images: readonly GalleryImage[],
-  themeId: ThemeId,
-): void {
-  if (themeId === "theme02") {
-    initTheme02Gallery(root, clientId, images);
-    return;
-  }
-  initTheme01Gallery(root, clientId, images);
 }

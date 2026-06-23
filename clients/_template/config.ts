@@ -1,4 +1,4 @@
-import type { ClientConfig } from "../../packages/core/types";
+import type { ClientConfig } from "../../packages/shared/types";
 
 const config: ClientConfig = {
   id: "CLIENT_ID",
@@ -65,7 +65,14 @@ const config: ClientConfig = {
     lat: 37.5,
     lng: 127.0,
     naverPlaceId: "",
-    transport: [{ title: "오시는 길", lines: ["안내 문구"] }],
+    location: {
+      theme01: {
+        transport: [{ label: "오시는 길", lines: ["안내 문구를 입력해 주세요."] }],
+      },
+      theme02: {
+        transport: [{ label: "오시는 길", lines: ["안내 문구를 입력해 주세요."] }],
+      },
+    },
   },
 
   gallery: [{ src: "gallery01.png", alt: "갤러리 사진 1" }],

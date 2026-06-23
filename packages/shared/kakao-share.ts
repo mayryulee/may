@@ -1,5 +1,5 @@
-import type { ClientConfig, ThemeId } from "./types";
-import { clientOgImageUrl, themeIconUrl } from "./types";
+import type { ClientConfig } from "./types";
+import { clientOgImageUrl } from "./types";
 import { copyText, COPY_TOAST, mountCopyToast, showCopyToast } from "./copy-toast";
 
 type ShareConfig = ClientConfig["share"];
@@ -159,26 +159,6 @@ async function shareViaKakaoTalk(
   });
 }
 
-function copyrightLogoAttrs(themeId: ThemeId): {
-  className: string;
-  width: number;
-  height: number;
-} {
-  if (themeId === "theme01") {
-    return {
-      className: "theme-toggle-target mx-auto mt-10 block h-auto w-[201px]",
-      width: 201,
-      height: 12,
-    };
-  }
-
-  return {
-    className: "theme-toggle-target mx-auto mt-20 block h-auto w-[201px]",
-    width: 201,
-    height: 12,
-  };
-}
-
 async function shareFallback(share: ShareConfig): Promise<void> {
   const url = sharePageUrl();
   if (navigator.share) {
@@ -191,67 +171,6 @@ async function shareFallback(share: ShareConfig): Promise<void> {
   }
   await copyText(url);
   showCopyToast(COPY_TOAST.address);
-}
-
-export function renderShareHtml(themeId: ThemeId): string {
-  const copyrightLogo = copyrightLogoAttrs(themeId);
-  const isTheme02 = themeId === "theme02";
-  const sectionClass = isTheme02
-    ? "mt-12 text-center font-pretendard"
-    : "mt-12 pb-8 text-center font-pretendard";
-  const kakaoButtonClass = isTheme02
-    ? "block w-full border border-[#75818D] bg-transparent py-3.5 font-pretendard text-[14px] font-normal tracking-tight text-[#343A40]"
-    : "block w-full rounded-lg border-0 bg-[#FCE777] py-3.5 font-pretendard text-[14px] font-medium tracking-tight text-[#191919]";
-  const copyButtonClass = isTheme02
-    ? "flex w-full items-center justify-center gap-2 bg-white py-3.5 font-pretendard text-[14px] font-normal tracking-tight text-[#343A40]"
-    : "flex w-full items-center justify-center gap-2 rounded-lg border-0 bg-[#F7F7F7] py-3.5 font-pretendard text-[14px] font-normal tracking-tight text-[#111111]";
-  const buttonsWrapClass = isTheme02
-    ? "mx-auto max-w-full space-y-4"
-    : "mx-auto max-w-full space-y-2.5";
-  const kakaoLabel = isTheme02 ? "카카오톡 공유하기" : "카카오톡으로 청첩장 전하기";
-
-  return `
-    <section
-      id="share"
-      class="${sectionClass}"
-      aria-label="청첩장 공유"
-    >
-      <div class="${buttonsWrapClass}">
-        <button
-          type="button"
-          id="share-kakao"
-          class="${kakaoButtonClass}"
-        >
-          ${kakaoLabel}
-        </button>
-        <button
-          type="button"
-          id="share-copy-link"
-          class="${copyButtonClass}"
-        >
-          청첩장 링크 복사하기
-          <img
-            src="${themeIconUrl(themeId, "copy.svg")}"
-            alt=""
-            width="17"
-            height="17"
-            class="block h-[17px] w-[17px]"
-            decoding="async"
-            aria-hidden="true"
-          />
-        </button>
-      </div>
-      <img
-        class="${copyrightLogo.className}"
-        src="${themeIconUrl(themeId, "copyright.svg")}"
-        alt="© FOR MAY"
-        width="${copyrightLogo.width}"
-        height="${copyrightLogo.height}"
-        decoding="async"
-        draggable="false"
-        data-theme-toggle
-      />
-    </section>`;
 }
 
 export function initShare(clientId: string, share: ShareConfig): void {
