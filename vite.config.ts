@@ -2,17 +2,31 @@ import tailwindcss from "@tailwindcss/vite";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { Plugin } from "vite";
-import { defineConfig } from "vite";
-import { resolveClient } from "./scripts/resolve-client.mjs";
+import { defineConfig, loadEnv } from "vite";
+import { resolveClient } from "./scripts/client";
 
-const { clientId, clientDir, themeOverride } = resolveClient();
+function injectClientPlugin(
+  clientId: string,
+  themeOverride: string | undefined,
+): Plugin {
+  const payload = JSON.stringify({ clientId, themeOverride: themeOverride ?? "" });
+
+  return {
+    name: "inject-client",
+    transformIndexHtml: {
+      order: "pre",
+      handler(html) {
+        return html.replace(
+          "<head>",
+          `<head>\n    <script>window.__MAY_CLIENT__=${payload}</script>`,
+        );
+      },
+    },
+  };
+}
 
 function readClientMeta(configPath: string) {
   const src = readFileSync(configPath, "utf8");
-  const pick = (field: string) => {
-    const match = src.match(new RegExp(`${field}:\\s*"([^"]*)"`));
-    return match?.[1] ?? "";
-  };
 
   const metaBlock = src.match(/meta:\s*\{([\s\S]*?)\n\s*\},/)?.[1] ?? "";
 
@@ -33,20 +47,27 @@ function readClientMeta(configPath: string) {
   };
 }
 
-const clientMeta = readClientMeta(resolve(clientDir, "config.ts"));
+function resolveSiteUrl(env: Record<string, string>): string {
+  return (
+    env.SITE_URL ||
+    env.VITE_SITE_URL ||
+    process.env.DEPLOY_PRIME_URL ||
+    process.env.URL ||
+    "http://localhost:5173"
+  ).replace(/\/$/, "");
+}
 
-/** 카카오·SNS 미리보기: og:image 는 절대 URL 필요 (Netlify 빌드 시 URL 환경변수 사용) */
-function ogMetaPlugin(): Plugin {
+type ClientMeta = ReturnType<typeof readClientMeta>;
+
+/** 카카오·SNS 미리보기: og:image 는 절대 URL 필요 (.env 또는 Netlify URL 환경변수) */
+function ogMetaPlugin(
+  siteUrl: string,
+  clientId: string,
+  clientMeta: ClientMeta,
+): Plugin {
   return {
     name: "og-meta",
     transformIndexHtml(html) {
-      const siteUrl = (
-        process.env.SITE_URL ||
-        process.env.VITE_SITE_URL ||
-        process.env.DEPLOY_PRIME_URL ||
-        process.env.URL ||
-        "http://localhost:5173"
-      ).replace(/\/$/, "");
       const imageUrl = `${siteUrl}/images/${clientId}/og-kakao.png?v=3`;
 
       return html
@@ -64,25 +85,36 @@ function ogMetaPlugin(): Plugin {
   };
 }
 
-export default defineConfig({
-  plugins: [tailwindcss(), ogMetaPlugin()],
-  define: {
-    "import.meta.env.VITE_THEME_OVERRIDE": JSON.stringify(themeOverride ?? ""),
-    "import.meta.env.VITE_CLIENT_ID": JSON.stringify(clientId),
-  },
-  resolve: {
-    alias: {
-      "@client": clientDir,
-      "@core": resolve(__dirname, "packages/core"),
-      "@themes": resolve(__dirname, "themes"),
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const { clientId, clientDir } = resolveClient(env.CLIENT);
+  const themeOverride = env.THEME?.trim();
+  const clientMeta = readClientMeta(resolve(clientDir, "config.ts"));
+  const siteUrl = resolveSiteUrl(env);
+
+  return {
+    plugins: [
+      injectClientPlugin(clientId, themeOverride),
+      tailwindcss(),
+      ogMetaPlugin(siteUrl, clientId, clientMeta),
+    ],
+    define: {
+      "import.meta.env.VITE_THEME_OVERRIDE": JSON.stringify(themeOverride ?? ""),
     },
-  },
-  build: {
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, "index.html"),
-        test: resolve(__dirname, "test.html"),
+    resolve: {
+      alias: {
+        "@client": clientDir,
+        "@core": resolve(__dirname, "packages/core"),
+        "@themes": resolve(__dirname, "themes"),
       },
     },
-  },
+    build: {
+      rollupOptions: {
+        input: {
+          main: resolve(__dirname, "index.html"),
+          test: resolve(__dirname, "test.html"),
+        },
+      },
+    },
+  };
 });

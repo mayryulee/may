@@ -8,5 +8,4 @@ public/icons/
 *.local
 .env
 .env.*
-!.env.example
 .idea/

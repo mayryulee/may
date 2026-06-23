@@ -35,14 +35,14 @@
 
 템플릿에서 `${SCRAP_IMAGE}`, `${SCRAP_TITLE}` 등을 쓴 경우:
 
-`.env.local`에 추가:
+`.env`에 추가:
 ```
 VITE_KAKAO_SHARE_METHOD=scrap
 ```
 
 ## 3. 환경 변수
 
-`.env.local` (로컬) 및 Netlify 환경 변수:
+`.env` (로컬) 및 Netlify 환경 변수:
 
 ```
 VITE_KAKAO_SHARE_TEMPLATE_ID=133867

@@ -2,9 +2,10 @@ import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PREVIEW_CLIENT_IDS } from "./preview-clients.mjs";
+import { resolveClient } from "./client.ts";
 
 const root = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
-const buildClientId = process.env.CLIENT || "sample01";
+const { clientId: buildClientId } = resolveClient();
 const publicImagesDir = resolve(root, "public", "images");
 const publicThemeAssetsDir = resolve(root, "public", "theme-assets");
 const themesDir = resolve(root, "themes");

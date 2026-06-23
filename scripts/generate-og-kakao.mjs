@@ -3,9 +3,10 @@ import { existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PREVIEW_CLIENT_IDS } from "./preview-clients.mjs";
+import { resolveClient } from "./client.ts";
 
 const root = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
-const buildClientId = process.env.CLIENT || "sample01";
+const { clientId: buildClientId } = resolveClient();
 const clientIds = [...new Set([...PREVIEW_CLIENT_IDS, buildClientId])];
 
 const OUTPUT_WIDTH = 600;

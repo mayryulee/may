@@ -16,10 +16,11 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@client/*": ["clients/sample02/*"],
+      "@client/*": ["clients/sample01/*"],
       "@core/*": ["packages/core/*"],
       "@themes/*": ["themes/*"]
     }
   },
-  "include": ["src", "packages/core", "themes", "clients"]
+  "include": ["src", "packages/core", "themes", "clients"],
+  "exclude": ["vite.config.ts"]
 }

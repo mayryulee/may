@@ -18,11 +18,11 @@ const previewClients = {
 
 type PreviewClientId = keyof typeof previewClients;
 
-const buildClientId = import.meta.env.VITE_CLIENT_ID as string;
+const mayClient = window.__MAY_CLIENT__;
+const buildClientId = (mayClient?.clientId ?? "sample01") as PreviewClientId;
+const themeOverride = mayClient?.themeOverride?.trim();
 const initialClientId: PreviewClientId =
-  buildClientId in previewClients
-    ? (buildClientId as PreviewClientId)
-    : "sample01";
+  buildClientId in previewClients ? buildClientId : "sample01";
 
 const appEl = document.querySelector<HTMLDivElement>("#app");
 if (!appEl) throw new Error("#app not found");
@@ -32,7 +32,7 @@ let activeClientId = initialClientId;
 
 function mountClient(clientId: PreviewClientId): void {
   const config: ClientConfig = previewClients[clientId];
-  const themeId: ThemeId = config.theme;
+  const themeId: ThemeId = (themeOverride as ThemeId | undefined) || config.theme;
   const theme = themes[themeId];
 
   if (!theme) {

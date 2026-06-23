@@ -3,6 +3,7 @@ import { clientImageUrl } from "./types";
 import { sectionTitleEnClass, theme02MelodramaTitleClass, themeBodyFontClass } from "./section-heading";
 
 const POPUP_IMAGE_MAX = 99;
+const GALLERY_MORE_BATCH_SIZE = 4;
 
 const GALLERY_ARROW_BASE =
   "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-white/90";
@@ -132,7 +133,7 @@ function renderTheme01GalleryHtml(
         </p>
       </header>
 
-      <div class="grid grid-cols-2 gap-2.5">
+      <div id="gallery-grid" class="grid grid-cols-2 gap-2.5">
         ${thumbs}
       </div>
 
@@ -311,13 +312,15 @@ function initTheme01Gallery(
   images: readonly GalleryImage[],
 ): void {
   const section = root.querySelector("#gallery");
+  const grid = section?.querySelector<HTMLElement>("#gallery-grid");
   const lightbox = root.querySelector<HTMLElement>("#gallery-lightbox");
   const imageEl = root.querySelector<HTMLImageElement>("#gallery-lightbox-image");
   const moreBtn = root.querySelector<HTMLButtonElement>("#gallery-more");
-  if (!section || !lightbox || !imageEl || !moreBtn) {
+  if (!section || !grid || !lightbox || !imageEl || !moreBtn) {
     return;
   }
 
+  const galleryGrid = grid;
   const lb = lightbox;
   const img = imageEl;
   const more = moreBtn;
@@ -332,27 +335,68 @@ function initTheme01Gallery(
   let touchStartX = 0;
   let popupUrls: string[] = [];
   let popupReady = false;
+  let revealedPopupCount = 0;
 
   function allSlides(): { src: string; alt: string }[] {
-    const popupSlides = popupUrls.map((src, i) => ({
+    const revealed = popupUrls.slice(0, revealedPopupCount).map((src, i) => ({
       src,
       alt: `갤러리 사진 ${resolved.length + i + 1}`,
     }));
-    return [...resolved, ...popupSlides];
+    return [...resolved, ...revealed];
   }
 
   function totalCount(): number {
-    return resolved.length + (popupReady ? popupUrls.length : 0);
+    return resolved.length + revealedPopupCount;
+  }
+
+  function updateMoreButton(): void {
+    if (!popupReady) return;
+    more.hidden = revealedPopupCount >= popupUrls.length;
   }
 
   async function ensurePopupUrls(): Promise<string[]> {
     if (!popupReady) {
       popupUrls = await discoverPopupImages(clientId);
       popupReady = true;
-      more.hidden = popupUrls.length === 0;
-      updateArrows();
+      updateMoreButton();
     }
     return popupUrls;
+  }
+
+  function bindThumbOpen(btn: HTMLButtonElement): void {
+    btn.addEventListener("click", () => {
+      const index = Number(btn.dataset.galleryOpen);
+      if (Number.isNaN(index)) return;
+      openLightbox(index);
+    });
+  }
+
+  async function appendMoreImages(): Promise<void> {
+    await ensurePopupUrls();
+    const batch = popupUrls.slice(
+      revealedPopupCount,
+      revealedPopupCount + GALLERY_MORE_BATCH_SIZE,
+    );
+    if (batch.length === 0) return;
+
+    batch.forEach((_, i) => {
+      const popupIndex = revealedPopupCount + i + 1;
+      const index = resolved.length + revealedPopupCount + i;
+      const filename = `galleryp${String(popupIndex).padStart(2, "0")}.png`;
+      const alt = `갤러리 사진 ${index + 1}`;
+      const html = renderGalleryThumb(clientId, { src: filename, alt }, index);
+      const template = document.createElement("template");
+      template.innerHTML = html.trim();
+      const btn = template.content.firstElementChild as HTMLButtonElement | null;
+      if (btn) {
+        bindThumbOpen(btn);
+        galleryGrid.appendChild(btn);
+      }
+    });
+
+    revealedPopupCount += batch.length;
+    updateMoreButton();
+    updateArrows();
   }
 
   function updateArrows(): void {
@@ -393,20 +437,10 @@ function initTheme01Gallery(
 
   void ensurePopupUrls();
 
-  section.querySelectorAll<HTMLButtonElement>("[data-gallery-open]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const index = Number(btn.dataset.galleryOpen);
-      if (Number.isNaN(index)) return;
-      openLightbox(index);
-    });
-  });
+  section.querySelectorAll<HTMLButtonElement>("[data-gallery-open]").forEach(bindThumbOpen);
 
   more.addEventListener("click", () => {
-    void (async () => {
-      const urls = await ensurePopupUrls();
-      if (urls.length === 0) return;
-      openLightbox(resolved.length);
-    })();
+    void appendMoreImages();
   });
 
   lb.querySelectorAll("[data-gallery-close]").forEach((el) => {

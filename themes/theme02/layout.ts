@@ -393,7 +393,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
 
       <div
         id="venue-map"
-        class="h-[220px] w-full overflow-hidden rounded-sm bg-[#F7F7F7]"
+        class="-mx-8 mt-6 h-[220px] w-[calc(100%+4rem)] overflow-hidden bg-[#F7F7F7]"
         role="img"
         aria-label="${venue.name} 위치 지도"
       ></div>
