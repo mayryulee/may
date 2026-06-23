@@ -5,19 +5,19 @@ export function renderQuoteHtml(quote: ClientConfig["quote"]): string {
   const stanzas = quote.stanzas
     .map((stanza) => {
       const lines = stanza.map((line) => `<p class="m-0">${line}</p>`).join("");
-      return `<div class="space-y-0.5">${lines}</div>`;
+      return `<div class="space-y-[2px]">${lines}</div>`;
     })
     .join("");
 
   return `
     <section
-      class="pb-12 text-center ${bodyFontClass} text-[#424141]"
+      class="pb-[48px] text-center text-[#424141]"
       aria-label="명언"
     >
-      <div class="space-y-5 text-[14px] font-normal leading-[1.8] tracking-tight">
+      <div class="space-y-[20px] text-[14px] font-normal leading-[1.8] tracking-tight">
         ${stanzas}
       </div>
-      <p class="m-0 mt-10 text-[14px] font-normal tracking-tight text-[#5D5D5D]">
+      <p class="m-0 mt-[40px] text-[14px] font-normal tracking-tight text-[#5D5D5D]">
         ${quote.attribution}
       </p>
     </section>`;

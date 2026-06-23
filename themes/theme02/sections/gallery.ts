@@ -3,17 +3,15 @@ import type { GalleryImage } from "../../../packages/shared/types";
 import { clientImageUrl } from "../../../packages/shared/types";
 
 const GALLERY_ARROW_BASE =
-  "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-white/90";
-
-const GALLERY_ARROW_PREV_CLASS = `${GALLERY_ARROW_BASE} left-1`;
-const GALLERY_ARROW_NEXT_CLASS = `${GALLERY_ARROW_BASE} right-1`;
+  "absolute top-[50%] z-[10] flex h-[40px] w-[40px] -translate-y-[50%] items-center justify-center border-[0px] bg-transparent p-0 text-white/90";
+const GALLERY_ARROW_PREV_CLASS = `${GALLERY_ARROW_BASE} left-[4px]`;
+const GALLERY_ARROW_NEXT_CLASS = `${GALLERY_ARROW_BASE} right-[4px]`;
 const GALLERY_ARROW_PREV_HIDDEN_CLASS =
   "opacity-0 pointer-events-none transition-opacity duration-200";
-
 function galleryArrowIcon(direction: "prev" | "next"): string {
   const path = direction === "next" ? "M9 6l6 6-6 6" : "M15 6l-6 6 6 6";
   return `<svg
-            class="h-5 w-5"
+            class="h-[20px] w-[20px]"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -37,10 +35,10 @@ export function renderGalleryHtml(
   return `
     <section
       id="gallery"
-      class="-mx-[46px] mt-32 px-8 text-left"
+      class="-mx-[46px] mt-[128px] px-[32px] text-left"
       aria-label="갤러리"
     >
-      <header class="pb-10">
+      <header class="pb-[40px]">
         <p class="${melodramaTitleClass}">Gallery</p>
       </header>
 
@@ -67,7 +65,7 @@ export function renderGalleryHtml(
         <button
           type="button"
           data-gallery-prev
-          class="${GALLERY_ARROW_PREV_CLASS} ${GALLERY_ARROW_PREV_HIDDEN_CLASS}"
+          class="${GALLERY_ARROW_PREV_CLASS}${GALLERY_ARROW_PREV_HIDDEN_CLASS}"
           aria-label="이전 사진"
         >
           ${galleryArrowIcon("prev")}

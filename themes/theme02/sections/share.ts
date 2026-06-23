@@ -7,21 +7,21 @@ export function renderShareHtml(): string {
   return `
     <section
       id="share"
-      class="mt-12 text-center font-pretendard"
+      class="mt-[48px] text-center font-pretendard"
       aria-label="청첩장 공유"
     >
-      <div class="mx-auto max-w-full space-y-4">
+      <div class="mx-auto max-w-full space-y-[16px]">
         <button
           type="button"
           id="share-kakao"
-          class="block w-full border border-[#75818D] bg-transparent py-3.5 font-pretendard text-[14px] font-normal tracking-tight text-[#343A40]"
+          class="block w-full border-[1px] border-[#75818D] bg-transparent py-[14px] font-pretendard text-[14px] font-normal tracking-tight text-[#343A40]"
         >
           카카오톡 공유하기
         </button>
         <button
           type="button"
           id="share-copy-link"
-          class="flex w-full items-center justify-center gap-2 bg-white py-3.5 font-pretendard text-[14px] font-normal tracking-tight text-[#343A40]"
+          class="flex w-full items-center justify-center gap-[8px] bg-white py-[14px] font-pretendard text-[14px] font-normal tracking-tight text-[#343A40]"
         >
           청첩장 링크 복사하기
           <img
@@ -36,7 +36,7 @@ export function renderShareHtml(): string {
         </button>
       </div>
       <img
-        class="theme-toggle-target mx-auto mt-20 block h-auto w-[201px]"
+        class="theme-toggle-target mx-auto mt-[80px] block h-auto w-[201px]"
         src="${themeIconUrl("theme02", "copyright.svg")}"
         alt="© FOR MAY"
         width="201"

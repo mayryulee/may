@@ -35,7 +35,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
     saveTheDateLines.length > 0
       ? `<p class="m-0 mb-[8px]">${saveTheDateLines[0]}</p>${
           saveTheDateLines.length > 1
-            ? `<div class="space-y-1">${saveTheDateLines
+            ? `<div class="space-y-[4px]">${saveTheDateLines
                 .slice(1)
                 .map((line) => `<p class="m-0">${line}</p>`)
                 .join("")}</div>`
@@ -49,7 +49,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
   return `
   <article class="font-pretendard">
     <section
-      class="-mx-[46px] -mt-7 relative w-[calc(100%+92px)]"
+      class="-mx-[46px] -mt-[28px] relative w-[calc(100%+92px)]"
       aria-label="메인"
     >
       <img
@@ -62,7 +62,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
       />
 
       <div
-        class="pointer-events-none absolute inset-0 pb-10 text-[#FFF4C2]"
+        class="pointer-events-none absolute inset-0 pb-[40px] text-[#FFF4C2]"
       >
         <header aria-label="청첩장 타이틀">
           <h1
@@ -71,7 +71,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
             ${heroTitleHtml}
           </h1>
           <div
-            class="mt-[18px] mx-[35px] space-y-1 font-questrial text-[16px] leading-[1.55] tracking-[0.02em]"
+            class="mt-[18px] mx-[35px] space-y-[4px] font-questrial text-[16px] leading-[1.55] tracking-[0.02em]"
             aria-label="예식 일시·장소"
           >
             ${heroSubtitleHtml}
@@ -92,42 +92,42 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
     </section>
 
     <section
-      class="-mx-[46px] flex min-h-[560px] w-[calc(100%+92px)] flex-col justify-center bg-cover bg-center px-8 py-32 text-center font-pretendard text-[#111111]"
+      class="-mx-[46px] flex min-h-[560px] w-[calc(100%+92px)] flex-col justify-center bg-cover bg-center px-[32px] py-[128px] text-center font-pretendard text-[#111111]"
       style="background-image: url('${themeImageUrl(themeId, "background01.png")}')"
       aria-label="예식 안내"
     >
       <h2
-        class="m-0 mb-14 font-quattrocento text-[12px] font-bold uppercase tracking-[0.1em]"
+        class="m-0 mb-[56px] font-quattrocento text-[12px] font-bold uppercase tracking-[0.1em]"
       >
         Save the Date
       </h2>
 
       <div
-        class="mb-16 text-[13px] leading-[1.85] tracking-tight"
+        class="mb-[64px] text-[13px] leading-[1.85] tracking-tight"
       >
         ${saveTheDateHtml}
       </div>
 
       <div
-        class="mb-16 grid grid-cols-2 gap-4 text-[13px] font-light leading-[1.75] tracking-tight"
+        class="mb-[64px] grid grid-cols-2 gap-[16px] text-[13px] font-light leading-[1.75] tracking-tight"
         aria-label="신랑 신부"
       >
         <div>
           <p class="m-0 mb-[6px]">
             ${formatParentsLine(config.invitation.groomParents.parents, config.invitation.groomParents.relation)}
           </p>
-          <p class="m-0">신랑 <span class="text-[16px] font-normal ml-1">${config.invitation.groomParents.name}</span></p>
+          <p class="m-0">신랑 <span class="text-[16px] font-normal ml-[4px]">${config.invitation.groomParents.name}</span></p>
         </div>
         <div>
           <p class="m-0 mb-[6px]">
             ${formatParentsLine(config.invitation.brideParents.parents, config.invitation.brideParents.relation)}
           </p>
-          <p class="m-0">신부 <span class="text-[16px] font-normal ml-1">${config.invitation.brideParents.name}</span></p>
+          <p class="m-0">신부 <span class="text-[16px] font-normal ml-[4px]">${config.invitation.brideParents.name}</span></p>
         </div>
       </div>
 
       <div
-        class="space-y-1 text-[13px] font-normal leading-[1.75] tracking-tight"
+        class="space-y-[4px] text-[13px] font-normal leading-[1.75] tracking-tight"
         aria-label="예식 일시·장소"
       >
         <p class="m-0">${config.venue.address}</p>
@@ -137,12 +137,12 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
     </section>
 
     <section
-      class="-mx-[46px] bg-[#F7F7F7] py-12 text-center"
+      class="-mx-[46px] bg-[#F7F7F7] py-[48px] text-center"
       aria-label="예식 일정"
     >
       <div class="w-full px-[69px] text-center">
         <img
-          class="mx-auto my-24 block w-full h-auto"
+          class="mx-auto my-[96px] block w-full h-auto"
           src="${clientImageUrl(config.id, config.calendar.image)}"
           alt="${config.calendar.alt}"
           width="777"
@@ -153,19 +153,19 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
       </div>
 
       <!--
-      <div class="mt-8 w-full px-[69px] text-center">
+      <div class="mt-[32px] w-full px-[69px] text-center">
         <div
           class="mx-auto h-px w-full bg-[#dddddd]"
           aria-hidden="true"
         ></div>
 
         <div
-          class="mx-auto mt-8 w-full px-8"
+          class="mx-auto mt-[32px] w-full px-[32px]"
           aria-live="polite"
           aria-atomic="true"
         >
           <div
-            class="grid w-full grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-end justify-items-center gap-x-1"
+            class="grid w-full grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-end justify-items-center gap-x-[4px]"
           >
             <div class="w-full text-center">
               <p
@@ -175,12 +175,12 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
               </p>
               <p
                 id="count-days"
-                class="m-0 mt-1 w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
+                class="m-0 mt-[4px] w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
               >
                 000
               </p>
             </div>
-            <span class="pb-1 font-dm text-dday-colon leading-none text-[#111111]"
+            <span class="pb-[4px] font-dm text-dday-colon leading-none text-[#111111]"
               >:</span
             >
             <div class="w-full text-center">
@@ -191,12 +191,12 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
               </p>
               <p
                 id="count-hours"
-                class="m-0 mt-1 w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
+                class="m-0 mt-[4px] w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
               >
                 00
               </p>
             </div>
-            <span class="pb-1 font-dm text-dday-colon leading-none text-[#111111]"
+            <span class="pb-[4px] font-dm text-dday-colon leading-none text-[#111111]"
               >:</span
             >
             <div class="w-full text-center">
@@ -207,12 +207,12 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
               </p>
               <p
                 id="count-mins"
-                class="m-0 mt-1 w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
+                class="m-0 mt-[4px] w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
               >
                 00
               </p>
             </div>
-            <span class="pb-1 font-dm text-dday-colon leading-none text-[#111111]"
+            <span class="pb-[4px] font-dm text-dday-colon leading-none text-[#111111]"
               >:</span
             >
             <div class="w-full text-center">
@@ -223,7 +223,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
               </p>
               <p
                 id="count-secs"
-                class="m-0 mt-1 w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
+                class="m-0 mt-[4px] w-full font-dm text-dday-num font-semibold leading-none tabular-nums text-[#111111] transition-opacity duration-300"
               >
                 00
               </p>
@@ -232,7 +232,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
         </div>
       </div>
 
-      <div class="w-full px-[69px] pt-10 text-center">
+      <div class="w-full px-[69px] pt-[40px] text-center">
         <p
           class="m-0 w-full font-noto text-[14px] leading-snug tracking-tight text-[#111111]"
         >
@@ -259,7 +259,7 @@ export function renderPageHtml(config: ClientConfig, themeId: ThemeId): string {
         style="background-image: url('${themeImageUrl(themeId, "background02.png")}')"
         aria-hidden="true"
       ></div>
-      <div class="relative px-[25px] pt-24 pb-12">
+      <div class="relative px-[25px] pt-[96px] pb-[48px]">
         ${renderQuoteHtml(config.quote)}
 
         ${renderShareHtml()}

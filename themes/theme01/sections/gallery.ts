@@ -6,17 +6,15 @@ const POPUP_IMAGE_MAX = 99;
 const GALLERY_MORE_BATCH_SIZE = 4;
 
 const GALLERY_ARROW_BASE =
-  "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-white/90";
-
-const GALLERY_ARROW_PREV_CLASS = `${GALLERY_ARROW_BASE} left-1`;
-const GALLERY_ARROW_NEXT_CLASS = `${GALLERY_ARROW_BASE} right-1`;
+  "absolute top-[50%] z-[10] flex h-[40px] w-[40px] -translate-y-[50%] items-center justify-center border-[0px] bg-transparent p-0 text-white/90";
+const GALLERY_ARROW_PREV_CLASS = `${GALLERY_ARROW_BASE} left-[4px]`;
+const GALLERY_ARROW_NEXT_CLASS = `${GALLERY_ARROW_BASE} right-[4px]`;
 const GALLERY_ARROW_PREV_HIDDEN_CLASS =
   "opacity-0 pointer-events-none transition-opacity duration-200";
-
 function galleryArrowIcon(direction: "prev" | "next"): string {
   const path = direction === "next" ? "M9 6l6 6-6 6" : "M15 6l-6 6 6 6";
   return `<svg
-            class="h-5 w-5"
+            class="h-[20px] w-[20px]"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -39,7 +37,7 @@ function renderGalleryThumb(
     <button
       type="button"
       data-gallery-open="${index}"
-      class="block w-full overflow-hidden border-0 bg-transparent p-0"
+      class="block w-full overflow-hidden border-[0px] bg-transparent p-0"
       aria-label="${image.alt} 크게 보기"
     >
       <img
@@ -62,24 +60,24 @@ export function renderGalleryHtml(
   return `
     <section
       id="gallery"
-      class="-mx-[46px] mt-32 px-[25px] pb-14 text-center"
+      class="-mx-[46px] mt-[128px] px-[25px] pb-[56px] text-center"
       aria-label="갤러리"
     >
-      <header class="pb-10">
+      <header class="pb-[40px]">
         <p class="${sectionTitleEnClass}">Gallery</p>
-        <p class="m-0 mt-2.5 ${bodyFontClass} text-[16px] tracking-tight">
+        <p class="m-0 mt-[10px] text-[16px] tracking-tight">
           갤러리
         </p>
       </header>
 
-      <div id="gallery-grid" class="grid grid-cols-2 gap-2.5">
+      <div id="gallery-grid" class="grid grid-cols-2 gap-[10px]">
         ${thumbs}
       </div>
 
       <button
         type="button"
         id="gallery-more"
-        class="mt-10 border-0 bg-transparent p-0 font-pretendard text-[14px] tracking-normal"
+        class="mt-[40px] border-[0px] bg-transparent p-0 font-pretendard text-[14px] tracking-normal"
       >
         더보기 +
       </button>
@@ -94,11 +92,11 @@ export function renderGalleryHtml(
       aria-label="갤러리 사진 보기"
     >
       <div class="absolute inset-0 bg-black/90" data-gallery-close></div>
-      <div class="relative mx-auto flex h-full max-w-[430px] items-center justify-center py-12">
+      <div class="relative mx-auto flex h-full max-w-[430px] items-center justify-center py-[48px]">
         <button
           type="button"
           data-gallery-close
-          class="absolute top-4 right-4 z-10 inline-flex h-10 w-10 items-center justify-center border-0 bg-transparent p-0 text-[28px] leading-none text-white/80"
+          class="absolute top-[16px] right-[16px] z-[10] inline-flex h-[40px] w-[40px] items-center justify-center border-[0px] bg-transparent p-0 text-[28px] leading-none text-white/80"
           aria-label="닫기"
         >
           ×
@@ -106,7 +104,7 @@ export function renderGalleryHtml(
         <button
           type="button"
           data-gallery-prev
-          class="${GALLERY_ARROW_PREV_CLASS} ${GALLERY_ARROW_PREV_HIDDEN_CLASS}"
+          class="${GALLERY_ARROW_PREV_CLASS}${GALLERY_ARROW_PREV_HIDDEN_CLASS}"
           aria-label="이전 사진"
         >
           ${galleryArrowIcon("prev")}

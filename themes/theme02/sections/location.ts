@@ -16,9 +16,9 @@ function renderTransportSection(section: LocationTransportSection): string {
     .join("");
 
   return `
-    <div class="flex items-start gap-x-5 py-3">
+    <div class="flex items-start gap-x-[20px] py-[12px]">
       <p class="m-0 w-[48px] shrink-0 font-medium text-[#111111]">${section.label}</p>
-      <div class="m-0 min-w-0 flex-1 text-[#111111]">${lines}</div>
+      <div class="m-0 min-w-[0px] flex-1 text-[#111111]">${lines}</div>
     </div>`;
 }
 
@@ -28,11 +28,10 @@ function renderTransportHtml(transport: readonly LocationTransportSection[]): st
 
 function renderMapNavHtml(venue: Venue): string {
   const linkClass =
-    "block w-full border-b border-[#6D6D6D]/50 py-2 text-right text-[14px] font-light tracking-tight text-[#6D6D6D] no-underline";
-
+    "block w-full border-b-[1px] border-[#6D6D6D]/50 py-[8px] text-right text-[14px] font-light tracking-tight text-[#6D6D6D] no-underline";
   return `
-    <div class="mt-8 flex justify-end">
-      <div class="inline-grid mb-12">
+    <div class="mt-[32px] flex justify-end">
+      <div class="inline-grid mb-[48px]">
         <a
           data-map="naver"
           href="https://map.naver.com/p/search/${enc(venue.name)}/place/${venue.naverPlaceId}"
@@ -69,23 +68,23 @@ export function renderLocationHtml(config: ClientConfig, themeId: ThemeId): stri
 
   return `
     <section
-      class="-mx-[46px] mt-32 mb-32 bg-[#F9F8F2] px-8 py-12 text-left"
+      class="-mx-[46px] mt-[128px] mb-[128px] bg-[#F9F8F2] px-[32px] py-[48px] text-left"
       aria-label="오시는 길"
     >
-      <header class="pb-8 mt-12">
+      <header class="pb-[32px] mt-[48px]">
         <p class="${melodramaTitleClass}">Location</p>
       </header>
 
       <div class="text-right text-[#111111]">
         <p class="m-0 text-[16px] font-medium tracking-tight">${venue.name}</p>
         <p
-          class="m-0 mt-2 flex flex-wrap items-center justify-end gap-x-1.5 text-[16px] tracking-tight text-[#5D5D5D]"
+          class="m-0 mt-[8px] flex flex-wrap items-center justify-end gap-x-[6px] text-[16px] tracking-tight text-[#5D5D5D]"
         >
           <span>${venue.address}</span>
           <button
             id="copy-address"
             type="button"
-            class="inline-flex shrink-0 items-center justify-center rounded border-0 bg-transparent p-0"
+            class="inline-flex shrink-0 items-center justify-center rounded-[4px] border-[0px] bg-transparent p-0"
             aria-label="주소 복사"
           >
             <img
@@ -97,19 +96,19 @@ export function renderLocationHtml(config: ClientConfig, themeId: ThemeId): stri
             />
           </button>
         </p>
-        <p class="m-0 mt-1 text-[14px] tracking-tight text-[#5D5D5D]">
+        <p class="m-0 mt-[4px] text-[14px] tracking-tight text-[#5D5D5D]">
           Tel. ${venue.tel}
         </p>
       </div>
 
       <div
         id="venue-map"
-        class="-mx-8 mt-6 h-[220px] w-[calc(100%+4rem)] overflow-hidden bg-[#F7F7F7]"
+        class="-mx-[32px] mt-[24px] h-[220px] w-[calc(100%+64px)] overflow-hidden bg-[#F7F7F7]"
         role="img"
         aria-label="${venue.name} 위치 지도"
       ></div>
 
-      <div class="mt-10 space-y-1 text-left text-[14px] font-light leading-[1.6] tracking-tight text-[#111111]">
+      <div class="mt-[40px] space-y-[4px] text-left text-[14px] font-light leading-[1.6] tracking-tight text-[#111111]">
         ${renderTransportHtml(transport)}
       </div>
 

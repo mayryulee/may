@@ -187,8 +187,7 @@ function initMapFallback(
   link.href = webUrl;
   link.target = "_blank";
   link.rel = "noopener noreferrer";
-  link.className =
-    `flex h-full min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-[#F7F7F7] ${fallbackFontClass} text-[12px] font-extralight text-[#666666] no-underline`;
+  link.className = `flex h-full min-h-[200px] w-full flex-col items-center justify-center gap-[8px] bg-[#F7F7F7]${fallbackFontClass}text-[12px] font-extralight text-[#666666] no-underline`;
   link.innerHTML = `
     <span class="text-[24px]" aria-hidden="true">📍</span>
     <span>지도 보기 (카카오맵)</span>
