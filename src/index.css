@@ -7,7 +7,6 @@
   --font-snell: "Snell Roundhand", "SnellRoundhand", "Zapfino", "Pinyon Script",
     cursive;
   --font-dm: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-zalando-sans: "Zalando Sans", ui-sans-serif, sans-serif;
   --font-cormorant: "Cormorant Garamond", ui-serif, serif;
   --font-great: "Great Vibes", cursive;
   --font-milchella: "Milchella", sans-serif;
@@ -15,6 +14,7 @@
   --font-jeju: "Jeju Myeongjo", ui-serif, serif;
   --font-ultra: "Ultra", ui-serif, serif;
   --font-questrial: "Questrial", ui-sans-serif, sans-serif;
+  --font-quicksand: "Quicksand", ui-sans-serif, sans-serif;
   --font-quattrocento: "Quattrocento", ui-serif, serif;
   --font-pretendard: "Pretendard", ui-sans-serif, system-ui, sans-serif;
   --font-melodrama: "Melodrama", ui-serif, serif;
@@ -25,9 +25,15 @@
   --text-dday-colon: 22px;
 }
 
-.font-zalando-sans {
+@utility font-zalando-sans {
+  font-family: "Zalando Sans", sans-serif;
   font-optical-sizing: auto;
+  font-style: normal;
   font-variation-settings: "wdth" 100;
+}
+
+.font-quicksand {
+  font-optical-sizing: auto;
 }
 
 .guestbook-submit:disabled {

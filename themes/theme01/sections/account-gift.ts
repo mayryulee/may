@@ -1,7 +1,6 @@
 import { initAccountGift } from "../../../packages/shared/account-gift-init";
 import type { GiftAccount, GiftAccounts } from "../../../packages/shared/types";
 import { themeIconUrl } from "../../../packages/shared/types";
-import { bodyFontClass } from "../tokens";
 
 export { initAccountGift };
 

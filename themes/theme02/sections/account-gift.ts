@@ -47,7 +47,7 @@ export function renderGiftAccountsHtml(accounts: GiftAccounts): string {
   const groomCards = accounts.groom.map((a) => renderAccountCard(a)).join("");
   const brideCards = accounts.bride.map((a) => renderAccountCard(a)).join("");
 
-  return `
+  return /* html */ `
     <section
       id="gift-accounts"
       class="mt-[96px] mb-[96px] text-center "

@@ -9,7 +9,7 @@ export function renderQuoteHtml(quote: ClientConfig["quote"]): string {
     })
     .join("");
 
-  return `
+  return /* html */ `
     <section
       class="pb-[48px] text-center text-[#424141]"
       aria-label="명언"

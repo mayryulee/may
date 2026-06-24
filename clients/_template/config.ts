@@ -21,6 +21,8 @@ const config: ClientConfig = {
     brideEn: "Bride",
     groomKo: "신랑",
     brideKo: "신부",
+    groomGivenName: "신랑",
+    brideGivenName: "신부",
     ddayLabel: "신랑 ♥ 신부",
   },
 

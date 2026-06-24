@@ -66,9 +66,9 @@ export function renderLocationHtml(config: ClientConfig, themeId: ThemeId): stri
   const { venue } = config;
   const { transport } = venueLocationForTheme(venue, themeId);
 
-  return `
+  return /* html */ `
     <section
-      class="-mx-[46px] mt-[128px] mb-[128px] bg-[#F9F8F2] px-[32px] py-[48px] text-left"
+      class="mt-[128px] mb-[128px] bg-[#F9F8F2] px-[32px] py-[48px] text-left"
       aria-label="오시는 길"
     >
       <header class="pb-[32px] mt-[48px]">

@@ -1,7 +1,6 @@
 import { initVenueMap } from "../../../packages/shared/venue-map";
 import type { ClientConfig, LocationTransportSection, ThemeId, Venue } from "../../../packages/shared/types";
 import { themeIconUrl, venueLocationForTheme } from "../../../packages/shared/types";
-import { bodyFontClass, sectionTitleEnClass } from "../tokens";
 
 const enc = (s: string) => encodeURIComponent(s);
 
@@ -59,14 +58,14 @@ export function renderLocationHtml(config: ClientConfig, themeId: ThemeId): stri
 
   return `
     <section
-      class="-mx-[46px] bg-[#F7F7F7] px-[25px] py-[48px] text-center"
+      class="bg-[#F7F7F7] px-[25px] py-[48px] text-center"
       aria-label="오시는 길"
     >
       <header class="pb-[32px]">
-        <p class="${sectionTitleEnClass}">Location</p>
+        <p class="m-0 font-optima text-[30px] font-normal uppercase leading-tight tracking-normal text-[#111111]">Location</p>
       </header>
 
-      <div class="font-noto text-[#111111]">
+      <div class="text-[#111111]">
         <p class="m-0 mb-[12px] text-[14px] font-normal tracking-tight">${venue.name}</p>
         <p
           class="m-0 mt-[8px] flex flex-wrap items-center justify-center gap-x-[6px] text-[14px] font-extralight tracking-tight text-[#5D5D5D]"
@@ -155,12 +154,12 @@ export function renderLocationHtml(config: ClientConfig, themeId: ThemeId): stri
         </a>
       </div>
 
-      <div class="mt-[40px] mx-[32px] space-y-[0px] text-left font-noto text-[14px] leading-[1.85]">
+      <div class="mt-[40px] mx-[32px] space-y-[0px] text-left text-[14px] leading-[1.85]">
         ${renderTransportHtml(transport)}
       </div>
     </section>`;
 }
 
 export function initLocation(root: ParentNode, venue: Venue): void {
-  initVenueMap(root, venue, { fallbackFontClass: bodyFontClass });
+  initVenueMap(root, venue, { fallbackFontClass: "font-jeju" });
 }

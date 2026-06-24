@@ -1,5 +1,4 @@
 import type { ClientConfig } from "../../../packages/shared/types";
-import { bodyFontClass } from "../tokens";
 
 export function renderQuoteHtml(quote: ClientConfig["quote"]): string {
   const stanzas = quote.stanzas
@@ -11,7 +10,7 @@ export function renderQuoteHtml(quote: ClientConfig["quote"]): string {
 
   return `
     <section
-      class="-mx-[46px] bg-[#1E2531] px-[25px] py-[64px] text-center text-white"
+      class="bg-[#1E2531] px-[25px] py-[64px] text-center text-white"
       aria-label="명언"
     >
       <div class="space-y-[20px] text-[14px] font-normal leading-[1.8] tracking-tight">

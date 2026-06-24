@@ -32,10 +32,10 @@ export function renderGalleryHtml(
   const firstSrc = first ? clientImageUrl(clientId, first.src) : "";
   const firstAlt = first?.alt ?? "";
 
-  return `
+  return /* html */ `
     <section
       id="gallery"
-      class="-mx-[46px] mt-[128px] px-[32px] text-left"
+      class="mt-[128px] px-[32px] text-left"
       aria-label="갤러리"
     >
       <header class="pb-[40px]">

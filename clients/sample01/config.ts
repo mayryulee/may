@@ -22,6 +22,8 @@ const config: ClientConfig = {
     brideEn: "Chaehyun",
     groomKo: "김정호",
     brideKo: "박채현",
+    groomGivenName: "정호",
+    brideGivenName: "채현",
     ddayLabel: "정호 ♥ 채현",
   },
 
@@ -52,12 +54,12 @@ const config: ClientConfig = {
       "축복 해주시면 감사하겠습니다.",
     ],
     groomParents: {
-      parents: "김종욱 · 최은희의",
+      parents: "김종욱·최은희",
       relation: "아들",
       name: "김정호",
     },
     brideParents: {
-      parents: "박중호 · 김혜진의",
+      parents: "박중호·김혜진",
       relation: "딸",
       name: "박채현",
     },

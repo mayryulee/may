@@ -1,6 +1,5 @@
 import type { GalleryImage } from "../../../packages/shared/types";
 import { clientImageUrl } from "../../../packages/shared/types";
-import { bodyFontClass, sectionTitleEnClass } from "../tokens";
 
 const POPUP_IMAGE_MAX = 99;
 const GALLERY_MORE_BATCH_SIZE = 4;
@@ -60,11 +59,11 @@ export function renderGalleryHtml(
   return `
     <section
       id="gallery"
-      class="-mx-[46px] mt-[128px] px-[25px] pb-[56px] text-center"
+      class="mt-[128px] px-[25px] pb-[56px] text-center"
       aria-label="갤러리"
     >
       <header class="pb-[40px]">
-        <p class="${sectionTitleEnClass}">Gallery</p>
+        <p class="m-0 font-optima text-[30px] font-normal uppercase leading-tight tracking-normal text-[#111111]">Gallery</p>
         <p class="m-0 mt-[10px] text-[16px] tracking-tight">
           갤러리
         </p>
@@ -92,7 +91,7 @@ export function renderGalleryHtml(
       aria-label="갤러리 사진 보기"
     >
       <div class="absolute inset-0 bg-black/90" data-gallery-close></div>
-      <div class="relative mx-auto flex h-full max-w-[430px] items-center justify-center py-[48px]">
+      <div class="relative mx-auto flex h-full max-w-[400px] items-center justify-center py-[48px]">
         <button
           type="button"
           data-gallery-close

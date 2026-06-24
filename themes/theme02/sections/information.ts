@@ -30,10 +30,10 @@ function renderSlide(slide: InformationSlide, index: number): string {
 export function renderInformationHtml(slides: readonly InformationSlide[]): string {
   const slideHtml = slides.map((slide, index) => renderSlide(slide, index)).join("");
 
-  return `
+  return /* html */ `
     <section
       id="information"
-      class="-mx-[46px] bg-[#F9F8F2] px-[32px] pt-[93px] pb-[126px] text-center"
+      class="bg-[#F9F8F2] px-[32px] pt-[93px] pb-[126px] text-center"
       aria-label="안내 사항"
     >
       <header class="pb-[35px] text-center">

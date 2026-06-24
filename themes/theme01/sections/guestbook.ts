@@ -6,7 +6,6 @@ import {
   type GuestbookEntry,
 } from "../../../packages/shared/guestbook-store";
 import { themeIconUrl } from "../../../packages/shared/types";
-import { bodyFontClass, sectionTitleEnClass } from "../tokens";
 
 const MODALS = ["write", "list", "delete"] as const;
 type ModalName = (typeof MODALS)[number];
@@ -172,7 +171,7 @@ export function renderGuestbookHtml(): string {
       class="mt-[128px] pb-[56px] text-center "
       aria-label="방명록"
     >
-      <p class="${sectionTitleEnClass}">Message</p>
+      <p class="m-0 font-optima text-[30px] font-normal uppercase leading-tight tracking-normal text-[#111111]">Message</p>
       <p class="m-0 mt-[10px] text-[14px] tracking-noraml text-[#5D5D5D]">
         저희 둘에게 따뜻한 방명록을 남겨주세요
       </p>
@@ -214,7 +213,7 @@ export function renderGuestbookHtml(): string {
       aria-labelledby="guestbook-write-title"
     >
       <div class="absolute inset-0 bg-black/35" data-guestbook-backdrop="write"></div>
-      <div class="relative mx-auto flex h-full max-w-[430px] items-center px-[24px] py-[40px]">
+      <div class="relative mx-auto flex h-full max-w-[400px] items-center px-[24px] py-[40px]">
         <div class="relative w-full rounded-[8px] bg-white px-[24px] py-[32px] text-center font-pretendard tracking-tight shadow-lg">
           <button
             type="button"
@@ -250,7 +249,7 @@ export function renderGuestbookHtml(): string {
       aria-labelledby="guestbook-list-title"
     >
       <div class="absolute inset-0 bg-black/35" data-guestbook-backdrop="list"></div>
-      <div class="relative mx-auto flex h-full max-w-[430px] items-center px-[24px] py-[40px]">
+      <div class="relative mx-auto flex h-full max-w-[400px] items-center px-[24px] py-[40px]">
         <div class="relative flex max-h-[min(85vh,544px)] w-full flex-col rounded-[8px] bg-[#F7F7F7] px-[20px] py-[24px] font-pretendard tracking-tight shadow-lg">
           <button
             type="button"
@@ -277,7 +276,7 @@ export function renderGuestbookHtml(): string {
       aria-labelledby="guestbook-delete-title"
     >
       <div class="absolute inset-0 bg-black/35" data-guestbook-backdrop="delete"></div>
-      <div class="relative mx-auto flex h-full max-w-[430px] items-center px-[24px] py-[40px]">
+      <div class="relative mx-auto flex h-full max-w-[400px] items-center px-[24px] py-[40px]">
         <div class="relative w-full rounded-[8px] bg-[#F7F7F7] px-[24px] py-[32px] text-center font-pretendard tracking-tight shadow-lg">
           <button
             type="button"

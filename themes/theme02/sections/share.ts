@@ -4,7 +4,7 @@ import { themeIconUrl } from "../../../packages/shared/types";
 export { initShare };
 
 export function renderShareHtml(): string {
-  return `
+  return /* html */ `
     <section
       id="share"
       class="mt-[48px] text-center font-pretendard"

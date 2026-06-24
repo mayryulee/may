@@ -22,6 +22,8 @@ const config: ClientConfig = {
     brideEn: "Chaehyun",
     groomKo: "김정호",
     brideKo: "박채현",
+    groomGivenName: "정호",
+    brideGivenName: "채현",
     ddayLabel: "정호 ♥ 채현",
   },
 

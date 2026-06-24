@@ -1,4 +1,30 @@
 export type ThemeId = "theme01" | "theme02";
+export type ThemeSlug = "grace" | "tender";
+
+export type ThemeMeta = {
+  slug: ThemeSlug;
+  label: string;
+};
+
+/**
+ * 내부 테마 ID(theme01/theme02)와 외부 표기명(Grace/Tender) 매핑
+ */
+export const THEME_META: Record<ThemeId, ThemeMeta> = {
+  theme01: { slug: "grace", label: "Grace" },
+  theme02: { slug: "tender", label: "Tender" },
+} as const;
+
+export function themeSlugOf(themeId: ThemeId): ThemeSlug {
+  return THEME_META[themeId].slug;
+}
+
+export function themeLabelOf(themeId: ThemeId): string {
+  return THEME_META[themeId].label;
+}
+
+export function themeIdFromSlug(slug: ThemeSlug): ThemeId {
+  return slug === "grace" ? "theme01" : "theme02";
+}
 
 export type GalleryImage = {
   src: string;
@@ -78,6 +104,9 @@ export type ClientConfig = {
     brideEn: string;
     groomKo: string;
     brideKo: string;
+    /** 성 제외 이름 (예: 김정호 → 정호) */
+    groomGivenName: string;
+    brideGivenName: string;
     ddayLabel: string;
   };
   weddingAt: string;

@@ -1,6 +1,5 @@
 import { initInformationCarousel } from "../../../packages/shared/information-carousel-init";
 import type { InformationSlide } from "../../../packages/shared/types";
-import { bodyFontClass, sectionTitleEnClass } from "../tokens";
 
 export { initInformationCarousel };
 
@@ -31,11 +30,11 @@ export function renderInformationHtml(slides: readonly InformationSlide[]): stri
   return `
     <section
       id="information"
-      class="-mx-[46px] bg-[#F7F7F7] px-[25px] py-[48px] text-center"
+      class="bg-[#F7F7F7] px-[25px] py-[48px] text-center"
       aria-label="안내 사항"
     >
       <header>
-        <p class="${sectionTitleEnClass}">Information</p>
+        <p class="m-0 font-optima text-[30px] font-normal uppercase leading-tight tracking-normal text-[#111111]">Information</p>
         <p class="m-0 mt-[10px] text-[16px] tracking-noraml text-[#5D5D5D]">
           결혼식에 관련하여 사전 안내 드립니다
         </p>

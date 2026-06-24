@@ -1,0 +1,11 @@
+{
+  "html.autoClosingTags": true,
+  "editor.autoClosingBrackets": "always",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.guides.indentation": true,
+  "emmet.includeLanguages": {
+    "typescript": "html"
+  },
+  "emmet.triggerExpansionOnTab": true
+}
