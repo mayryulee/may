@@ -6,7 +6,7 @@ export { initInformationCarousel };
 function renderSlide(slide: InformationSlide, index: number): string {
   const body =
     slide.lines.length > 0
-      ? `<div class="mt-[20px] space-y-[2px] text-[12px] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]">
+      ? `<div class="mt-[20px] space-y-[2px] text-[12px] leading-[1.8] tracking-tighter text-[#5D5D5D]">
           ${slide.lines.map((line) => `<p class="m-0">${line}</p>`).join("")}
         </div>`
       : "";
@@ -17,7 +17,7 @@ function renderSlide(slide: InformationSlide, index: number): string {
       data-info-slide="${index}"
       aria-hidden="${index === 0 ? "false" : "true"}"
     >
-      <p class="m-0 text-[16px] font-semibold tracking-tight text-[#111111]">
+      <p class="m-0 text-[16px] tracking-tighter text-[#111111]">
         ${slide.title}
       </p>
       ${body}
@@ -28,19 +28,15 @@ export function renderInformationHtml(slides: readonly InformationSlide[]): stri
   const slideHtml = slides.map((slide, index) => renderSlide(slide, index)).join("");
 
   return /* html */ `
-    <section
-      id="information"
-      class="bg-[#F7F7F7] px-[25px] py-[48px] text-center"
-      aria-label="안내 사항"
-    >
+    <section id="information" class="bg-[#F7F7F7] px-[30px] py-[80px] text-center" aria-label="안내 사항">
       <header>
-        <p class="m-0 font-optima text-[30px] font-normal uppercase leading-tight tracking-normal text-[#111111]">Information</p>
-        <p class="m-0 mt-[10px] text-[16px] tracking-noraml text-[#5D5D5D]">
+        <p class="m-0 font-optima text-[30px] uppercase leading-tight text-[#111111]">Information</p>
+        <p class="m-0 mt-[16px] text-[16px] tracking-tighter text-[#5D5D5D]">
           결혼식에 관련하여 사전 안내 드립니다
         </p>
       </header>
 
-      <div class="relative mx-auto mt-[32px] max-w-full">
+      <div class="relative mx-auto mt-[50px] max-w-full">
         <div class="min-h-[184px] overflow-hidden rounded-[2px] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
           <div
             id="info-track"
@@ -54,7 +50,7 @@ export function renderInformationHtml(slides: readonly InformationSlide[]): stri
         <button
           type="button"
           id="info-next"
-          class="absolute top-[50%] right-[4px] flex h-[40px] w-[40px] -translate-y-[50%] items-center justify-center border-[0px] bg-transparent p-0 text-[#cccccc]"
+          class="absolute top-[50%] right-[2px] flex h-[40px] w-[40px] -translate-y-[50%] items-center justify-center border-[0px] bg-transparent p-0 text-[#cccccc]"
           aria-label="다음 안내"
         >
           <svg class="h-[20px] w-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -65,7 +61,7 @@ export function renderInformationHtml(slides: readonly InformationSlide[]): stri
         <button
           type="button"
           id="info-prev"
-          class="absolute top-[50%] left-[4px] flex h-[40px] w-[40px] -translate-y-[50%] items-center justify-center border-[0px] bg-transparent p-0 text-[#cccccc] opacity-0 pointer-events-none transition-opacity duration-200"
+          class="absolute top-[50%] left-[2px] flex h-[40px] w-[40px] -translate-y-[50%] items-center justify-center border-[0px] bg-transparent p-0 text-[#cccccc] opacity-0 pointer-events-none transition-opacity duration-200"
           aria-label="이전 안내"
         >
           <svg class="h-[20px] w-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -74,12 +70,7 @@ export function renderInformationHtml(slides: readonly InformationSlide[]): stri
         </button>
       </div>
 
-      <div
-        id="info-dots"
-        class="mt-[20px] flex items-center justify-center gap-[8px]"
-        role="tablist"
-        aria-label="안내 슬라이드"
-      >
+      <div id="info-dots" class="mt-[20px] flex items-center justify-center gap-[8px]" role="tablist" aria-label="안내 슬라이드">
         ${slides.map(
           (_, i) => `
         <button

@@ -166,38 +166,36 @@ async function refreshList(root: ParentNode, clientId: string): Promise<void> {
 
 export function renderGuestbookHtml(): string {
   return /* html */ `
-    <section
-      id="guestbook"
-      class="mt-[128px] pb-[56px] text-center "
-      aria-label="방명록"
-    >
-      <p class="m-0 font-optima text-[30px] font-normal uppercase leading-tight tracking-normal text-[#111111]">Message</p>
-      <p class="m-0 mt-[10px] text-[14px] tracking-noraml text-[#5D5D5D]">
+    <section id="guestbook" class="py-[120px] px-[30px] text-center" aria-label="방명록">
+      <p class="m-0 font-optima text-[30px] uppercase text-[#111111]">Message</p>
+      <p class="m-0 mt-[16px] text-[16px] tracking-tighter text-[#5D5D5D]">
         저희 둘에게 따뜻한 방명록을 남겨주세요
       </p>
 
-      <img
-        class="mx-auto my-[80px] block h-auto w-[176px] max-w-[60%]"
-        src="${themeIconUrl("theme01", "message.svg")}"
-        alt=""
-        width="194"
-        height="93"
-        decoding="async"
-        aria-hidden="true"
-      />
+      <div class="-mx-[30px]">
+        <img
+          class="mx-[103px] my-[80px] block"
+          src="${themeIconUrl("theme01", "message.svg")}"
+          alt=""
+          width="194"
+          height="93"
+          decoding="async"
+          aria-hidden="true"
+        />
+      </div>
 
-      <div class="mx-auto mt-[40px] max-w-full space-y-[10px]">
+      <div class="mx-auto max-w-full space-y-[17px]">
         <button
           type="button"
           id="guestbook-open-write"
-          class="block w-full rounded-[8px] border-[0px] bg-[#111111] py-[14px] font-pretendard text-[14px] font-normal tracking-tight text-white"
+          class="block w-full rounded-[8px] border-[1px] border-transparent bg-[#111111] py-[13px] font-pretendard text-[16px] font-medium tracking-tight text-white"
         >
           메시지 남기기
         </button>
         <button
           type="button"
           id="guestbook-open-list"
-          class="block w-full rounded-[8px] border-[1px] border-[#111111] bg-white py-[14px] font-pretendard text-[14px] font-normal tracking-tight text-[#111111]"
+          class="block w-full rounded-[8px] border-[1px] border-[#111111] bg-white py-[13px] font-pretendard text-[16px] font-medium tracking-tight text-[#111111]"
         >
           방명록 전체보기
         </button>

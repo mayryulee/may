@@ -67,7 +67,7 @@ export function renderLocationHtml(venue: Venue): string {
       aria-label="오시는 길"
     >
       <header class="mb-[40px]">
-        <p class="m-0 font-optima text-[30px] font-normal uppercase leading-tight tracking-normal text-[#111111]">Location</p>
+        <p class="m-0 font-optima text-[30px] font-normal uppercase leading-tight text-[#111111]">Location</p>
       </header>
 
       <div class="">
