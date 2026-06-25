@@ -8,7 +8,7 @@ export function renderQuoteHtml(quote: ClientConfig["quote"]): string {
     })
     .join("");
 
-  return `
+  return /* html */ `
     <section
       class="bg-[#1E2531] px-[25px] py-[64px] text-center text-white"
       aria-label="명언"

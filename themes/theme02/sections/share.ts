@@ -25,7 +25,7 @@ export function renderShareHtml(): string {
         >
           청첩장 링크 복사하기
           <img
-            src="${themeIconUrl("theme02", "copy.svg")}"
+            src="${themeIconUrl("theme02", "btn-copy.svg")}"
             alt=""
             width="17"
             height="17"

@@ -10,10 +10,11 @@ function accountCopyLine(account: GiftAccount): string {
 
 function renderAccountCard(account: GiftAccount): string {
   const copyLine = accountCopyLine(account);
+  const copyIconSrc = themeIconUrl("theme01", "btn-copy.svg");
 
-  return `
+  return /* html */ `
         <div class="rounded-[8px] bg-white px-[20px] py-[20px] shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-          <div class="mb-[20px] flex items-baseline justify-between text-[13px] tracking-tight text-[#111111]">
+          <div class="mb-[20px] flex items-baseline justify-between text-[14px] tracking-tighter text-[#111111]">
             <span class="font-normal">${account.relation}</span>
             <span class="font-normal">${account.name}</span>
           </div>
@@ -31,7 +32,7 @@ function renderAccountCard(account: GiftAccount): string {
               aria-label="계좌번호 복사"
             >
               <img
-                src="${themeIconUrl("theme01", "copy.svg")}"
+                src="${copyIconSrc}"
                 alt=""
                 class="block h-[17px] w-[17px] opacity-80"
                 decoding="async"
@@ -46,25 +47,21 @@ export function renderGiftAccountsHtml(accounts: GiftAccounts): string {
   const groomCards = accounts.groom.map((a) => renderAccountCard(a)).join("");
   const brideCards = accounts.bride.map((a) => renderAccountCard(a)).join("");
 
-  return `
-    <section
-      id="gift-accounts"
-      class="mt-[128px] pb-[56px] text-center "
-      aria-label="마음 전하실 곳"
-    >
-      <div class="mx-auto h-px w-[40px] bg-[#000000]" aria-hidden="true"></div>
+  return /* html */ `
+    <section id="gift-accounts" class="pt-[80px] pb-[120px] px-[30px] text-center " aria-label="마음 전하실 곳">
+      <div class="mx-auto h-px w-[50px] bg-[#000000]" aria-hidden="true"></div>
 
-      <h2 class="mt-[32px] text-[16px] font-medium tracking-tight text-[#111111]">
+      <h2 class="mt-[40px] text-[16px] tracking-tighter">
         마음 전하실 곳
       </h2>
 
-      <div class="mx-auto mt-[16px] max-w-[280px] text-[14px] font-extralight leading-[1.85] tracking-tight text-[#5D5D5D]">
+      <div class="mx-auto mt-[18px] text-[16px] font-extralight leading-[1.8] tracking-tighter text-[#5D5D5D]">
         <p class="m-0">참석이 어려우신 분들을 위해 기재했습니다.</p>
         <p class="m-0">너그러운 마음으로 양해 부탁드립니다.</p>
       </div>
 
       <div
-        class="mt-[32px] flex border-b-[1px] border-[#eeeeee]"
+        class="mt-[47px] flex border-b-[1px] border-[#eeeeee]"
         role="tablist"
         aria-label="계좌 안내 대상"
       >
@@ -73,7 +70,7 @@ export function renderGiftAccountsHtml(accounts: GiftAccounts): string {
           role="tab"
           data-gift-tab="groom"
           aria-selected="true"
-          class="flex-1 border-b-2 border-[#111111] py-[12px] text-[14px] font-medium tracking-tight text-[#111111]"
+          class="flex-1 border-b-2 border-[#111111] py-[12px] text-[14px] tracking-tighter text-[#111111]"
         >
           신랑측에게
         </button>
@@ -82,16 +79,16 @@ export function renderGiftAccountsHtml(accounts: GiftAccounts): string {
           role="tab"
           data-gift-tab="bride"
           aria-selected="false"
-          class="flex-1 border-b-2 border-transparent py-[12px] text-[14px] font-extralight tracking-tight text-[#ABABAB]"
+          class="flex-1 border-b-2 border-transparent py-[12px] text-[14px] tracking-tighter text-[#ABABAB]"
         >
           신부측에게
         </button>
       </div>
 
-      <div class="mt-[40px] space-y-[12px] text-left" data-gift-panel="groom">
+      <div class="mt-[54px] space-y-[16px] text-left" data-gift-panel="groom">
         ${groomCards}
       </div>
-      <div class="mt-[40px] space-y-[12px] text-left" data-gift-panel="bride" hidden>
+      <div class="mt-[54px] space-y-[16px] text-left" data-gift-panel="bride" hidden>
         ${brideCards}
       </div>
     </section>`;

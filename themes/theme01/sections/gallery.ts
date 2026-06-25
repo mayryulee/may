@@ -1,5 +1,7 @@
 import type { GalleryImage } from "../../../packages/shared/types";
-import { clientImageUrl } from "../../../packages/shared/types";
+import { clientImageUrl, themeIconUrl } from "../../../packages/shared/types";
+
+const THEME_ID = "theme01" as const;
 
 const POPUP_IMAGE_MAX = 99;
 const GALLERY_MORE_BATCH_SIZE = 4;
@@ -12,7 +14,7 @@ const GALLERY_ARROW_PREV_HIDDEN_CLASS =
   "opacity-0 pointer-events-none transition-opacity duration-200";
 function galleryArrowIcon(direction: "prev" | "next"): string {
   const path = direction === "next" ? "M9 6l6 6-6 6" : "M15 6l-6 6 6 6";
-  return `<svg
+  return /* html */ `<svg
             class="h-[20px] w-[20px]"
             viewBox="0 0 24 24"
             fill="none"
@@ -32,7 +34,7 @@ function renderGalleryThumb(
   index: number,
 ): string {
   const src = clientImageUrl(clientId, image.src);
-  return `
+  return /* html */ `
     <button
       type="button"
       data-gallery-open="${index}"
@@ -55,30 +57,34 @@ export function renderGalleryHtml(
   images: readonly GalleryImage[],
 ): string {
   const thumbs = images.map((img, i) => renderGalleryThumb(clientId, img, i)).join("");
+  const plusBtnSrc = themeIconUrl(THEME_ID, "btn-plus.svg");
 
-  return `
-    <section
-      id="gallery"
-      class="mt-[128px] px-[25px] pb-[56px] text-center"
-      aria-label="갤러리"
-    >
-      <header class="pb-[40px]">
-        <p class="m-0 font-optima text-[30px] font-normal uppercase leading-tight tracking-normal text-[#111111]">Gallery</p>
-        <p class="m-0 mt-[10px] text-[16px] tracking-tight">
+  return /* html */ `
+    <section id="gallery" class="pt-[100px] px-[25px] pb-[140px] text-center" aria-label="갤러리">
+        <p class="m-0 font-optima text-[30px] uppercase">Gallery</p>
+        <p class="m-0 mt-[16px] mb-[47px] text-[16px] tracking-tighter">
           갤러리
         </p>
-      </header>
 
-      <div id="gallery-grid" class="grid grid-cols-2 gap-[10px]">
+      <div id="gallery-grid" class="grid grid-cols-2 gap-[18px]">
         ${thumbs}
       </div>
 
       <button
         type="button"
         id="gallery-more"
-        class="mt-[40px] border-[0px] bg-transparent p-0 font-pretendard text-[14px] tracking-normal"
+        class="mx-auto mt-[30px] flex items-center justify-center border-[0px] bg-transparent p-0"
+        aria-label="갤러리 더보기"
       >
-        더보기 +
+        <img
+          src="${plusBtnSrc}"
+          alt=""
+          width="57"
+          height="17"
+          class="block h-auto w-full"
+          decoding="async"
+          aria-hidden="true"
+        />
       </button>
     </section>
 

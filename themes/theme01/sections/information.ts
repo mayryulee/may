@@ -11,7 +11,7 @@ function renderSlide(slide: InformationSlide, index: number): string {
         </div>`
       : "";
 
-  return `
+  return /* html */ `
     <div
       class="w-full shrink-0 px-[24px] py-[36px] text-center"
       data-info-slide="${index}"
@@ -27,7 +27,7 @@ function renderSlide(slide: InformationSlide, index: number): string {
 export function renderInformationHtml(slides: readonly InformationSlide[]): string {
   const slideHtml = slides.map((slide, index) => renderSlide(slide, index)).join("");
 
-  return `
+  return /* html */ `
     <section
       id="information"
       class="bg-[#F7F7F7] px-[25px] py-[48px] text-center"

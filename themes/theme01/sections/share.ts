@@ -4,7 +4,7 @@ import { themeIconUrl } from "../../../packages/shared/types";
 export { initShare };
 
 export function renderShareHtml(): string {
-  return `
+  return /* html */ `
     <section
       id="share"
       class="mt-[48px] pb-[32px] text-center font-pretendard"
@@ -25,7 +25,7 @@ export function renderShareHtml(): string {
         >
           청첩장 링크 복사하기
           <img
-            src="${themeIconUrl("theme01", "copy.svg")}"
+            src="${themeIconUrl("theme01", "btn-copy.svg")}"
             alt=""
             width="17"
             height="17"

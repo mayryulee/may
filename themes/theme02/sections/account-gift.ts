@@ -32,7 +32,7 @@ function renderAccountCard(account: GiftAccount): string {
               aria-label="계좌번호 복사"
             >
               <img
-                src="${themeIconUrl("theme02", "copy.svg")}"
+                src="${themeIconUrl("theme02", "btn-copy.svg")}"
                 alt=""
                 class="block h-[17px] w-[17px] opacity-80"
                 decoding="async"

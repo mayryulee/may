@@ -1,0 +1,14 @@
+{
+  "HTML return (highlighted)": {
+    "scope": "typescript",
+    "prefix": "htmlreturn",
+    "body": ["return /* html */ `", "  $0", "`;"],
+    "description": "es6-string-html 하이라이트용 HTML 템플릿"
+  },
+  "HTML block": {
+    "scope": "typescript",
+    "prefix": "htmlblock",
+    "body": ["/* html */ `", "  $0", "`"],
+    "description": "HTML 템플릿 블록 (변수 할당용)"
+  }
+}

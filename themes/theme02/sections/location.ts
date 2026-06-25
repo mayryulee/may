@@ -1,12 +1,9 @@
 import { initVenueMap } from "../../../packages/shared/venue-map";
-import type {
-  ClientConfig,
-  LocationTransportSection,
-  ThemeId,
-  Venue,
-} from "../../../packages/shared/types";
+import type { LocationTransportSection, Venue } from "../../../packages/shared/types";
 import { themeIconUrl, venueLocationForTheme } from "../../../packages/shared/types";
 import { bodyFontClass, melodramaTitleClass } from "../tokens";
+
+const THEME_ID = "theme02" as const;
 
 const enc = (s: string) => encodeURIComponent(s);
 
@@ -62,9 +59,8 @@ function renderMapNavHtml(venue: Venue): string {
     </div>`;
 }
 
-export function renderLocationHtml(config: ClientConfig, themeId: ThemeId): string {
-  const { venue } = config;
-  const { transport } = venueLocationForTheme(venue, themeId);
+export function renderLocationHtml(venue: Venue): string {
+  const { transport } = venueLocationForTheme(venue, THEME_ID);
 
   return /* html */ `
     <section
@@ -88,7 +84,7 @@ export function renderLocationHtml(config: ClientConfig, themeId: ThemeId): stri
             aria-label="주소 복사"
           >
             <img
-              src="${themeIconUrl(themeId, "copy.svg")}"
+              src="${themeIconUrl(THEME_ID, "btn-copy.svg")}"
               alt=""
               class="block h-[12px] w-[12px] opacity-80"
               decoding="async"

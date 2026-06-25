@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "Tobermory.es6-string-html",
+    "formulahendry.auto-close-tag",
+    "vincaslt.highlight-matching-tag",
+    "bradlc.vscode-tailwindcss"
+  ]
+}

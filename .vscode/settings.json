@@ -4,8 +4,37 @@
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
   "editor.guides.indentation": true,
+  "editor.linkedEditing": true,
+
   "emmet.includeLanguages": {
+    "typescript": "html",
+    "javascript": "html"
+  },
+  "emmet.triggerExpansionOnTab": true,
+  "emmet.showExpandedAbbreviation": "always",
+  "emmet.syntaxProfiles": {
+    "typescript": "html",
+    "javascript": "html"
+  },
+
+  "auto-close-tag.activationOnLanguage": [
+    "typescript",
+    "typescriptreact",
+    "javascript",
+    "javascriptreact",
+    "html"
+  ],
+  "auto-close-tag.enableAutoCloseTag": true,
+  "auto-close-tag.enableAutoCloseSelfClosingTag": true,
+
+  "highlight-matching-tag.highlightFromName": true,
+  "highlight-matching-tag.highlightSelfClosing": true,
+
+  "tailwindCSS.includeLanguages": {
     "typescript": "html"
   },
-  "emmet.triggerExpansionOnTab": true
+  "tailwindCSS.experimental.classRegex": [
+    ["class=\"([^\"]*)\"", "([^\\s\"]+)"],
+    ["class='([^']*)'", "([^\\s']+)"]
+  ]
 }

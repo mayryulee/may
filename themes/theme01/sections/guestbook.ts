@@ -119,7 +119,7 @@ function bindSubmitSync(
 }
 
 function renderEntryCard(entry: GuestbookEntry): string {
-  return `
+  return /* html */ `
     <article
       class="relative rounded-[8px] bg-white px-[20px] py-[20px] text-left shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
       data-entry-id="${entry.id}"
@@ -165,7 +165,7 @@ async function refreshList(root: ParentNode, clientId: string): Promise<void> {
 }
 
 export function renderGuestbookHtml(): string {
-  return `
+  return /* html */ `
     <section
       id="guestbook"
       class="mt-[128px] pb-[56px] text-center "
