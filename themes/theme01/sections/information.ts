@@ -79,7 +79,7 @@ export function renderInformationHtml(slides: readonly InformationSlide[]): stri
           data-info-dot="${i}"
           aria-label="${i + 1}번째 안내"
           aria-selected="${i === 0 ? "true" : "false"}"
-          class="h-[8px] w-[8px] rounded-[9999px] border-[0px] p-0 transition-colors duration-200 ${i === 0 ? "bg-[#555555]" : "bg-[#dddddd]"}"
+          class="h-[6px] w-[6px] rounded-[9999px] border-[0px] p-0 transition-colors duration-200 ${i === 0 ? "bg-[#555555]" : "bg-[#dddddd]"}"
         ></button>`,
         ).join("")}
       </div>

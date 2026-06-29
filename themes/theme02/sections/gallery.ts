@@ -35,10 +35,10 @@ export function renderGalleryHtml(
   return /* html */ `
     <section
       id="gallery"
-      class="mt-[128px] px-[32px] text-left"
-      aria-label="갤러리"
+      class="pt-[103px] pb-[123px] px-[25px] text-left"
+      aria-label="갤러리"s
     >
-      <header class="pb-[40px]">
+      <header class="mb-[30px]">
         <p class="${melodramaTitleClass}">Gallery</p>
       </header>
 

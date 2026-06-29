@@ -18,10 +18,10 @@ function renderAccountCard(account: GiftAccount): string {
             <span class="font-normal">${account.relation}</span>
             <span class="font-normal">${account.name}</span>
           </div>
-          <div class="flex items-center justify-between gap-[8px] rounded-[6px] bg-[#F7F7F7] pl-[16px] pr-[16px] py-[14px]">
+          <div class="flex items-center justify-between gap-[8px] rounded-[6px] bg-[#F7F7F7] pl-[16px] pr-[22px] py-[14px]">
             <div class="min-w-[0px] text-left font-pretendard text-[#5D5D5D]">
               <p class="m-0 text-[12px]">${account.bank}</p>
-              <p class="m-0 mt-[4px] text-[14px] font-normal tabular-nums tracking-tight">
+              <p class="m-0 mt-[4px] text-[12px] font-normal tabular-nums tracking-tight">
                 ${account.number}
               </p>
             </div>

@@ -4,7 +4,7 @@ import { themeImageUrl } from "../../../packages/shared/types";
 const THEME_ID = "theme02" as const;
 
 function formatParentsLine(parents: string, relation: string): string {
-  return `${parents.replace(/ · /g, ' <span class="font-medium">·</span> ')} ${relation}`;
+  return `${parents.replace(/ · /g, " · ")} ${relation}`;
 }
 
 function renderSaveTheDateHtml(lines: readonly string[]): string {
@@ -20,6 +20,22 @@ function renderSaveTheDateHtml(lines: readonly string[]): string {
   }`;
 }
 
+function renderCoupleSide(
+  label: "신랑" | "신부",
+  parents: ClientConfig["invitation"]["groomParents"],
+): string {
+  return `
+    <div class="flex flex-col items-center">
+      <p class="m-0 text-center text-[13px] font-light leading-[1.75] tracking-tight">
+        ${formatParentsLine(parents.parents, parents.relation)}
+      </p>
+      <p class="m-0 flex items-baseline justify-center gap-x-[8px] text-[13px] font-light leading-[1.75] tracking-tight">
+        <span>${label}</span>
+        <span class="text-[16px] font-normal">${parents.name}</span>
+      </p>
+    </div>`;
+}
+
 export function renderInvitationHtml(
   invitation: ClientConfig["invitation"],
   dateDisplay: ClientConfig["dateDisplay"],
@@ -31,26 +47,20 @@ export function renderInvitationHtml(
 
   return /* html */ `
     <section
-      class="flex min-h-[560px] w-full flex-col justify-center bg-cover bg-center px-[32px] py-[128px] text-center font-pretendard text-[#111111]"
+      class="flex min-h-[560px] w-full flex-col items-center justify-center bg-cover bg-center px-[30px] pt-[124px] pb-[130px] text-center font-pretendard text-[#111111]"
       style="background-image: url('${backgroundSrc}')"
       aria-label="예식안내 초대"
     >
-      <h2 class="m-0 mb-[56px] font-quattrocento text-[12px] font-bold uppercase tracking-[0.1em]">
+      <h2 class="m-0 mb-[52px] font-quattrocento text-[12px] font-bold uppercase tracking-[0.1em]">
         Save the Date
       </h2>
-      <div class="mb-[64px] text-[13px] leading-[1.85] tracking-tight">
+      <div class="mb-[64px] text-[13px] leading-[1.8] tracking-tight">
         ${renderSaveTheDateHtml(saveTheDateLines)}
       </div>
 
-      <div class="mb-[64px] grid grid-cols-2 gap-[16px] text-[13px] font-light leading-[1.75] tracking-tight">
-        <p class="m-0 mb-[6px]">
-          ${formatParentsLine(invitation.groomParents.parents, invitation.groomParents.relation)}
-        </p>
-        <p class="m-0">신랑 <span class="text-[16px] font-normal ml-[4px]">${invitation.groomParents.name}</span></p>
-        <p class="m-0 mb-[6px]">
-          ${formatParentsLine(invitation.brideParents.parents, invitation.brideParents.relation)}
-        </p>
-        <p class="m-0">신부 <span class="text-[16px] font-normal ml-[4px]">${invitation.brideParents.name}</span></p>
+      <div class="mb-[64px] flex justify-center gap-x-[56px]">
+        ${renderCoupleSide("신랑", invitation.groomParents)}
+        ${renderCoupleSide("신부", invitation.brideParents)}
       </div>
 
       <div class="space-y-[4px] text-[13px] font-normal leading-[1.75] tracking-tight">

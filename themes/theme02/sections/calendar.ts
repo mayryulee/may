@@ -8,10 +8,10 @@ export function renderCalendarHtml(
   const calendarSrc = clientImageUrl(clientId, calendar.image);
 
   return /* html */ `
-    <section class="bg-[#F7F7F7] py-[48px] text-center" aria-label="캘린더">
-      <div class="w-full px-[69px] text-center">
+    <section class="bg-[#F7F7F7] text-center" aria-label="캘린더">
+      <div class="w-full pt-[102px] pb-[126px] pl-[76px] pr-[67px] text-center">
         <img
-          class="mx-auto my-[96px] block w-full h-auto"
+          class="mx-auto block w-full h-auto"
           src="${calendarSrc}"
           alt="${calendar.alt}"
           width="777"

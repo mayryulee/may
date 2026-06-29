@@ -38,7 +38,7 @@ export function renderShareHtml(): string {
       <img
         class="theme-toggle-target mx-auto mt-[84px] block h-auto w-[180px]"
         src="${themeIconUrl("theme01", "copyright.svg")}"
-        alt="© FOR MAY"
+        alt="© MAY"
         width="201"
         height="12"
         decoding="async"

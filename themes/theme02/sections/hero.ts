@@ -27,7 +27,7 @@ export function renderHeroHtml(
   const heroSrc = clientImageUrl(clientId, hero.image);
 
   return /* html */ `
-    <section class="-mt-[28px] relative w-full" aria-label="타이틀">
+    <section class="relative w-full" aria-label="타이틀">
       <img
         class="block w-full h-auto"
         src="${heroSrc}"
@@ -37,19 +37,19 @@ export function renderHeroHtml(
         decoding="async"
       />
 
-      <div class="pointer-events-none absolute inset-0 pb-[40px] text-[#FFF4C2]">
+      <div class="absolute inset-0 pb-[40px] text-[#FFF4C2]">
         <header>
-          <h1 class="mt-[76px] mb-0 mx-[35px] font-ultra text-[clamp(32px,6.8vw,28px)] leading-[1.05] tracking-[-0.01em]">
+          <h1 class="pt-[76px] px-[35px] font-ultra text-[30px] leading-[1.25]">
             ${heroTitleHtml}
           </h1>
-          <div class="mt-[18px] mx-[35px] space-y-[4px] font-questrial text-[16px] leading-[1.55] tracking-[0.02em]">
+          <div class="mt-[18px] mx-[35px] space-y-[4px] font-questrial text-[14px] leading-[1.2] tracking-wider">
             ${heroSubtitleHtml}
           </div>
         </header>
       </div>
 
-      <div class="pointer-events-none absolute inset-x-0 bottom-0 pb-[58px] text-center text-[#FFF4C2]">
-        <p class="m-0 font-quattrocento text-[16px] font-bold tracking-[0.06em]">
+      <div class="absolute inset-x-0 bottom-0 pb-[58px] text-center text-[#FFF4C2]">
+        <p class="m-0 font-quattrocento text-[16px] font-bold tracking-wider">
           ${coupleEnHtml}
         </p>
       </div>

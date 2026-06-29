@@ -33,10 +33,10 @@ export function renderInformationHtml(slides: readonly InformationSlide[]): stri
   return /* html */ `
     <section
       id="information"
-      class="bg-[#F9F8F2] px-[32px] pt-[93px] pb-[126px] text-center"
+      class="bg-[#F9F8F2] px-[25px] pt-[93px] pb-[95px] text-center"
       aria-label="안내 사항"
     >
-      <header class="pb-[35px] text-center">
+      <header class="mb-[35px] text-center">
         <p class="${informationTitleClass}">Information</p>
         <p class="m-0 mt-[10px] text-[16px] tracking-noraml text-[#5D5D5D]">
           결혼식에 관련하여 사전 안내 드립니다
@@ -91,7 +91,7 @@ export function renderInformationHtml(slides: readonly InformationSlide[]): stri
           data-info-dot="${i}"
           aria-label="${i + 1}번째 안내"
           aria-selected="${i === 0 ? "true" : "false"}"
-          class="h-[8px] w-[8px] rounded-[9999px] border-[0px] p-0 transition-colors duration-200 ${i === 0 ? "bg-[#555555]" : "bg-[#dddddd]"}"
+          class="h-[6px] w-[6px] rounded-[9999px] border-[0px] p-0 transition-colors duration-200 ${i === 0 ? "bg-[#555555]" : "bg-[#dddddd]"}"
         ></button>`,
         ).join("")}
       </div>

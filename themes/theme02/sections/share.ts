@@ -7,7 +7,7 @@ export function renderShareHtml(): string {
   return /* html */ `
     <section
       id="share"
-      class="mt-[48px] text-center font-pretendard"
+      class="pb-[56px] px-[30px] text-center font-pretendard"
       aria-label="청첩장 공유"
     >
       <div class="mx-auto max-w-full space-y-[16px]">
@@ -36,9 +36,9 @@ export function renderShareHtml(): string {
         </button>
       </div>
       <img
-        class="theme-toggle-target mx-auto mt-[80px] block h-auto w-[201px]"
+        class="theme-toggle-target mx-auto mt-[81px] block h-auto w-[180px]"
         src="${themeIconUrl("theme02", "copyright.svg")}"
-        alt="© FOR MAY"
+        alt="© MAY"
         width="201"
         height="12"
         decoding="async"

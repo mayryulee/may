@@ -11,7 +11,7 @@ export function renderQuoteHtml(quote: ClientConfig["quote"]): string {
 
   return /* html */ `
     <section
-      class="pb-[48px] text-center text-[#424141]"
+      class="pt-[116px] pb-[101px] text-center text-[#424141]"
       aria-label="명언"
     >
       <div class="space-y-[20px] text-[14px] font-normal leading-[1.8] tracking-tight">
