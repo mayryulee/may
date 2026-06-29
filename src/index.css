@@ -42,7 +42,6 @@
   --font-melodrama: "Melodrama", ui-serif, serif;
   --font-sackers: "Sackers English Script AT", cursive;
   --font-photograph: "Photograph Signature", cursive;
-  --font-hagrid: "Hagrid Trial", "Pretendard", ui-sans-serif, sans-serif;
 
   /* 캘린더 섹션 글자 크기 (main.ts 에서 이름만 쓰면 됨) */
   --text-dday-label: 14px;
