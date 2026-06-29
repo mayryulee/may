@@ -1,5 +1,5 @@
-export type ThemeId = "theme01" | "theme02";
-export type ThemeSlug = "grace" | "tender";
+export type ThemeId = "theme01" | "theme02" | "theme03";
+export type ThemeSlug = "grace" | "tender" | "theme03";
 
 export type ThemeMeta = {
   slug: ThemeSlug;
@@ -7,11 +7,12 @@ export type ThemeMeta = {
 };
 
 /**
- * 내부 테마 ID(theme01/theme02)와 외부 표기명(Grace/Tender) 매핑
+ * 내부 테마 ID(theme01/theme02/theme03)와 외부 표기명(Grace/Tender 등) 매핑
  */
 export const THEME_META: Record<ThemeId, ThemeMeta> = {
   theme01: { slug: "grace", label: "Grace" },
   theme02: { slug: "tender", label: "Tender" },
+  theme03: { slug: "theme03", label: "Theme 03" },
 } as const;
 
 export function themeSlugOf(themeId: ThemeId): ThemeSlug {
@@ -23,7 +24,9 @@ export function themeLabelOf(themeId: ThemeId): string {
 }
 
 export function themeIdFromSlug(slug: ThemeSlug): ThemeId {
-  return slug === "grace" ? "theme01" : "theme02";
+  if (slug === "grace") return "theme01";
+  if (slug === "tender") return "theme02";
+  return "theme03";
 }
 
 export type GalleryImage = {

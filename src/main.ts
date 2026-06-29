@@ -3,12 +3,14 @@ import sample01Config from "../clients/sample01/config";
 import sample02Config from "../clients/sample02/config";
 import * as theme01 from "@themes/theme01/layout";
 import * as theme02 from "@themes/theme02/layout";
+import * as theme03 from "@themes/theme03/layout";
 import type { ClientConfig, ThemeId } from "@shared/types";
 import { bindThemeToggle } from "./theme-toggle";
 
 const themes = {
   theme01,
   theme02,
+  theme03,
 } as const;
 
 const previewClients = {

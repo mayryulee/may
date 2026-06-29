@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Sackers English Script AT";
+  src:
+    url("https://db.onlinewebfonts.com/t/9cbababf19f41ce389f1027c4c1654ca.woff2")
+      format("woff2"),
+    url("https://db.onlinewebfonts.com/t/9cbababf19f41ce389f1027c4c1654ca.woff")
+      format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hagrid Trial";
+  src:
+    url("https://fonts.cdnfonts.com/s/31163/Hagrid-Regular-trial.woff")
+      format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --font-cabinet: "Cabinet Grotesk", ui-sans-serif, sans-serif;
   --font-optima: "Optima", "Optima Nova", "Candara", "Calibri", "Segoe UI",
@@ -18,6 +40,9 @@
   --font-quattrocento: "Quattrocento", ui-serif, serif;
   --font-pretendard: "Pretendard", ui-sans-serif, system-ui, sans-serif;
   --font-melodrama: "Melodrama", ui-serif, serif;
+  --font-sackers: "Sackers English Script AT", cursive;
+  --font-photograph: "Photograph Signature", cursive;
+  --font-hagrid: "Hagrid Trial", "Pretendard", ui-sans-serif, sans-serif;
 
   /* 캘린더 섹션 글자 크기 (main.ts 에서 이름만 쓰면 됨) */
   --text-dday-label: 14px;

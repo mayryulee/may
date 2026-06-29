@@ -1,7 +1,7 @@
 import type { ClientConfig } from "../../../packages/shared/types";
 import { themeImageUrl } from "../../../packages/shared/types";
 
-const THEME_ID = "theme02" as const;
+const THEME_ID = "theme03" as const;
 
 export function renderCalendarHtml(calendar: ClientConfig["calendar"]): string {
   const calendarSrc = themeImageUrl(THEME_ID, "calendar.png");

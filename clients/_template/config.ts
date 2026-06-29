@@ -74,6 +74,9 @@ const config: ClientConfig = {
       theme02: {
         transport: [{ label: "오시는 길", lines: ["안내 문구를 입력해 주세요."] }],
       },
+      theme03: {
+        transport: [{ label: "오시는 길", lines: ["안내 문구를 입력해 주세요."] }],
+      },
     },
   },
 
