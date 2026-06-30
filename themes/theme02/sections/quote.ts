@@ -1,5 +1,4 @@
 import type { ClientConfig } from "../../../packages/shared/types";
-import { bodyFontClass } from "../tokens";
 
 export function renderQuoteHtml(quote: ClientConfig["quote"]): string {
   const stanzas = quote.stanzas

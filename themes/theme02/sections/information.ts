@@ -1,6 +1,5 @@
 import { initInformationCarousel } from "../../../packages/shared/information-carousel-init";
 import type { InformationSlide } from "../../../packages/shared/types";
-import { bodyFontClass } from "../tokens";
 
 export { initInformationCarousel };
 
