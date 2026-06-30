@@ -2,7 +2,7 @@ const HOLD_MS = 800;
 
 let bound = false;
 
-/** © FOR MAY 로고를 길게 누르면 sample01 ↔ sample02 전환 */
+/** © FOR MAY 로고를 길게 누르면 theme01 → theme02 → theme03 순환 (클라이언트는 테마별 고정) */
 export function bindThemeToggle(
   root: ParentNode,
   onToggle: () => void,

@@ -11,11 +11,11 @@ const MODALS = ["write", "list", "delete"] as const;
 type ModalName = (typeof MODALS)[number];
 
 const SUBMIT_BTN =
-  "guestbook-submit mt-[8px] w-full rounded-[8px] border-[0px] bg-[#111111] py-[14px] font-pretendard text-[14px] font-normal tracking-tight text-white transition-colors duration-200";
+  "guestbook-submit mt-[8px] w-full rounded-[8px] border-[0px] bg-[#111111] py-[13px] font-pretendard text-[14px] font-normal tracking-tight text-white transition-colors duration-200";
 const GUESTBOOK_FIELD =
-  "w-full rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[16px] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
+  "w-full rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
 const GUESTBOOK_TEXTAREA =
-  "min-h-[120px] w-full resize-none rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[16px] font-extralight leading-[1.75] tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
+  "min-h-[120px] w-full resize-none rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight leading-[1.75] tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
 let deleteTargetId: string | null = null;
 
 function modalEl(root: ParentNode, name: ModalName): HTMLElement | null {
@@ -188,14 +188,14 @@ export function renderGuestbookHtml(): string {
         <button
           type="button"
           id="guestbook-open-write"
-          class="block w-full rounded-[8px] border-[1px] border-transparent bg-[#111111] py-[13px] font-pretendard text-[16px] font-medium tracking-tight text-white"
+          class="block w-full rounded-[8px] border-[1px] border-transparent bg-[#111111] py-[13px] font-pretendard text-[14px] font-medium tracking-tight text-white"
         >
           메시지 남기기
         </button>
         <button
           type="button"
           id="guestbook-open-list"
-          class="block w-full rounded-[8px] border-[1px] border-[#111111] bg-white py-[13px] font-pretendard text-[16px] font-medium tracking-tight text-[#111111]"
+          class="block w-full rounded-[8px] border-[1px] border-[#111111] bg-white py-[13px] font-pretendard text-[14px] font-medium tracking-tight text-[#111111]"
         >
           방명록 전체보기
         </button>
@@ -296,7 +296,7 @@ export function renderGuestbookHtml(): string {
               type="password"
               required
               placeholder="비밀번호를 입력해 주세요"
-              class="w-full rounded-[8px] border-[0px] bg-white px-[16px] py-[14px] text-[16px] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
+              class="w-full rounded-[8px] border-[0px] bg-white px-[16px] py-[14px] text-[14px] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]"
             />
             <p id="guestbook-delete-error" class="m-0 hidden text-center text-[11px] tracking-tight text-[#c44]"></p>
             <button type="submit" disabled class="${SUBMIT_BTN}">삭제하기</button>

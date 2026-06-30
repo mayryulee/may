@@ -242,6 +242,20 @@ const config: ClientConfig = {
     imageWidth: 600,
     imageHeight: 800,
   },
+
+  rsvp: {
+    enabled: true,
+    showOnLoad: true,
+    title: "참석 의사 전달",
+    subtitleLines: [
+      "축하의 마음으로 참석해주시는",
+      "모든 분들을 귀하게 모실 수 있도록",
+      "참석 의사를 전달 부탁드립니다.",
+    ],
+    notify: {
+      emails: ["formayletter@gmail.com"],
+    },
+  },
 };
 
 export default config;

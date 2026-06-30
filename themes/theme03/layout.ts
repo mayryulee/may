@@ -10,6 +10,7 @@ import {
 import { renderInvitationHtml } from "./sections/invitation";
 import { initLocation, renderLocationHtml } from "./sections/location";
 import { initShare } from "./sections/share";
+import { initRsvp, renderRsvpOverlayHtml } from "../../packages/shared/rsvp/rsvp-modal";
 import type { ClientConfig, ThemeId } from "../../packages/shared/types";
 
 export function renderPageHtml(config: ClientConfig, _themeId: ThemeId): string {
@@ -37,6 +38,7 @@ export function renderPageHtml(config: ClientConfig, _themeId: ThemeId): string 
 
     ${renderClosingHtml(config.quote)}
   </article>
+  ${renderRsvpOverlayHtml(config, _themeId)}
 `;
 }
 
@@ -50,4 +52,5 @@ export function initPage(
   initAccountGift(root);
   initInformationCarousel(root, config.information);
   initShare(config.id, config.share);
+  initRsvp(document, config);
 }

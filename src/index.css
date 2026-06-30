@@ -60,10 +60,19 @@
   font-optical-sizing: auto;
 }
 
-.guestbook-submit:disabled {
+.guestbook-submit:disabled,
+.rsvp-submit:disabled:not(.rsvp-submit--outline) {
   cursor: not-allowed;
   background-color: #d4d8e4;
   color: rgb(255 255 255 / 0.9);
+}
+
+.rsvp-submit--outline:disabled,
+.rsvp-primary-btn--outline:disabled {
+  cursor: not-allowed;
+  border-color: #d4d8e4;
+  color: #adb5bd;
+  background-color: transparent;
 }
 
 .theme-toggle-target {

@@ -9,3 +9,6 @@ public/icons/
 .env
 .env.*
 .idea/
+
+# Local Netlify folder
+.netlify

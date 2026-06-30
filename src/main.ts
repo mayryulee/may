@@ -4,7 +4,7 @@ import sample02Config from "../clients/sample02/config";
 import * as theme01 from "@themes/theme01/layout";
 import * as theme02 from "@themes/theme02/layout";
 import * as theme03 from "@themes/theme03/layout";
-import type { ClientConfig, ThemeId } from "@shared/types";
+import type { ThemeId } from "@shared/types";
 import { bindThemeToggle } from "./theme-toggle";
 
 const themes = {
@@ -13,12 +13,21 @@ const themes = {
   theme03,
 } as const;
 
+const THEME_CYCLE: ThemeId[] = ["theme01", "theme02", "theme03"];
+
 const previewClients = {
   sample01: sample01Config,
   sample02: sample02Config,
 } as const;
 
 type PreviewClientId = keyof typeof previewClients;
+
+/** 미리보기: 테마별 고정 클라이언트 (theme01 → sample01, theme02/03 → sample02) */
+const THEME_CLIENT: Record<ThemeId, PreviewClientId> = {
+  theme01: "sample01",
+  theme02: "sample02",
+  theme03: "sample02",
+};
 
 const mayClient = window.__MAY_CLIENT__;
 const buildClientId = (mayClient?.clientId ?? "sample01") as PreviewClientId;
@@ -30,11 +39,23 @@ const appEl = document.querySelector<HTMLDivElement>("#app");
 if (!appEl) throw new Error("#app not found");
 
 const app = appEl;
-let activeClientId = initialClientId;
+let activeThemeId: ThemeId;
 
-function mountClient(clientId: PreviewClientId): void {
-  const config: ClientConfig = previewClients[clientId];
-  const themeId: ThemeId = (themeOverride as ThemeId | undefined) || config.theme;
+function resolveInitialTheme(): ThemeId {
+  const fromEnv = themeOverride as ThemeId | undefined;
+  if (fromEnv && fromEnv in themes) return fromEnv;
+  return previewClients[initialClientId].theme;
+}
+
+function nextThemeId(current: ThemeId): ThemeId {
+  const index = THEME_CYCLE.indexOf(current);
+  const next = index === -1 ? 0 : (index + 1) % THEME_CYCLE.length;
+  return THEME_CYCLE[next]!;
+}
+
+function mountPage(themeId: ThemeId): void {
+  const clientId = THEME_CLIENT[themeId];
+  const config = previewClients[clientId];
   const theme = themes[themeId];
 
   if (!theme) {
@@ -43,13 +64,11 @@ function mountClient(clientId: PreviewClientId): void {
 
   app.innerHTML = theme.renderPageHtml(config, themeId);
   theme.initPage(app, config, themeId);
-  activeClientId = clientId;
+  activeThemeId = themeId;
 }
 
-mountClient(initialClientId);
+mountPage(resolveInitialTheme());
 
 bindThemeToggle(app, () => {
-  const next: PreviewClientId =
-    activeClientId === "sample01" ? "sample02" : "sample01";
-  mountClient(next);
+  mountPage(nextThemeId(activeThemeId));
 });

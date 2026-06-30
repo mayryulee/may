@@ -97,6 +97,21 @@ export type ClientMeta = {
   twitterDescription: string;
 };
 
+export type ClientRsvpConfig = {
+  enabled: boolean;
+  /** 접속 시 자동 팝업 (이미 제출했거나 '오늘 하루 보지 않기'면 스킵) */
+  showOnLoad?: boolean;
+  title?: string;
+  /** @deprecated subtitleLines 사용 권장 */
+  subtitle?: string;
+  /** intro 팝업 안내 문구 (줄 단위, 중앙 정렬) */
+  subtitleLines?: string[];
+  /** 제출 시 알림 수신 이메일 (Netlify Function에서 사용) */
+  notify?: {
+    emails?: string[];
+  };
+};
+
 export type ClientConfig = {
   id: string;
   theme: ThemeId;
@@ -159,6 +174,7 @@ export type ClientConfig = {
     imageWidth: number;
     imageHeight: number;
   };
+  rsvp?: ClientRsvpConfig;
 };
 
 /** 클라이언트 전용 사진 (갤러리, 커버, 메인 등) */

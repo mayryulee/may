@@ -13,6 +13,7 @@ import { initLocation, renderLocationHtml } from "./sections/location";
 import { renderQuoteHtml } from "./sections/quote";
 import { initShare, renderShareHtml } from "./sections/share";
 import { renderWeddingDateHtml } from "./sections/wedding-date";
+import { initRsvp, renderRsvpOverlayHtml } from "../../packages/shared/rsvp/rsvp-modal";
 import type { ClientConfig, ThemeId } from "../../packages/shared/types";
 
 export function renderPageHtml(config: ClientConfig, _themeId: ThemeId): string {
@@ -42,6 +43,7 @@ export function renderPageHtml(config: ClientConfig, _themeId: ThemeId): string 
 
     ${renderShareHtml()}
   </article>
+  ${renderRsvpOverlayHtml(config, _themeId)}
 `;
 }
 
@@ -57,4 +59,5 @@ export function initPage(
   initInformationCarousel(root, config.information);
   initGuestbook(root, config.id);
   initShare(config.id, config.share);
+  initRsvp(document, config);
 }
