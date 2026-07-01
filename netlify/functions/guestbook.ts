@@ -53,7 +53,7 @@ export default async (req: Request, _context: Context) => {
     if (!name || !message || !password) {
       return Response.json({ error: "invalid" }, { status: 400 });
     }
-    if (message.length > 200) {
+    if (message.length > 100) {
       return Response.json({ error: "too_long" }, { status: 400 });
     }
 

@@ -1,5 +1,6 @@
 export type RsvpEmailEntry = {
   name: string;
+  side: "groom" | "bride";
   attending: "yes" | "no";
   guestCount: number;
   message?: string;
@@ -16,6 +17,10 @@ function escapeHtml(text: string): string {
 
 function attendingLabel(attending: "yes" | "no"): string {
   return attending === "yes" ? "참석" : "불참";
+}
+
+function sideLabel(side: "groom" | "bride"): string {
+  return side === "groom" ? "신랑측" : "신부측";
 }
 
 export async function sendRsvpEmail(opts: {
@@ -47,6 +52,7 @@ export async function sendRsvpEmail(opts: {
       <h2 style="margin:0 0 12px;font-size:18px">참석 의사가 접수되었습니다</h2>
       <p style="margin:0 0 16px;color:#666">${escapeHtml(coupleLabel)} · ${escapeHtml(weddingDate)} ${escapeHtml(weddingTime)}<br>${escapeHtml(venueName)}</p>
       <p><strong>성함:</strong> ${escapeHtml(entry.name)}</p>
+      <p><strong>측:</strong> ${sideLabel(entry.side)}</p>
       <p><strong>참석 여부:</strong> ${status}</p>
       ${guestLine}
       ${messageLine}

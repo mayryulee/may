@@ -13,9 +13,9 @@ type ModalName = (typeof MODALS)[number];
 const SUBMIT_BTN =
   "guestbook-submit mt-[8px] w-full rounded-[8px] border-[0px] bg-[#111111] py-[13px] font-pretendard text-[14px] font-normal tracking-tight text-white transition-colors duration-200";
 const GUESTBOOK_FIELD =
-  "w-full rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
+  "may-form-control w-full rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
 const GUESTBOOK_TEXTAREA =
-  "min-h-[120px] w-full resize-none rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight leading-[1.75] tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
+  "may-form-control min-h-[120px] w-full resize-none rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight leading-[1.75] tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
 let deleteTargetId: string | null = null;
 
 function modalEl(root: ParentNode, name: ModalName): HTMLElement | null {
@@ -50,6 +50,17 @@ function openDeleteOverlay(root: ParentNode): void {
   syncDeleteSubmit(root);
 }
 
+function resetWriteForm(root: ParentNode): void {
+  const form = root.querySelector<HTMLFormElement>("#guestbook-write-form");
+  const error = root.querySelector<HTMLElement>("#guestbook-write-error");
+  form?.reset();
+  if (error) {
+    error.textContent = "";
+    error.classList.add("hidden");
+  }
+  syncWriteSubmit(root);
+}
+
 function closeModals(root: ParentNode): void {
   MODALS.forEach((m) => {
     const el = modalEl(root, m);
@@ -59,6 +70,7 @@ function closeModals(root: ParentNode): void {
   });
   document.body.classList.remove("overflow-hidden");
   deleteTargetId = null;
+  resetWriteForm(root);
 }
 
 function closeDeleteModal(root: ParentNode): void {
@@ -230,7 +242,7 @@ export function renderGuestbookHtml(): string {
           <form id="guestbook-write-form" class="mt-[24px] space-y-[10px] text-left">
             <input name="name" type="text" maxlength="30" required placeholder="성함을 남겨주세요" class="${GUESTBOOK_FIELD}" />
             <input name="password" type="password" maxlength="20" required placeholder="비밀번호를 입력해 주세요" class="${GUESTBOOK_FIELD}" />
-            <textarea name="message" maxlength="200" required rows="4" placeholder="200자 이내로 작성해 주세요" class="${GUESTBOOK_TEXTAREA}"></textarea>
+            <textarea name="message" maxlength="100" required rows="4" placeholder="100자 이내로 작성해 주세요" class="${GUESTBOOK_TEXTAREA}"></textarea>
             <p id="guestbook-write-error" class="m-0 hidden text-center text-[11px] tracking-tight text-[#c44]"></p>
             <button type="submit" disabled class="${SUBMIT_BTN}">작성 완료</button>
           </form>
@@ -360,8 +372,8 @@ export function initGuestbook(root: ParentNode, clientId: string): void {
       writeError.classList.remove("hidden");
       return;
     }
-    if (message.length > 200) {
-      writeError.textContent = "200자 이내로 작성해 주세요.";
+    if (message.length > 100) {
+      writeError.textContent = "100자 이내로 작성해 주세요.";
       writeError.classList.remove("hidden");
       return;
     }

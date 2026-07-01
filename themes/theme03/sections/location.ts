@@ -1,8 +1,6 @@
 import { initVenueMap } from "../../../packages/shared/venue-map";
 import type { LocationTransportSection, Venue } from "../../../packages/shared/types";
 import { themeIconUrl, venueLocationForTheme } from "../../../packages/shared/types";
-import { bodyFontClass, melodramaTitleClass } from "../tokens";
-
 const THEME_ID = "theme03" as const;
 
 const enc = (s: string) => encodeURIComponent(s);
@@ -83,7 +81,7 @@ export function renderLocationHtml(venue: Venue): string {
       aria-label="오시는 길"
     >
       <header class="pb-[32px] mt-[48px]">
-        <p class="${melodramaTitleClass}">Location</p>
+        <p class="mb-0 mx-0 font-melodrama text-[38px] uppercase leading-none tracking-normal text-[#111111]">Location</p>
       </header>
 
       <div class="text-right text-[#111111]">
@@ -128,5 +126,5 @@ export function renderLocationHtml(venue: Venue): string {
 }
 
 export function initLocation(root: ParentNode, venue: Venue): void {
-  initVenueMap(root, venue, { fallbackFontClass: bodyFontClass });
+  initVenueMap(root, venue, { fallbackFontClass: "font-pretendard" });
 }

@@ -1,7 +1,9 @@
 export type RsvpAttending = "yes" | "no";
+export type RsvpSide = "groom" | "bride";
 
 export type RsvpSubmitInput = {
   name: string;
+  side: RsvpSide;
   attending: RsvpAttending;
   guestCount: number;
   message?: string;
@@ -60,6 +62,7 @@ export async function submitRsvp(
 ): Promise<boolean> {
   const payload = {
     name: input.name.trim(),
+    side: input.side,
     attending: input.attending,
     guestCount: input.guestCount,
     message: input.message?.trim() || undefined,

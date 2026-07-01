@@ -5,6 +5,7 @@ import {
   isRsvpDismissedToday,
   submitRsvp,
   type RsvpAttending,
+  type RsvpSide,
 } from "../rsvp-store";
 import { rsvpIcons } from "./rsvp-icons";
 import { rsvpIntroCtaClass, rsvpSubmitBtnClass } from "./rsvp-button-styles";
@@ -18,9 +19,11 @@ const DEFAULT_SUBTITLE_LINES = [
 
 /** theme01 방명록 모달과 동일한 인풋 스타일 */
 const RSVP_FIELD =
-  "w-full rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
+  "may-form-control w-full rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
+const RSVP_SELECT =
+  "may-form-control w-full appearance-none rounded-[8px] border-[0px] bg-[#F7F7F7] pl-[16px] pr-[40px] py-[14px] text-[14px] font-extralight tracking-tight text-[#111111] outline-none bg-[length:12px_12px] bg-[position:right_16px_center] bg-no-repeat bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23111111%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M6 9l6 6 6-6%22/%3E%3C/svg%3E')]";
 const RSVP_TEXTAREA =
-  "min-h-[120px] w-full resize-none rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight leading-[1.75] tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
+  "may-form-control min-h-[120px] w-full resize-none rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight leading-[1.75] tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
 const MODAL_SHELL =
   "fixed inset-0 z-[100] hidden font-pretendard";
 const MODAL_CARD =
@@ -68,8 +71,9 @@ function fieldValue(form: HTMLFormElement, name: string): string {
 
 function isRsvpFormReady(form: HTMLFormElement): boolean {
   const name = fieldValue(form, "name").trim();
+  const side = fieldValue(form, "side");
   const attending = fieldValue(form, "attending");
-  if (!name || !attending) return false;
+  if (!name || !side || !attending) return false;
   if (attending === "yes" && !fieldValue(form, "guestCount")) return false;
   return true;
 }
@@ -218,18 +222,22 @@ export function renderRsvpOverlayHtml(config: ClientConfig, themeId: ThemeId): s
               placeholder="성함을 입력해주세요"
               class="${RSVP_FIELD}"
             />
-            <select name="attending" class="${RSVP_FIELD}">
+            <select name="side" required class="${RSVP_SELECT}">
+              <option value="groom" selected>신랑측</option>
+              <option value="bride">신부측</option>
+            </select>
+            <select name="attending" class="${RSVP_SELECT}">
               <option value="yes">참석할게요</option>
               <option value="no">참석이 어려워요</option>
             </select>
             <div id="rsvp-guest-count-wrap">
-              <select name="guestCount" class="${RSVP_FIELD}">
+              <select name="guestCount" class="${RSVP_SELECT}">
                 ${guestOptions}
               </select>
             </div>
             <textarea
               name="message"
-              maxlength="200"
+              maxlength="100"
               rows="4"
               placeholder="축하의 마음을 전해주세요"
               class="${RSVP_TEXTAREA}"
@@ -308,6 +316,9 @@ export function initRsvp(root: ParentNode, config: ClientConfig): void {
 
     const fd = new FormData(form);
     const name = String(fd.get("name") ?? "").trim();
+    const sideRaw = String(fd.get("side") ?? "");
+    const side: RsvpSide | null =
+      sideRaw === "groom" || sideRaw === "bride" ? sideRaw : null;
     const attending = String(fd.get("attending") ?? "yes") as RsvpAttending;
     const guestCount =
       attending === "no" ? 0 : Math.min(10, Math.max(1, Number(fd.get("guestCount")) || 1));
@@ -319,11 +330,18 @@ export function initRsvp(root: ParentNode, config: ClientConfig): void {
       return;
     }
 
+    if (!side) {
+      errorEl.textContent = "신랑측 또는 신부측을 선택해 주세요.";
+      errorEl.classList.remove("hidden");
+      return;
+    }
+
     const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     if (submitBtn) submitBtn.disabled = true;
 
     const ok = await submitRsvp(clientId, {
       name,
+      side,
       attending,
       guestCount,
       message: message || undefined,

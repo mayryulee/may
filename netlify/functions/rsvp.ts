@@ -8,6 +8,7 @@ type StoredRsvpEntry = {
   id: string;
   clientId: string;
   name: string;
+  side: "groom" | "bride";
   attending: "yes" | "no";
   guestCount: number;
   message?: string;
@@ -49,12 +50,15 @@ export default async (req: Request, _context: Context) => {
 
   const body = (await req.json()) as {
     name?: string;
+    side?: string;
     attending?: string;
     guestCount?: number;
     message?: string;
   };
 
   const name = body.name?.trim() ?? "";
+  const side: "groom" | "bride" | null =
+    body.side === "groom" || body.side === "bride" ? body.side : null;
   const attending: "yes" | "no" = body.attending === "no" ? "no" : "yes";
   const guestCount =
     attending === "no"
@@ -62,10 +66,10 @@ export default async (req: Request, _context: Context) => {
       : Math.min(10, Math.max(1, Number(body.guestCount) || 1));
   const message = body.message?.trim() || undefined;
 
-  if (!name) {
+  if (!name || !side) {
     return Response.json({ error: "invalid" }, { status: 400 });
   }
-  if (message && message.length > 200) {
+  if (message && message.length > 100) {
     return Response.json({ error: "too_long" }, { status: 400 });
   }
 
@@ -73,6 +77,7 @@ export default async (req: Request, _context: Context) => {
     id: crypto.randomUUID(),
     clientId,
     name,
+    side,
     attending,
     guestCount,
     message,

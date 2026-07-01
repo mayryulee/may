@@ -97,7 +97,7 @@ export function renderGalleryHtml(
       aria-label="갤러리 사진 보기"
     >
       <div class="absolute inset-0 bg-black/90" data-gallery-close></div>
-      <div class="relative mx-auto flex h-full max-w-[400px] items-center justify-center py-[48px]">
+      <div class="relative mx-auto flex h-full max-w-[400px] items-center justify-center px-[8px] py-[48px]">
         <button
           type="button"
           data-gallery-close
@@ -106,28 +106,30 @@ export function renderGalleryHtml(
         >
           ×
         </button>
-        <button
-          type="button"
-          data-gallery-prev
-          class="${GALLERY_ARROW_PREV_CLASS}${GALLERY_ARROW_PREV_HIDDEN_CLASS}"
-          aria-label="이전 사진"
-        >
-          ${galleryArrowIcon("prev")}
-        </button>
-        <button
-          type="button"
-          data-gallery-next
-          class="${GALLERY_ARROW_NEXT_CLASS}"
-          aria-label="다음 사진"
-        >
-          ${galleryArrowIcon("next")}
-        </button>
-        <img
-          id="gallery-lightbox-image"
-          class="relative z-0 max-h-[min(85vh,720px)] w-full object-contain"
-          alt=""
-          decoding="async"
-        />
+        <div class="relative w-fit max-w-full">
+          <button
+            type="button"
+            data-gallery-prev
+            class="${GALLERY_ARROW_PREV_CLASS}${GALLERY_ARROW_PREV_HIDDEN_CLASS}"
+            aria-label="이전 사진"
+          >
+            ${galleryArrowIcon("prev")}
+          </button>
+          <button
+            type="button"
+            data-gallery-next
+            class="${GALLERY_ARROW_NEXT_CLASS}"
+            aria-label="다음 사진"
+          >
+            ${galleryArrowIcon("next")}
+          </button>
+          <img
+            id="gallery-lightbox-image"
+            class="block max-h-[min(85vh,720px)] max-w-full w-auto h-auto"
+            alt=""
+            decoding="async"
+          />
+        </div>
       </div>
     </div>`;
 }

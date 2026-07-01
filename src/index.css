@@ -75,6 +75,33 @@
   background-color: transparent;
 }
 
+#rsvp-form .may-form-control,
+#guestbook-write-form .may-form-control {
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #rsvp-form .may-form-control:hover,
+  #guestbook-write-form .may-form-control:hover {
+    background-color: #efefef;
+    box-shadow: inset 0 0 0 1px #dddddd;
+  }
+}
+
+#rsvp-form .may-form-control:active,
+#guestbook-write-form .may-form-control:active {
+  background-color: #e8e8e8;
+  box-shadow: inset 0 0 0 1px #cccccc;
+}
+
+#rsvp-form .may-form-control:focus,
+#guestbook-write-form .may-form-control:focus {
+  background-color: #efefef;
+  box-shadow: inset 0 0 0 1px #cccccc;
+}
+
 .theme-toggle-target {
   touch-action: manipulation;
   -webkit-user-select: none;
