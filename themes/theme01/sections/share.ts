@@ -1,4 +1,4 @@
-import { initShare } from "../../../packages/shared/kakao-share";
+import { initShare } from "../../../packages/shared/share";
 import { themeIconUrl } from "../../../packages/shared/types";
 
 export { initShare };
@@ -11,13 +11,6 @@ export function renderShareHtml(): string {
       aria-label="청첩장 공유"
     >
       <div class="mx-auto max-w-full space-y-[17px]">
-        <button
-          type="button"
-          id="share-kakao"
-          class="block w-full rounded-[8px] border-[0px] bg-[#FCE777] py-[13px] font-pretendard text-[16px] text-[#343A40]"
-        >
-          카카오톡으로 청첩장 전하기
-        </button>
         <button
           type="button"
           id="share-copy-link"

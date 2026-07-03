@@ -41,13 +41,19 @@ function readClientMeta(configPath: string) {
     ogSiteName: pickInMeta("ogSiteName"),
     ogTitle: pickInMeta("ogTitle"),
     ogDescription: pickInMeta("ogDescription"),
+    ogImage: pickInMeta("ogImage"),
     ogImageAlt: pickInMeta("ogImageAlt"),
     twitterTitle: pickInMeta("twitterTitle"),
     twitterDescription: pickInMeta("twitterDescription"),
   };
 }
 
-function resolveSiteUrl(env: Record<string, string>): string {
+function resolveSiteUrl(env: Record<string, string>, mode: string): string {
+  // 로컬·ngrok OG 디버깅: DEV_SITE_URL 이 있으면 dev 에서만 우선 사용
+  if (mode === "development" && env.DEV_SITE_URL?.trim()) {
+    return env.DEV_SITE_URL.trim().replace(/\/$/, "");
+  }
+
   return (
     env.SITE_URL ||
     env.VITE_SITE_URL ||
@@ -59,7 +65,7 @@ function resolveSiteUrl(env: Record<string, string>): string {
 
 type ClientMeta = ReturnType<typeof readClientMeta>;
 
-/** 카카오·SNS 미리보기: og:image 는 절대 URL 필요 (.env 또는 Netlify URL 환경변수) */
+/** SNS 미리보기: og:image 는 절대 URL 필요 (.env 또는 Netlify URL 환경변수) */
 function ogMetaPlugin(
   siteUrl: string,
   clientId: string,
@@ -68,7 +74,8 @@ function ogMetaPlugin(
   return {
     name: "og-meta",
     transformIndexHtml(html) {
-      const imageUrl = `${siteUrl}/images/${clientId}/og-kakao.png?v=3`;
+      const imageFile = clientMeta.ogImage || "coverh01.png";
+      const imageUrl = `${siteUrl}/images/${clientId}/${imageFile}`;
 
       return html
         .replaceAll("__OG_SITE_URL__", siteUrl)
@@ -90,7 +97,7 @@ export default defineConfig(({ mode }) => {
   const { clientId, clientDir } = resolveClient(env.CLIENT);
   const themeOverride = env.THEME?.trim();
   const clientMeta = readClientMeta(resolve(clientDir, "config.ts"));
-  const siteUrl = resolveSiteUrl(env);
+  const siteUrl = resolveSiteUrl(env, mode);
 
   return {
     plugins: [
@@ -107,6 +114,11 @@ export default defineConfig(({ mode }) => {
         "@shared": resolve(__dirname, "packages/shared"),
         "@themes": resolve(__dirname, "themes"),
       },
+    },
+    server: {
+      allowedHosts: [
+        "blank-crowbar-gave.ngrok-free.dev", // ngrok 주소 추가
+      ],
     },
     build: {
       rollupOptions: {

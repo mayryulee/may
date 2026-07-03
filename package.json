@@ -7,8 +7,7 @@
     "predev": "node --experimental-strip-types scripts/sync-client-assets.mjs",
     "dev": "vite",
     "prebuild": "node --experimental-strip-types scripts/sync-client-assets.mjs",
-    "build": "node --experimental-strip-types scripts/generate-og-kakao.mjs && tsc && tsc -p tsconfig.node.json && vite build",
-    "generate:og": "node --experimental-strip-types scripts/generate-og-kakao.mjs",
+    "build": "tsc && tsc -p tsconfig.node.json && vite build",
     "preview": "vite preview",
     "ship": "bash scripts/git-ship.sh"
   },

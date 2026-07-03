@@ -92,6 +92,8 @@ export type ClientMeta = {
   ogSiteName: string;
   ogTitle: string;
   ogDescription: string;
+  /** 카카오·SNS 미리보기 썸네일 (clients/{id}/images/ 아래 파일명, 기본 coverh01.png) */
+  ogImage?: string;
   ogImageAlt: string;
   twitterTitle: string;
   twitterDescription: string;
@@ -171,8 +173,6 @@ export type ClientConfig = {
   share: {
     title: string;
     description: string;
-    imageWidth: number;
-    imageHeight: number;
   };
   rsvp?: ClientRsvpConfig;
 };
@@ -180,10 +180,6 @@ export type ClientConfig = {
 /** 클라이언트 전용 사진 (갤러리, 커버, 메인 등) */
 export function clientImageUrl(clientId: string, filename: string): string {
   return `/images/${clientId}/${filename}`;
-}
-
-export function clientOgImageUrl(clientId: string): string {
-  return `${clientImageUrl(clientId, "og-kakao.png")}?v=3`;
 }
 
 /** 테마 전용 이미지 (title.png 등) */

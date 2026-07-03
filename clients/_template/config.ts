@@ -11,6 +11,8 @@ const config: ClientConfig = {
     ogSiteName: "신랑 & 신부",
     ogTitle: "신랑♥신부 결혼합니다.",
     ogDescription: "예식 일시·장소",
+    ogImage: "coverh01.png",
+    // ogImage: "coverv01.png",
     ogImageAlt: "결혼식 초대",
     twitterTitle: "신랑♥신부 결혼합니다.",
     twitterDescription: "소중한 분들을 초대합니다.",
@@ -97,8 +99,6 @@ const config: ClientConfig = {
   share: {
     title: "신랑♥신부 결혼합니다.",
     description: "예식 일시·장소",
-    imageWidth: 600,
-    imageHeight: 800,
   },
 
   rsvp: {

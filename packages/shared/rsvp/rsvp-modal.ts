@@ -25,7 +25,7 @@ const RSVP_SELECT =
 const RSVP_TEXTAREA =
   "may-form-control min-h-[120px] w-full resize-none rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight leading-[1.75] tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
 const MODAL_SHELL =
-  "fixed inset-0 z-[100] hidden font-pretendard";
+  "fixed inset-0 z-[100] hidden font-pretendard"
 const MODAL_CARD =
   "relative w-full rounded-[8px] bg-white px-[24px] py-[32px] text-center font-pretendard tracking-tight shadow-lg";
 const CLOSE_BTN =
