@@ -15,7 +15,7 @@ function siteUrl(): string {
 }
 
 function sharePageUrl(): string {
-  return `${siteUrl()}/`;
+  return siteUrl();
 }
 
 function shareImageUrl(config: ClientConfig): string {
@@ -57,20 +57,22 @@ async function shareToKakao(config: ClientConfig): Promise<void> {
   const templateId = getKakaoTemplateId();
 
   if (!javascriptKey || !Number.isInteger(templateId) || templateId <= 0) {
-    await copyShareUrlFallback();
-    return;
+    throw new Error("Kakao share config is missing");
   }
 
   await loadKakaoSdk();
 
   const kakao = window.Kakao;
-  if (!kakao?.Share?.sendCustom) {
-    await copyShareUrlFallback();
-    return;
+  if (!kakao) {
+    throw new Error("Kakao SDK is unavailable");
   }
 
   if (!kakao.isInitialized()) {
     kakao.init(javascriptKey);
+  }
+
+  if (!kakao.Share?.sendCustom) {
+    throw new Error("Kakao Share SDK is unavailable");
   }
 
   kakao.Share.sendCustom({
@@ -95,18 +97,31 @@ function getKakaoTemplateId(): number {
   return Number(templateId);
 }
 
+function kakaoShareErrorMessage(error: unknown): string {
+  if (error instanceof Error && error.message) return error.message;
+  if (typeof error === "string") return error;
+  if (typeof error === "object" && error) {
+    const maybeMessage =
+      "message" in error && typeof error.message === "string" ? error.message : undefined;
+    const maybeMsg = "msg" in error && typeof error.msg === "string" ? error.msg : undefined;
+    const maybeCode = "code" in error ? String(error.code) : undefined;
+    return [maybeCode, maybeMessage || maybeMsg].filter(Boolean).join(": ");
+  }
+  return "알 수 없는 오류";
+}
+
 export function initShare(config: ClientConfig): void {
   mountCopyToast();
+  void loadKakaoSdk().catch(() => {
+    /* 클릭 시 다시 시도하고 실패 메시지를 보여줍니다. */
+  });
 
   document.querySelector("#share-kakao-link")?.addEventListener("click", async () => {
     try {
       await shareToKakao(config);
-    } catch {
-      try {
-        await copyShareUrlFallback();
-      } catch {
-        showCopyToast(COPY_TOAST.failed);
-      }
+    } catch (error) {
+      console.error(error);
+      showCopyToast(`카카오 공유 실패: ${kakaoShareErrorMessage(error)}`);
     }
   });
 
