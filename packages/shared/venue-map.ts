@@ -208,14 +208,15 @@ export function initVenueMap(
 ): void {
   const fallbackFontClass = options.fallbackFontClass ?? "font-noto";
   const siteAppName =
-    import.meta.env.VITE_SITE_APP_NAME?.trim() || "formayletter.netlify.app";
+    import.meta.env.VITE_SITE_APP_NAME?.trim() || "mayletter.site";
   const links = buildMapLinks(venue, siteAppName);
 
   initMapButtons(root, links);
 
   const mapEl = root.querySelector<HTMLElement>("#venue-map");
   if (mapEl) {
-    const appKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY as string | undefined;
+    const appKey =
+      import.meta.env.VITE_KAKAO_MAP_APP_KEY || import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY;
     if (appKey?.trim()) {
       initKakaoMap(mapEl, appKey.trim(), venue).catch(() =>
         initMapFallback(mapEl, links.kakao.web, fallbackFontClass),

@@ -6,6 +6,7 @@
 [build.environment]
   SITE_URL = "https://mayletter.site"
   VITE_SITE_URL = "https://mayletter.site"
+  VITE_KAKAO_MAP_APP_KEY = "a6ef8d048f4f69d413e799bd8fc65063"
   VITE_KAKAO_JAVASCRIPT_KEY = "a6ef8d048f4f69d413e799bd8fc65063"
   VITE_KAKAO_SHARE_TEMPLATE_VARIANT = "vertical"
   VITE_KAKAO_SHARE_TEMPLATE_ID_VERTICAL = "135014"
