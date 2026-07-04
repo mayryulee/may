@@ -58,6 +58,6 @@ export function initPage(
   initAccountGift(root);
   initInformationCarousel(root, config.information);
   initGuestbook(root, config.id);
-  initShare();
+  initShare(config);
   initRsvp(document, config);
 }

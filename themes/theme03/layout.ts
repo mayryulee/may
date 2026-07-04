@@ -51,6 +51,6 @@ export function initPage(
   initLocation(root, config.venue);
   initAccountGift(root);
   initInformationCarousel(root, config.information);
-  initShare();
+  initShare(config);
   initRsvp(document, config);
 }

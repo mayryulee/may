@@ -13,6 +13,13 @@ export function renderShareHtml(): string {
       <div class="mx-auto max-w-full space-y-[17px]">
         <button
           type="button"
+          id="share-kakao-link"
+          class="flex w-full items-center justify-center gap-[8px] rounded-[8px] border-[0px] bg-[#FBE66B] py-[13px] font-pretendard text-[16px] text-[#15181F]"
+        >
+          카카오톡으로 청첩장 전하기
+        </button>
+        <button
+          type="button"
           id="share-copy-link"
           class="flex w-full items-center justify-center gap-[8px] rounded-[8px] border-[0px] bg-[#F7F7F7] py-[13px] font-pretendard text-[16px] text-[#15181F]"
         >

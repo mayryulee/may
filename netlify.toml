@@ -4,5 +4,11 @@
 
 # Netlify 기본 URL(boisterous-xxx) 대신 실제 공유 도메인 사용
 [build.environment]
-  SITE_URL = "https://formayletter.netlify.app"
-  VITE_SITE_URL = "https://formayletter.netlify.app"
+  SITE_URL = "https://mayletter.site"
+  VITE_SITE_URL = "https://mayletter.site"
+  VITE_KAKAO_JAVASCRIPT_KEY = "a6ef8d048f4f69d413e799bd8fc65063"
+  VITE_KAKAO_SHARE_TEMPLATE_VARIANT = "vertical"
+  VITE_KAKAO_SHARE_TEMPLATE_ID_VERTICAL = "135014"
+  VITE_KAKAO_SHARE_TEMPLATE_ID_HORIZONTAL = ""
+  VITE_KAKAO_SHARE_TEMPLATE_ID = "135014"
+  VITE_KAKAO_SHARE_METHOD = "custom"
