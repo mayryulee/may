@@ -11,9 +11,9 @@ const config: ClientConfig = {
     ogSiteName: "신랑 & 신부",
     ogTitle: "신랑♥신부 결혼합니다.",
     ogDescription: "예식 일시·장소",
-    // coverv01=세로형, coverh01=가로형
-    ogImage: "coverh01.png",
-    // ogImage: "coverv01.png",
+    // coverv001=세로형, coverh001=가로형
+    ogImage: "coverv001.png",
+    // ogImage: "coverh001.png",
     ogImageAlt: "결혼식 초대",
     twitterTitle: "신랑♥신부 결혼합니다.",
     twitterDescription: "소중한 분들을 초대합니다.",

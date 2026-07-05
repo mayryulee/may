@@ -92,7 +92,7 @@ function ogMetaPlugin(
   return {
     name: "og-meta",
     transformIndexHtml(html) {
-      const imageFile = clientMeta.ogImage || "coverh001.png";
+      const imageFile = clientMeta.ogImage || "coverv001.png";
       const imageUrl = withImageCacheBust(
         `${siteUrl}/images/${clientId}/${imageFile}`,
         imageVersion,

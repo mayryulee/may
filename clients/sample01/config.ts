@@ -13,8 +13,8 @@ const config: ClientConfig = {
     ogTitle: "정호♥채현 결혼합니다.",
     ogDescription: "4월 25일 토요일 낮 11시 노블발렌티 대치점",
     // 링크 복사(OG): coverv001=세로, coverh001=가로
-    ogImage: "coverh001.png",
-    // ogImage: "coverv001.png",
+    ogImage: "coverv001.png",
+    // ogImage: "coverh001.png",
     ogImageAlt: "정호와 채현의 결혼식 초대",
     twitterTitle: "정호♥채현 결혼합니다.",
     twitterDescription: "2027년 4월 25일, 소중한 분들을 초대합니다.",
