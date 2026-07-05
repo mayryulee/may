@@ -24,10 +24,10 @@ function getKakaoTemplateVariant(): "vertical" | "horizontal" {
     : "vertical";
 }
 
-/** coverv01=세로형, coverh01=가로형 — 카카오 THU는 쿼리스트링 없는 URL만 허용 */
+/** coverv001=세로형, coverh001=가로형 — 카카오 THU는 쿼리스트링 없는 URL만 허용 */
 function shareImageUrl(config: ClientConfig): string {
   const variant = getKakaoTemplateVariant();
-  const imageFile = variant === "horizontal" ? "coverh01.png" : "coverv01.png";
+  const imageFile = variant === "horizontal" ? "coverh001.png" : "coverv001.png";
   return `${siteUrl()}/images/${config.id}/${imageFile}`;
 }
 

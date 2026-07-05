@@ -94,8 +94,8 @@ export type ClientMeta = {
   ogDescription: string;
   /**
    * 링크 복사·OG 미리보기용 (clients/{id}/images/).
-   * coverv01=세로형, coverh01=가로형.
-   * 카카오 템플릿 공유 썸네일은 variant에 따라 coverv01/coverh01 자동 선택.
+   * coverv001=세로형, coverh001=가로형.
+   * 카카오 템플릿 공유 썸네일은 variant에 따라 coverv001/coverh001 자동 선택.
    */
   ogImage?: string;
   ogImageAlt: string;

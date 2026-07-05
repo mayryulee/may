@@ -65,10 +65,10 @@ function resolveSiteUrl(env: Record<string, string>, mode: string): string {
 
 type ClientMeta = ReturnType<typeof readClientMeta>;
 
-/** coverh01/coverv01 교체 시 카카오·OG 캐시 무효화용 */
+/** coverh001/coverv001 교체 시 카카오·OG 캐시 무효화용 */
 function readCoverImageVersion(clientDir: string): string {
   let max = 0;
-  for (const file of ["coverh01.png", "coverv01.png"]) {
+  for (const file of ["coverh001.png", "coverv001.png", "coverh01.png", "coverv01.png"]) {
     try {
       max = Math.max(max, statSync(resolve(clientDir, "images", file)).mtimeMs);
     } catch {
@@ -92,7 +92,7 @@ function ogMetaPlugin(
   return {
     name: "og-meta",
     transformIndexHtml(html) {
-      const imageFile = clientMeta.ogImage || "coverh01.png";
+      const imageFile = clientMeta.ogImage || "coverh001.png";
       const imageUrl = withImageCacheBust(
         `${siteUrl}/images/${clientId}/${imageFile}`,
         imageVersion,
