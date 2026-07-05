@@ -28,7 +28,9 @@ function getKakaoTemplateVariant(): "vertical" | "horizontal" {
 function shareImageUrl(config: ClientConfig): string {
   const variant = getKakaoTemplateVariant();
   const imageFile = variant === "horizontal" ? "coverh01.png" : "coverv01.png";
-  return `${siteUrl()}/images/${config.id}/${imageFile}`;
+  const base = `${siteUrl()}/images/${config.id}/${imageFile}`;
+  const version = import.meta.env.VITE_OG_IMAGE_VERSION?.trim();
+  return version ? `${base}?v=${encodeURIComponent(version)}` : base;
 }
 
 function loadKakaoSdk(): Promise<void> {

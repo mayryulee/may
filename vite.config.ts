@@ -1,5 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import type { Plugin } from "vite";
 import { defineConfig, loadEnv } from "vite";
@@ -65,17 +65,38 @@ function resolveSiteUrl(env: Record<string, string>, mode: string): string {
 
 type ClientMeta = ReturnType<typeof readClientMeta>;
 
+/** coverh01/coverv01 교체 시 카카오·OG 캐시 무효화용 */
+function readCoverImageVersion(clientDir: string): string {
+  let max = 0;
+  for (const file of ["coverh01.png", "coverv01.png"]) {
+    try {
+      max = Math.max(max, statSync(resolve(clientDir, "images", file)).mtimeMs);
+    } catch {
+      /* 파일 없으면 스킵 */
+    }
+  }
+  return String(max || Date.now());
+}
+
+function withImageCacheBust(url: string, version: string): string {
+  return `${url}?v=${encodeURIComponent(version)}`;
+}
+
 /** SNS 미리보기: og:image 는 절대 URL 필요 (.env 또는 Netlify URL 환경변수) */
 function ogMetaPlugin(
   siteUrl: string,
   clientId: string,
   clientMeta: ClientMeta,
+  imageVersion: string,
 ): Plugin {
   return {
     name: "og-meta",
     transformIndexHtml(html) {
       const imageFile = clientMeta.ogImage || "coverh01.png";
-      const imageUrl = `${siteUrl}/images/${clientId}/${imageFile}`;
+      const imageUrl = withImageCacheBust(
+        `${siteUrl}/images/${clientId}/${imageFile}`,
+        imageVersion,
+      );
 
       return html
         .replaceAll("__OG_SITE_URL__", siteUrl)
@@ -98,15 +119,17 @@ export default defineConfig(({ mode }) => {
   const themeOverride = env.THEME?.trim();
   const clientMeta = readClientMeta(resolve(clientDir, "config.ts"));
   const siteUrl = resolveSiteUrl(env, mode);
+  const coverImageVersion = readCoverImageVersion(clientDir);
 
   return {
     plugins: [
       injectClientPlugin(clientId, themeOverride),
       tailwindcss(),
-      ogMetaPlugin(siteUrl, clientId, clientMeta),
+      ogMetaPlugin(siteUrl, clientId, clientMeta, coverImageVersion),
     ],
     define: {
       "import.meta.env.VITE_THEME_OVERRIDE": JSON.stringify(themeOverride ?? ""),
+      "import.meta.env.VITE_OG_IMAGE_VERSION": JSON.stringify(coverImageVersion),
     },
     resolve: {
       alias: {
