@@ -92,7 +92,11 @@ export type ClientMeta = {
   ogSiteName: string;
   ogTitle: string;
   ogDescription: string;
-  /** 카카오·SNS 미리보기 썸네일 (clients/{id}/images/ 아래 파일명, 기본 coverh01.png) */
+  /**
+   * 링크 복사·OG 미리보기용 (clients/{id}/images/).
+   * coverv01=세로형, coverh01=가로형.
+   * 카카오 템플릿 공유 썸네일은 variant에 따라 coverv01/coverh01 자동 선택.
+   */
   ogImage?: string;
   ogImageAlt: string;
   twitterTitle: string;

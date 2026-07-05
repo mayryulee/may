@@ -18,8 +18,16 @@ function sharePageUrl(): string {
   return siteUrl();
 }
 
+function getKakaoTemplateVariant(): "vertical" | "horizontal" {
+  return import.meta.env.VITE_KAKAO_SHARE_TEMPLATE_VARIANT === "horizontal"
+    ? "horizontal"
+    : "vertical";
+}
+
+/** coverv01=세로형, coverh01=가로형 */
 function shareImageUrl(config: ClientConfig): string {
-  const imageFile = config.meta.ogImage || "coverh01.png";
+  const variant = getKakaoTemplateVariant();
+  const imageFile = variant === "horizontal" ? "coverh01.png" : "coverv01.png";
   return `${siteUrl()}/images/${config.id}/${imageFile}`;
 }
 
@@ -87,7 +95,7 @@ async function shareToKakao(config: ClientConfig): Promise<void> {
 }
 
 function getKakaoTemplateId(): number {
-  const variant = import.meta.env.VITE_KAKAO_SHARE_TEMPLATE_VARIANT || "vertical";
+  const variant = getKakaoTemplateVariant();
   const templateId =
     variant === "horizontal"
       ? import.meta.env.VITE_KAKAO_SHARE_TEMPLATE_ID_HORIZONTAL

@@ -12,6 +12,7 @@ const config: ClientConfig = {
     ogSiteName: "Jeongho & Chaehyun",
     ogTitle: "정호♥채현 결혼합니다.",
     ogDescription: "4월 25일 토요일 낮 11시 노블발렌티 대치점",
+    // 링크 복사(OG): coverv01=세로, coverh01=가로
     ogImage: "coverh01.png",
     // ogImage: "coverv01.png",
     ogImageAlt: "정호와 채현의 결혼식 초대",
