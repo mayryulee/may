@@ -57,7 +57,7 @@ function main() {
     redirectLines.push(`/${client.slug}    /${client.slug}/index.html   200`);
   }
 
-  redirectLines.push(`/    /${manifest.defaultSlug}/    302`);
+  redirectLines.push(`/    /grace/    302`);
   redirectLines.push(`/*    /index.html   200`);
 
   writeFileSync(redirectsPath, `${redirectLines.join("\n")}\n`, "utf8");
