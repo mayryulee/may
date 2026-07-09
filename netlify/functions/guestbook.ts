@@ -12,17 +12,20 @@ type StoredEntry = {
 type PublicEntry = Omit<StoredEntry, "password">;
 
 const STORE = "guestbook";
-const KEY = "entries";
 
-async function readEntries(): Promise<StoredEntry[]> {
+function entriesKey(clientId: string): string {
+  return `${clientId}/entries`;
+}
+
+async function readEntries(clientId: string): Promise<StoredEntry[]> {
   const store = getStore({ name: STORE, consistency: "strong" });
-  const raw = await store.get(KEY, { type: "json" });
+  const raw = await store.get(entriesKey(clientId), { type: "json" });
   return Array.isArray(raw) ? (raw as StoredEntry[]) : [];
 }
 
-async function writeEntries(entries: StoredEntry[]): Promise<void> {
+async function writeEntries(clientId: string, entries: StoredEntry[]): Promise<void> {
   const store = getStore({ name: STORE, consistency: "strong" });
-  await store.setJSON(KEY, entries);
+  await store.setJSON(entriesKey(clientId), entries);
 }
 
 function toPublic(entry: StoredEntry): PublicEntry {
@@ -34,9 +37,19 @@ function toPublic(entry: StoredEntry): PublicEntry {
   };
 }
 
+function resolveClientId(req: Request): string | null {
+  const url = new URL(req.url);
+  return url.searchParams.get("clientId")?.trim() || null;
+}
+
 export default async (req: Request, _context: Context) => {
+  const clientId = resolveClientId(req);
+  if (!clientId) {
+    return Response.json({ error: "client_required" }, { status: 400 });
+  }
+
   if (req.method === "GET") {
-    const entries = await readEntries();
+    const entries = await readEntries(clientId);
     return Response.json(entries.map(toPublic));
   }
 
@@ -65,9 +78,9 @@ export default async (req: Request, _context: Context) => {
       createdAt: new Date().toISOString(),
     };
 
-    const entries = await readEntries();
+    const entries = await readEntries(clientId);
     entries.push(entry);
-    await writeEntries(entries);
+    await writeEntries(clientId, entries);
     return Response.json(toPublic(entry));
   }
 
@@ -75,12 +88,15 @@ export default async (req: Request, _context: Context) => {
     const body = (await req.json()) as { id?: string; password?: string };
     const id = body.id ?? "";
     const password = body.password ?? "";
-    const entries = await readEntries();
+    const entries = await readEntries(clientId);
     const target = entries.find((e) => e.id === id);
     if (!target || target.password !== password) {
       return Response.json({ ok: false }, { status: 403 });
     }
-    await writeEntries(entries.filter((e) => e.id !== id));
+    await writeEntries(
+      clientId,
+      entries.filter((e) => e.id !== id),
+    );
     return Response.json({ ok: true });
   }
 

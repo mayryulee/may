@@ -251,7 +251,7 @@ export function renderRsvpOverlayHtml(config: ClientConfig, themeId: ThemeId): s
   `;
 }
 
-export function initRsvp(root: ParentNode, config: ClientConfig): void {
+export function initRsvp(root: ParentNode, config: ClientConfig, themeId: ThemeId): void {
   if (!config.rsvp?.enabled) return;
 
   mountCopyToast();
@@ -264,8 +264,8 @@ export function initRsvp(root: ParentNode, config: ClientConfig): void {
 
   const shouldAutoOpen =
     config.rsvp.showOnLoad !== false &&
-    !hasSubmittedRsvp(clientId) &&
-    !isRsvpDismissedToday(clientId);
+    !hasSubmittedRsvp(clientId, themeId) &&
+    !isRsvpDismissedToday(clientId, themeId);
 
   if (shouldAutoOpen) {
     requestAnimationFrame(() => showModal(intro));
@@ -287,7 +287,7 @@ export function initRsvp(root: ParentNode, config: ClientConfig): void {
     if (checkEl) checkEl.innerHTML = rsvpIcons.checkboxChecked;
 
     window.setTimeout(() => {
-      dismissRsvpForToday(clientId);
+      dismissRsvpForToday(clientId, themeId);
       hideModal(intro);
       btn.disabled = false;
       if (checkEl) checkEl.innerHTML = rsvpIcons.checkbox;
@@ -339,7 +339,7 @@ export function initRsvp(root: ParentNode, config: ClientConfig): void {
     const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     if (submitBtn) submitBtn.disabled = true;
 
-    const ok = await submitRsvp(clientId, {
+    const ok = await submitRsvp(clientId, themeId, {
       name,
       side,
       attending,

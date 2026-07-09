@@ -4,6 +4,7 @@ public/images/*
 !public/images/.gitkeep
 public/theme-assets/
 public/icons/
+packages/shared/generated/
 .DS_Store
 *.local
 .env

@@ -4,6 +4,19 @@ import type { ClientConfig } from "./types";
 const KAKAO_SDK_SRC = "https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js";
 const KAKAO_SDK_SCRIPT_ID = "kakao-js-sdk";
 
+/** 미리보기용 테마 URL(/grace, /tender, /veil) — 카카오 SLUG에 그대로 사용 */
+const PREVIEW_THEME_SLUGS = new Set(["grace", "tender", "veil"]);
+
+function currentPathSegment(): string {
+  return window.location.pathname.replace(/^\/+|\/+$/g, "").split("/")[0] ?? "";
+}
+
+function shareSlug(config: ClientConfig): string {
+  const segment = currentPathSegment();
+  if (PREVIEW_THEME_SLUGS.has(segment)) return segment;
+  return config.slug;
+}
+
 function siteUrl(): string {
   if (import.meta.env.DEV) {
     const fromDevEnv = import.meta.env.VITE_DEV_SITE_URL?.replace(/\/$/, "");
@@ -15,7 +28,9 @@ function siteUrl(): string {
 }
 
 function sharePageUrl(): string {
-  return siteUrl();
+  const path = window.location.pathname.replace(/\/$/, "");
+  const base = siteUrl();
+  return path ? `${base}${path}` : base;
 }
 
 /** coverv001=세로형, coverh001=가로형 — 카카오 THU는 쿼리스트링 없는 URL만 허용 */
@@ -83,7 +98,7 @@ async function shareToKakao(config: ClientConfig): Promise<void> {
       THU: shareImageUrl(config),
       TITLE: config.share.title || config.meta.ogTitle || config.meta.title,
       DESC: config.share.description || config.meta.ogDescription || config.meta.description,
-      URL: sharePageUrl(),
+      SLUG: shareSlug(config),
     },
   });
 }

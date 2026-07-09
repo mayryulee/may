@@ -59,5 +59,5 @@ export function initPage(
   initInformationCarousel(root, config.information);
   initGuestbook(root, config.id);
   initShare(config);
-  initRsvp(document, config);
+  initRsvp(document, config, _themeId);
 }

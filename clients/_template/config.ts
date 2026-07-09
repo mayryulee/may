@@ -2,6 +2,7 @@ import type { ClientConfig } from "../../packages/shared/types";
 
 const config: ClientConfig = {
   id: "CLIENT_ID",
+  slug: "CLIENT_SLUG",
   theme: "theme01",
   expiresAt: "YYYY-MM-DD",
 

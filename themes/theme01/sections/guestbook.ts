@@ -165,15 +165,28 @@ function escapeHtml(text: string): string {
 async function refreshList(root: ParentNode, clientId: string): Promise<void> {
   const list = root.querySelector<HTMLElement>("#guestbook-list");
   if (!list) return;
-  const entries = await listGuestbookEntries(clientId);
-  if (entries.length === 0) {
+
+  list.innerHTML = `
+    <p class="m-0 py-[40px] text-center font-pretendard text-[12px] font-extralight tracking-tight text-[#999999]">
+      불러오는 중…
+    </p>`;
+
+  try {
+    const entries = await listGuestbookEntries(clientId);
+    if (entries.length === 0) {
+      list.innerHTML = `
+        <p class="m-0 py-[40px] text-center font-pretendard text-[12px] font-extralight tracking-tight text-[#999999]">
+          아직 남겨진 방명록이 없습니다.
+        </p>`;
+      return;
+    }
+    list.innerHTML = entries.map(renderEntryCard).join("");
+  } catch {
     list.innerHTML = `
       <p class="m-0 py-[40px] text-center font-pretendard text-[12px] font-extralight tracking-tight text-[#999999]">
-        아직 남겨진 방명록이 없습니다.
+        방명록을 불러오지 못했습니다.
       </p>`;
-    return;
   }
-  list.innerHTML = entries.map(renderEntryCard).join("");
 }
 
 export function renderGuestbookHtml(): string {
@@ -333,8 +346,8 @@ export function initGuestbook(root: ParentNode, clientId: string): void {
   });
 
   root.querySelector("#guestbook-open-list")?.addEventListener("click", async () => {
-    await refreshList(root, clientId);
     openModal(root, "list");
+    await refreshList(root, clientId);
   });
 
   root.querySelectorAll("[data-guestbook-close]").forEach((btn) => {
@@ -378,7 +391,13 @@ export function initGuestbook(root: ParentNode, clientId: string): void {
       return;
     }
 
-    await addGuestbookEntry(clientId, { name, message, password });
+    try {
+      await addGuestbookEntry(clientId, { name, message, password });
+    } catch {
+      writeError.textContent = "전송에 실패했습니다. 잠시 후 다시 시도해 주세요.";
+      writeError.classList.remove("hidden");
+      return;
+    }
     writeForm.reset();
     syncWriteSubmit(root);
     closeModals(root);

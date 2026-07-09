@@ -1,5 +1,5 @@
 export type ThemeId = "theme01" | "theme02" | "theme03";
-export type ThemeSlug = "grace" | "tender" | "theme03";
+export type ThemeSlug = "grace" | "tender" | "veil";
 
 export type ThemeMeta = {
   slug: ThemeSlug;
@@ -12,7 +12,7 @@ export type ThemeMeta = {
 export const THEME_META: Record<ThemeId, ThemeMeta> = {
   theme01: { slug: "grace", label: "Grace" },
   theme02: { slug: "tender", label: "Tender" },
-  theme03: { slug: "theme03", label: "Theme 03" },
+  theme03: { slug: "veil", label: "Veil" },
 } as const;
 
 export function themeSlugOf(themeId: ThemeId): ThemeSlug {
@@ -27,6 +27,14 @@ export function themeIdFromSlug(slug: ThemeSlug): ThemeId {
   if (slug === "grace") return "theme01";
   if (slug === "tender") return "theme02";
   return "theme03";
+}
+
+export function isThemeSlug(slug: string): slug is ThemeSlug {
+  return slug === "grace" || slug === "tender" || slug === "veil";
+}
+
+export function pathForTheme(themeId: ThemeId): string {
+  return `/${themeSlugOf(themeId)}`;
 }
 
 export type GalleryImage = {
@@ -120,6 +128,8 @@ export type ClientRsvpConfig = {
 
 export type ClientConfig = {
   id: string;
+  /** URL 경로 (`/eunju-hani`) — 미지정 시 빌드 스크립트가 폴더명을 사용 */
+  slug: string;
   theme: ThemeId;
   expiresAt?: string;
   meta: ClientMeta;

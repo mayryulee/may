@@ -52,5 +52,5 @@ export function initPage(
   initAccountGift(root);
   initInformationCarousel(root, config.information);
   initShare(config);
-  initRsvp(document, config);
+  initRsvp(document, config, _themeId);
 }

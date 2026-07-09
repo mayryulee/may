@@ -36,14 +36,12 @@ export function renderShareHtml(): string {
         </button>
       </div>
       <img
-        class="theme-toggle-target mx-auto mt-[81px] block h-auto w-[180px]"
+        class="mx-auto mt-[81px] block h-auto w-[180px]"
         src="${themeIconUrl("theme02", "copyright.svg")}"
         alt="© MAY"
         width="201"
         height="12"
         decoding="async"
-        draggable="false"
-        data-theme-toggle
       />
     </section>`;
 }

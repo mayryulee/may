@@ -1,8 +1,5 @@
-import sample01 from "../clients/sample01/config";
-import sample02 from "../clients/sample02/config";
+import { ALL_CLIENT_CONFIGS } from "../packages/shared/generated/client-registry";
 import type { ClientConfig } from "../packages/shared/types";
-
-const configs: ClientConfig[] = [sample01, sample02];
 
 export type RsvpNotifyContext = {
   emails: string[];
@@ -12,6 +9,8 @@ export type RsvpNotifyContext = {
   venueName: string;
 };
 
+const configs: ClientConfig[] = [...ALL_CLIENT_CONFIGS];
+
 export function getRsvpNotifyContext(
   clientId: string,
 ): RsvpNotifyContext | null {
@@ -19,8 +18,6 @@ export function getRsvpNotifyContext(
   if (!config?.rsvp?.enabled) return null;
 
   const emails = config.rsvp.notify?.emails?.filter(Boolean) ?? [];
-  // Resend 이메일 알림 사용 시 아래 조건 해제
-  // if (emails.length === 0) return null;
 
   return {
     emails,

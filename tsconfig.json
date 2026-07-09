@@ -16,7 +16,6 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@client/*": ["clients/sample01/*"],
       "@shared/*": ["packages/shared/*"],
       "@themes/*": ["themes/*"]
     }

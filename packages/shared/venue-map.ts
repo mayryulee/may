@@ -3,6 +3,47 @@ import type { Venue } from "./types";
 
 const enc = (s: string) => encodeURIComponent(s);
 
+type LatLngCoords = { lat: number; lng: number };
+
+type GeocodeResult = { x: string; y: string };
+
+type KakaoMapInstance = { relayout: () => void };
+
+type KakaoMapsApi = {
+  LatLng: new (lat: number, lng: number) => unknown;
+  Map: new (
+    el: HTMLElement,
+    opts: { center: unknown; level: number },
+  ) => KakaoMapInstance;
+  Marker: new (opts: { position: unknown }) => { setMap: (map: unknown) => void };
+  load: (cb: () => void) => void;
+  services: {
+    Status: { OK: string };
+    Geocoder: new () => {
+      addressSearch: (
+        query: string,
+        cb: (result: GeocodeResult[], status: string) => void,
+      ) => void;
+    };
+    Places: new () => {
+      keywordSearch: (
+        keyword: string,
+        cb: (result: GeocodeResult[], status: string) => void,
+      ) => void;
+    };
+  };
+};
+
+type KakaoMaps = {
+  maps: KakaoMapsApi;
+};
+
+declare global {
+  interface Window {
+    kakao?: KakaoMaps;
+  }
+}
+
 function buildMapLinks(venue: Venue, siteAppName: string) {
   return {
     kakao: {
@@ -21,23 +62,6 @@ function buildMapLinks(venue: Venue, siteAppName: string) {
       storeIos: "https://apps.apple.com/app/id431589174",
     },
   } as const;
-}
-
-type KakaoMaps = {
-  maps: {
-    LatLng: new (lat: number, lng: number) => unknown;
-    Map: new (
-      el: HTMLElement,
-      opts: { center: unknown; level: number },
-    ) => unknown;
-    Marker: new (opts: { position: unknown }) => { setMap: (map: unknown) => void };
-  };
-};
-
-declare global {
-  interface Window {
-    kakao?: KakaoMaps;
-  }
 }
 
 function isMobileDevice(): boolean {
@@ -139,7 +163,7 @@ function loadKakaoMapsSdk(appKey: string): Promise<void> {
     }
     const script = document.createElement("script");
     script.dataset.kakaoMaps = "true";
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${appKey}&autoload=false`;
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${appKey}&libraries=services&autoload=false`;
     script.async = true;
     script.onload = () => {
       window.kakao?.maps
@@ -151,11 +175,7 @@ function loadKakaoMapsSdk(appKey: string): Promise<void> {
   });
 }
 
-function initKakaoMap(
-  container: HTMLElement,
-  appKey: string,
-  venue: Venue,
-): Promise<void> {
+function waitForKakaoMapsApi(appKey: string): Promise<KakaoMapsApi> {
   return loadKakaoMapsSdk(appKey).then(
     () =>
       new Promise((resolve, reject) => {
@@ -164,18 +184,83 @@ function initKakaoMap(
           reject(new Error("Kakao Maps SDK unavailable"));
           return;
         }
-        const mapsApi = kakao.maps as KakaoMaps["maps"] & {
-          load: (cb: () => void) => void;
-        };
-        mapsApi.load(() => {
-          const center = new mapsApi.LatLng(venue.lat, venue.lng);
-          const map = new mapsApi.Map(container, { center, level: 3 });
-          const marker = new mapsApi.Marker({ position: center });
-          marker.setMap(map);
-          resolve();
-        });
+        kakao.maps.load(() => resolve(kakao.maps));
       }),
   );
+}
+
+function parseGeocodeResult(result: GeocodeResult[]): LatLngCoords | null {
+  const first = result[0];
+  if (!first) return null;
+
+  const lat = Number.parseFloat(first.y);
+  const lng = Number.parseFloat(first.x);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+
+  return { lat, lng };
+}
+
+function keywordSearch(
+  mapsApi: KakaoMapsApi,
+  query: string,
+): Promise<GeocodeResult[]> {
+  return new Promise((resolve) => {
+    const places = new mapsApi.services.Places();
+    places.keywordSearch(query, (result, status) => {
+      resolve(status === mapsApi.services.Status.OK ? result : []);
+    });
+  });
+}
+
+function addressSearch(
+  mapsApi: KakaoMapsApi,
+  query: string,
+): Promise<GeocodeResult[]> {
+  return new Promise((resolve) => {
+    const geocoder = new mapsApi.services.Geocoder();
+    geocoder.addressSearch(query, (result, status) => {
+      resolve(status === mapsApi.services.Status.OK ? result : []);
+    });
+  });
+}
+
+async function resolveVenueCoords(
+  mapsApi: KakaoMapsApi,
+  venue: Venue,
+): Promise<LatLngCoords | null> {
+  const keywordCoords = parseGeocodeResult(await keywordSearch(mapsApi, venue.name));
+  if (keywordCoords) return keywordCoords;
+
+  for (const query of [venue.address, venue.addressFull]) {
+    const addressCoords = parseGeocodeResult(await addressSearch(mapsApi, query));
+    if (addressCoords) return addressCoords;
+  }
+
+  return null;
+}
+
+function renderKakaoMap(
+  container: HTMLElement,
+  mapsApi: KakaoMapsApi,
+  coords: LatLngCoords,
+): void {
+  const center = new mapsApi.LatLng(coords.lat, coords.lng);
+  const map = new mapsApi.Map(container, { center, level: 3 });
+  const marker = new mapsApi.Marker({ position: center });
+  marker.setMap(map);
+  requestAnimationFrame(() => map.relayout());
+}
+
+async function resolveVenueForMap(
+  appKey: string,
+  venue: Venue,
+): Promise<{ mapsApi: KakaoMapsApi; venue: Venue }> {
+  const mapsApi = await waitForKakaoMapsApi(appKey);
+  const coords = await resolveVenueCoords(mapsApi, venue);
+  return {
+    mapsApi,
+    venue: coords ? { ...venue, ...coords } : venue,
+  };
 }
 
 function initMapFallback(
@@ -209,22 +294,38 @@ export function initVenueMap(
   const fallbackFontClass = options.fallbackFontClass ?? "font-noto";
   const siteAppName =
     import.meta.env.VITE_SITE_APP_NAME?.trim() || "mayletter.site";
-  const links = buildMapLinks(venue, siteAppName);
-
-  initMapButtons(root, links);
-
   const mapEl = root.querySelector<HTMLElement>("#venue-map");
-  if (mapEl) {
-    const appKey =
-      import.meta.env.VITE_KAKAO_MAP_APP_KEY || import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY;
-    if (appKey?.trim()) {
-      initKakaoMap(mapEl, appKey.trim(), venue).catch(() =>
-        initMapFallback(mapEl, links.kakao.web, fallbackFontClass),
-      );
-    } else {
-      initMapFallback(mapEl, links.kakao.web, fallbackFontClass);
+  const appKey =
+    import.meta.env.VITE_KAKAO_MAP_APP_KEY || import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY;
+
+  void (async () => {
+    if (!appKey?.trim()) {
+      const links = buildMapLinks(venue, siteAppName);
+      initMapButtons(root, links);
+      if (mapEl) initMapFallback(mapEl, links.kakao.web, fallbackFontClass);
+      return;
     }
-  }
+
+    try {
+      const { mapsApi, venue: resolvedVenue } = await resolveVenueForMap(
+        appKey.trim(),
+        venue,
+      );
+      const links = buildMapLinks(resolvedVenue, siteAppName);
+      initMapButtons(root, links);
+
+      if (mapEl) {
+        renderKakaoMap(mapEl, mapsApi, {
+          lat: resolvedVenue.lat,
+          lng: resolvedVenue.lng,
+        });
+      }
+    } catch {
+      const links = buildMapLinks(venue, siteAppName);
+      initMapButtons(root, links);
+      if (mapEl) initMapFallback(mapEl, links.kakao.web, fallbackFontClass);
+    }
+  })();
 
   const copyBtn = root.querySelector<HTMLButtonElement>("#copy-address");
   if (copyBtn) {

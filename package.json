@@ -4,10 +4,11 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "predev": "node --experimental-strip-types scripts/sync-client-assets.mjs",
+    "generate:clients": "node scripts/generate-client-registry.mjs",
+    "predev": "npm run generate:clients && node scripts/sync-client-assets.mjs",
     "dev": "vite",
-    "prebuild": "node --experimental-strip-types scripts/sync-client-assets.mjs",
-    "build": "tsc && tsc -p tsconfig.node.json && vite build",
+    "prebuild": "npm run generate:clients && node scripts/sync-client-assets.mjs",
+    "build": "tsc && tsc -p tsconfig.node.json && vite build && node scripts/prerender-client-pages.mjs",
     "preview": "vite preview",
     "ship": "bash scripts/git-ship.sh"
   },

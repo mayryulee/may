@@ -2,6 +2,7 @@ import type { ClientConfig } from "../../packages/shared/types";
 
 const config: ClientConfig = {
   id: "sample01",
+  slug: "sample01",
   theme: "theme01",
   expiresAt: "2027-07-25",
 
@@ -82,8 +83,8 @@ const config: ClientConfig = {
     address: "서울 강남구 영동대로 325",
     addressFull: "서울 강남구 영동대로 325 (대치동 983-1)",
     tel: "02-539-0400",
-    lat: 37.505686,
-    lng: 127.060155,
+    lat: 37.507037,
+    lng: 127.061892,
     naverPlaceId: "1634613412",
     location: {
       theme01: {
@@ -215,8 +216,16 @@ const config: ClientConfig = {
         "호접란 화분만 가능합니다.)",
       ],
     },
-    { title: "sample2", lines: [] },
-    { title: "sample3", lines: [] },
+    {
+      title: "전세버스 안내",
+      lines: [
+        "하객분들의 편의를 위해",
+        "전세버스를 운행합니다.",
+        "",
+        "출발 시간 및 장소를 확인하시어",
+        "이용에 참고해 주시기 바랍니다.",
+      ],
+    },
   ],
 
   quote: {
