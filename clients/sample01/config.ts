@@ -252,7 +252,7 @@ const config: ClientConfig = {
       "참석 의사를 전달 부탁드립니다.",
     ],
     notify: {
-      emails: ["formayletter@gmail.com"],
+      emails: ["mayryulee@gmail.com"],
     },
   },
 };

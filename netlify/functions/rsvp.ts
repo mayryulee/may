@@ -1,8 +1,7 @@
 import type { Context } from "@netlify/functions";
 import { getStore } from "@netlify/blobs";
 import { getRsvpNotifyContext } from "../rsvp-notify-config";
-// Resend 이메일 알림 사용 시 import 해제
-// import { sendRsvpEmail } from "../rsvp-send-email";
+import { sendRsvpEmail } from "../rsvp-send-email";
 
 type StoredRsvpEntry = {
   id: string;
@@ -88,19 +87,21 @@ export default async (req: Request, _context: Context) => {
   entries.push(entry);
   await writeEntries(clientId, entries);
 
-  // --- Resend 이메일 알림 (사용 시 아래 블록 주석 해제) ---
-  // const emailed = await sendRsvpEmail({
-  //   to: notifyCtx.emails,
-  //   coupleLabel: notifyCtx.coupleLabel,
-  //   weddingDate: notifyCtx.weddingDate,
-  //   weddingTime: notifyCtx.weddingTime,
-  //   venueName: notifyCtx.venueName,
-  //   entry,
-  // });
-  //
-  // if (!emailed) {
-  //   return Response.json({ error: "notify_failed" }, { status: 502 });
-  // }
+  // Resend 이메일 알림. 접수는 이미 저장됐으므로 메일 실패가 제출을 막지 않도록 로그만 남긴다.
+  if (notifyCtx.emails.length > 0) {
+    const emailed = await sendRsvpEmail({
+      to: notifyCtx.emails,
+      coupleLabel: notifyCtx.coupleLabel,
+      weddingDate: notifyCtx.weddingDate,
+      weddingTime: notifyCtx.weddingTime,
+      venueName: notifyCtx.venueName,
+      entry,
+    });
+
+    if (!emailed) {
+      console.error(`RSVP notify email failed for client ${clientId}`);
+    }
+  }
 
   return Response.json({ ok: true });
 };
