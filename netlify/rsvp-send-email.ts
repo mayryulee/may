@@ -82,7 +82,6 @@ export async function sendRsvpEmail(opts: {
   const html = `
     <div style="font-family:sans-serif;line-height:1.6;color:#222">
       <h2 style="margin:0 0 12px;font-size:18px">${escapeHtml(entry.name)}님께서 참석 여부를 전달해 주셨습니다.</h2>
-      <p style="margin:0 0 16px;color:#666">${escapeHtml(coupleLabel)} · ${escapeHtml(weddingDate)} ${escapeHtml(weddingTime)}<br>${escapeHtml(venueName)}</p>
       <p><strong>성함:</strong> ${escapeHtml(entry.name)}</p>
       <p><strong>측:</strong> ${sideLabel(entry.side)}</p>
       <p><strong>참석 여부:</strong> ${status}</p>
