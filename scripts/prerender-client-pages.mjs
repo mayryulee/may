@@ -7,6 +7,13 @@ const distDir = resolve(root, "dist");
 const manifestPath = resolve(root, "packages/shared/generated/client-manifest.json");
 const redirectsPath = resolve(distDir, "_redirects");
 
+/** 테마 미리보기 slug → 클라이언트 id (src/client-route.ts와 동기화 유지) */
+const PREVIEW_SLUG_TO_CLIENT_ID = {
+  grace: "sample01",
+  tender: "sample02",
+  veil: "sample02",
+};
+
 function siteUrl() {
   return (
     process.env.SITE_URL ||
@@ -47,23 +54,38 @@ function main() {
   const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
   const baseUrl = siteUrl();
 
+  const clientById = new Map(manifest.clients.map((c) => [c.id, c]));
   const redirectLines = [];
 
-  for (const client of manifest.clients) {
-    const outDir = resolve(distDir, client.slug);
+  const writePage = (slug, client) => {
+    const outDir = resolve(distDir, slug);
     mkdirSync(outDir, { recursive: true });
-    const html = applyMeta(baseHtml, client, baseUrl);
-    writeFileSync(resolve(outDir, "index.html"), html, "utf8");
-    redirectLines.push(`/${client.slug}    /${client.slug}/index.html   200`);
+    writeFileSync(resolve(outDir, "index.html"), applyMeta(baseHtml, client, baseUrl), "utf8");
+    redirectLines.push(`/${slug}    /${slug}/index.html   200`);
+  };
+
+  for (const client of manifest.clients) {
+    writePage(client.slug, client);
   }
 
-  redirectLines.push(`/    /grace/    302`);
+  // 미리보기 slug(grace/tender/veil)도 매핑된 클라이언트 메타로 프리렌더
+  for (const [slug, clientId] of Object.entries(PREVIEW_SLUG_TO_CLIENT_ID)) {
+    const client = clientById.get(clientId);
+    if (client) writePage(slug, client);
+  }
+
+  // 루트 index.html에도 기본 클라이언트 메타를 심어 플레이스홀더 노출 방지
+  // (루트 공유 및 SPA 폴백(/* → /index.html) 모두 올바른 OG 메타를 갖게 됨)
+  const defaultClient =
+    manifest.clients.find((c) => c.slug === manifest.defaultSlug) || manifest.clients[0];
+  writeFileSync(indexPath, applyMeta(baseHtml, defaultClient, baseUrl), "utf8");
+
   redirectLines.push(`/*    /index.html   200`);
 
   writeFileSync(redirectsPath, `${redirectLines.join("\n")}\n`, "utf8");
 
   console.log(
-    `Prerendered ${manifest.clients.length} client pages → dist/{slug}/index.html`,
+    `Prerendered ${manifest.clients.length} client pages + ${Object.keys(PREVIEW_SLUG_TO_CLIENT_ID).length} preview slugs, root meta = ${defaultClient.slug}`,
   );
 }
 
