@@ -33,10 +33,14 @@ function sharePageUrl(): string {
   return path ? `${base}${path}` : base;
 }
 
-/** coverv001=세로형, coverh001=가로형 — 카카오 THU는 쿼리스트링 없는 URL만 허용 */
+/** 클라이언트별 카카오 템플릿 방향 (미지정 시 세로) */
+function kakaoVariant(config: ClientConfig): "vertical" | "horizontal" {
+  return config.share.kakaoTemplate ?? "vertical";
+}
+
+/** 카카오 THU는 쿼리스트링 없는 URL만 허용 — 클라이언트별 ogImage 사용 */
 function shareImageUrl(config: ClientConfig): string {
-  const variant = import.meta.env.VITE_KAKAO_SHARE_TEMPLATE_VARIANT;
-  const imageFile = variant === "horizontal" ? "coverh001.png" : "coverv001.png";
+  const imageFile = config.meta.ogImage || "cover.png";
   return `${siteUrl()}/images/${config.id}/${imageFile}`;
 }
 
@@ -71,7 +75,7 @@ async function copyShareUrlFallback(): Promise<void> {
 async function shareToKakao(config: ClientConfig): Promise<void> {
   const javascriptKey =
     import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY || import.meta.env.VITE_KAKAO_MAP_APP_KEY;
-  const templateId = getKakaoTemplateId();
+  const templateId = getKakaoTemplateId(config);
 
   if (!javascriptKey || !Number.isInteger(templateId) || templateId <= 0) {
     throw new Error("Kakao share config is missing");
@@ -103,10 +107,9 @@ async function shareToKakao(config: ClientConfig): Promise<void> {
   });
 }
 
-function getKakaoTemplateId(): number {
-  const variant = import.meta.env.VITE_KAKAO_SHARE_TEMPLATE_VARIANT;
+function getKakaoTemplateId(config: ClientConfig): number {
   const templateId =
-    variant === "horizontal"
+    kakaoVariant(config) === "horizontal"
       ? import.meta.env.VITE_KAKAO_SHARE_TEMPLATE_ID_HORIZONTAL
       : import.meta.env.VITE_KAKAO_SHARE_TEMPLATE_ID_VERTICAL;
   return Number(templateId);

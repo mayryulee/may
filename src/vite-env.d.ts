@@ -26,7 +26,6 @@ interface ImportMetaEnv {
   readonly VITE_KAKAO_MAP_APP_KEY?: string;
   readonly VITE_KAKAO_SHARE_TEMPLATE_ID_VERTICAL?: string;
   readonly VITE_KAKAO_SHARE_TEMPLATE_ID_HORIZONTAL?: string;
-  readonly VITE_KAKAO_SHARE_TEMPLATE_VARIANT?: "vertical" | "horizontal";
   readonly VITE_KAKAO_SHARE_METHOD?: string;
   readonly VITE_SITE_APP_NAME?: string;
   readonly VITE_OG_IMAGE_VERSION?: string;

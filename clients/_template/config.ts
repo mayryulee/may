@@ -12,9 +12,8 @@ const config: ClientConfig = {
     ogSiteName: "신랑 & 신부",
     ogTitle: "신랑♥신부 결혼합니다.",
     ogDescription: "예식 일시·장소",
-    // coverv001=세로형, coverh001=가로형
-    ogImage: "coverv001.png",
-    // ogImage: "coverh001.png",
+    // 카카오 썸네일 + OG 미리보기 공용 커버 (세로/가로 무관, 파일명 cover.png로 통일)
+    ogImage: "cover.png",
     ogImageAlt: "결혼식 초대",
     twitterTitle: "신랑♥신부 결혼합니다.",
     twitterDescription: "소중한 분들을 초대합니다.",
@@ -101,6 +100,8 @@ const config: ClientConfig = {
   share: {
     title: "신랑♥신부 결혼합니다.",
     description: "예식 일시·장소",
+    // 카카오 공유 템플릿 방향: 세로 커버면 "vertical", 가로 커버면 "horizontal"
+    kakaoTemplate: "vertical",
   },
 
   rsvp: {

@@ -13,8 +13,8 @@ const config: ClientConfig = {
     ogSiteName: "Jeongho & Chaehyun",
     ogTitle: "정호♥채현 결혼합니다.",
     ogDescription: "5월 25일 일요일 오전 11시 노블발렌티 대치점",
-    ogImage: "coverh01.png",
-    // ogImage: "coverv01.png",
+    // 카카오 썸네일 + OG 미리보기 공용 커버 (세로/가로 무관, 파일명 cover.png로 통일)
+    ogImage: "cover.png",
     ogImageAlt: "정호와 채현의 결혼식 초대",
     twitterTitle: "정호♥채현 결혼합니다.",
     twitterDescription: "2026년 5월 25일, 소중한 분들을 초대합니다.",
@@ -250,6 +250,7 @@ const config: ClientConfig = {
   share: {
     title: "정호♥채현 결혼합니다.",
     description: "5월 25일 일요일 오전 11시 노블발렌티 대치점",
+    kakaoTemplate: "horizontal",
   },
 
   rsvp: {

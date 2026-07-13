@@ -8,8 +8,7 @@
   VITE_SITE_URL = "https://mayletter.site"
   VITE_KAKAO_MAP_APP_KEY = "a6ef8d048f4f69d413e799bd8fc65063"
   VITE_KAKAO_JAVASCRIPT_KEY = "a6ef8d048f4f69d413e799bd8fc65063"
-  # 세로/가로 전환 시 VARIANT만 변경 (이미지·템플릿 ID는 코드에서 자동 매핑)
-  VITE_KAKAO_SHARE_TEMPLATE_VARIANT = "vertical"
+  # 세로/가로는 클라이언트별 config.share.kakaoTemplate로 선택 (아래는 방향별 템플릿 ID)
   VITE_KAKAO_SHARE_TEMPLATE_ID_VERTICAL = "135014"
   VITE_KAKAO_SHARE_TEMPLATE_ID_HORIZONTAL = "135029"
   VITE_KAKAO_SHARE_METHOD = "custom"

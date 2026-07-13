@@ -28,7 +28,7 @@ function setMeta(
 export function applyDocumentMeta(config: ClientConfig, slug: string): void {
   const base = siteUrl();
   const pageUrl = `${base}/${slug}`;
-  const imageFile = config.meta.ogImage || "coverv001.png";
+  const imageFile = config.meta.ogImage || "cover.png";
   const imageUrl = `${base}/images/${config.id}/${imageFile}`;
   const { meta } = config;
 

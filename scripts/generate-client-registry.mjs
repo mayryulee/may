@@ -29,7 +29,7 @@ function readClientMeta(src) {
     ogSiteName: pick("ogSiteName"),
     ogTitle: pick("ogTitle"),
     ogDescription: pick("ogDescription"),
-    ogImage: pick("ogImage") || "coverv001.png",
+    ogImage: pick("ogImage") || "cover.png",
     ogImageAlt: pick("ogImageAlt"),
     twitterTitle: pick("twitterTitle"),
     twitterDescription: pick("twitterDescription"),

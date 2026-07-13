@@ -101,9 +101,9 @@ export type ClientMeta = {
   ogTitle: string;
   ogDescription: string;
   /**
-   * 링크 복사·OG 미리보기용 (clients/{id}/images/).
-   * coverv001=세로형, coverh001=가로형.
-   * 카카오 템플릿 공유 썸네일은 variant에 따라 coverv001/coverh001 자동 선택.
+   * 링크 복사·OG 미리보기 + 카카오 공유 썸네일 (clients/{id}/images/).
+   * 세로/가로 무관하게 클라이언트별 커버 파일을 지정 (기본 파일명 cover.png).
+   * 미지정 시 cover.png로 폴백.
    */
   ogImage?: string;
   ogImageAlt: string;
@@ -187,6 +187,12 @@ export type ClientConfig = {
   share: {
     title: string;
     description: string;
+    /**
+     * 카카오 공유 템플릿 방향 (클라이언트별). 미지정 시 "vertical".
+     * 썸네일 이미지는 meta.ogImage를 사용하고, 이 값은 세로용/가로용
+     * 카카오 템플릿 ID(env) 선택에만 사용됩니다.
+     */
+    kakaoTemplate?: "vertical" | "horizontal";
   };
   rsvp?: ClientRsvpConfig;
 };
