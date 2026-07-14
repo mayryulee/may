@@ -1,3 +1,4 @@
+import { bindHorizontalSwipe } from "../../../packages/shared/horizontal-swipe";
 import type { GalleryImage } from "../../../packages/shared/types";
 import { clientImageUrl } from "../../../packages/shared/types";
 
@@ -91,11 +92,11 @@ export function renderGalleryHtml(
       </header>
 
       <div class="relative w-full">
-        <div class="relative z-0" data-gallery-carousel>
+        <div class="relative z-0 touch-pan-y" data-gallery-carousel>
           <button
             type="button"
             data-gallery-open
-            class="block w-full overflow-hidden border-[0px] bg-transparent p-0"
+            class="block w-full overflow-hidden border-[0px] bg-transparent p-0 touch-pan-y"
             aria-label="갤러리 사진 크게 보기"
           >
             <img
@@ -174,8 +175,6 @@ export function initGallery(
   }));
 
   let activeIndex = 0;
-  let touchStartX = 0;
-  let lightboxTouchStartX = 0;
 
   function updateArrows(): void {
     const hasMultiple = resolved.length > 1;
@@ -230,7 +229,21 @@ export function initGallery(
     showImage(activeIndex);
   }
 
-  openBtn.addEventListener("click", openLightbox);
+  const carouselSwipe = bindHorizontalSwipe(carousel, (direction) => {
+    if (direction === "prev") {
+      if (activeIndex > 0) showImage(activeIndex - 1);
+      return;
+    }
+    showImage(activeIndex + 1);
+  });
+
+  openBtn.addEventListener("click", (e) => {
+    if (carouselSwipe.consumeSwipe()) {
+      e.preventDefault();
+      return;
+    }
+    openLightbox();
+  });
 
   prev.addEventListener("click", () => {
     showImage(activeIndex - 1);
@@ -239,26 +252,6 @@ export function initGallery(
   next.addEventListener("click", () => {
     showImage(activeIndex + 1);
   });
-
-  carousel.addEventListener(
-    "touchstart",
-    (e) => {
-      touchStartX = e.changedTouches[0]?.clientX ?? 0;
-    },
-    { passive: true },
-  );
-
-  carousel.addEventListener(
-    "touchend",
-    (e) => {
-      const touchEndX = e.changedTouches[0]?.clientX ?? 0;
-      const delta = touchEndX - touchStartX;
-      if (Math.abs(delta) < 40) return;
-      if (delta > 0) showImage(activeIndex - 1);
-      else showImage(activeIndex + 1);
-    },
-    { passive: true },
-  );
 
   lb.querySelectorAll("[data-gallery-close]").forEach((el) => {
     el.addEventListener("click", closeLightbox);
@@ -272,25 +265,13 @@ export function initGallery(
     showLightboxImage(activeIndex + 1);
   });
 
-  lb.addEventListener(
-    "touchstart",
-    (e) => {
-      lightboxTouchStartX = e.changedTouches[0]?.clientX ?? 0;
-    },
-    { passive: true },
-  );
-
-  lb.addEventListener(
-    "touchend",
-    (e) => {
-      const touchEndX = e.changedTouches[0]?.clientX ?? 0;
-      const delta = touchEndX - lightboxTouchStartX;
-      if (Math.abs(delta) < 40) return;
-      if (delta > 0) showLightboxImage(activeIndex - 1);
-      else showLightboxImage(activeIndex + 1);
-    },
-    { passive: true },
-  );
+  bindHorizontalSwipe(lb, (direction) => {
+    if (direction === "prev") {
+      if (activeIndex > 0) showLightboxImage(activeIndex - 1);
+      return;
+    }
+    showLightboxImage(activeIndex + 1);
+  });
 
   window.addEventListener("keydown", (e) => {
     if (lb.classList.contains("hidden")) return;

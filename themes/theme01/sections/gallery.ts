@@ -1,3 +1,4 @@
+import { bindHorizontalSwipe } from "../../../packages/shared/horizontal-swipe";
 import type { GalleryImage } from "../../../packages/shared/types";
 import { clientImageUrl, themeIconUrl } from "../../../packages/shared/types";
 
@@ -185,7 +186,6 @@ export function initGallery(
   }));
 
   let activeIndex = 0;
-  let touchStartX = 0;
   let popupUrls: string[] = [];
   let popupReady = false;
   let revealedPopupCount = 0;
@@ -308,25 +308,13 @@ export function initGallery(
     showImage(activeIndex + 1);
   });
 
-  lb.addEventListener(
-    "touchstart",
-    (e) => {
-      touchStartX = e.changedTouches[0]?.clientX ?? 0;
-    },
-    { passive: true },
-  );
-
-  lb.addEventListener(
-    "touchend",
-    (e) => {
-      const touchEndX = e.changedTouches[0]?.clientX ?? 0;
-      const delta = touchEndX - touchStartX;
-      if (Math.abs(delta) < 40) return;
-      if (delta > 0) showImage(activeIndex - 1);
-      else showImage(activeIndex + 1);
-    },
-    { passive: true },
-  );
+  bindHorizontalSwipe(lb, (direction) => {
+    if (direction === "prev") {
+      if (activeIndex > 0) showImage(activeIndex - 1);
+      return;
+    }
+    showImage(activeIndex + 1);
+  });
 
   window.addEventListener("keydown", (e) => {
     if (lb.classList.contains("hidden")) return;
