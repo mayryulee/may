@@ -5,6 +5,7 @@ import {
   isRsvpDismissedToday,
   submitRsvp,
   type RsvpAttending,
+  type RsvpMeal,
   type RsvpSide,
 } from "../rsvp-store";
 import { rsvpIcons } from "./rsvp-icons";
@@ -17,20 +18,31 @@ const DEFAULT_SUBTITLE_LINES = [
   "참석 의사를 전달 부탁드립니다.",
 ] as const;
 
-/** theme01 방명록 모달과 동일한 인풋 스타일 */
+/** 방명록 모달과 동일한 인풋 스타일 */
 const RSVP_FIELD =
   "may-form-control w-full rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
-const RSVP_SELECT =
-  "may-form-control w-full appearance-none rounded-[8px] border-[0px] bg-[#F7F7F7] pl-[16px] pr-[40px] py-[14px] text-[14px] font-extralight tracking-tight text-[#111111] outline-none bg-[length:12px_12px] bg-[position:right_16px_center] bg-no-repeat bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23111111%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M6 9l6 6 6-6%22/%3E%3C/svg%3E')]";
 const RSVP_TEXTAREA =
   "may-form-control min-h-[120px] w-full resize-none rounded-[8px] border-[0px] bg-[#F7F7F7] px-[16px] py-[14px] text-[14px] font-extralight leading-[1.75] tracking-tight text-[#111111] outline-none placeholder:text-[#aaaaaa]";
+const RSVP_FIELD_GROUP = "flex flex-col gap-[8px]";
+const RSVP_FIELD_LABEL =
+  "m-0 block text-[12px] font-extralight tracking-tight text-[#888888]";
+const RSVP_TOGGLE_TRACK =
+  "flex w-full gap-[3px] rounded-[8px] bg-[#F2F2F2] p-[3px]";
+const RSVP_TOGGLE_OPTION =
+  "relative m-0 flex min-w-0 flex-1 cursor-pointer items-center justify-center";
+const RSVP_TOGGLE_INPUT =
+  "peer absolute inset-0 z-10 m-0 h-full w-full cursor-pointer opacity-0";
+const RSVP_TOGGLE_PILL =
+  "block w-full rounded-[6px] py-[10px] text-center text-[13px] font-extralight tracking-tight text-[#888888] transition-[background-color,box-shadow,color,font-weight] duration-150 peer-checked:bg-white peer-checked:font-medium peer-checked:text-[#111111] peer-checked:shadow-[0_1px_3px_rgba(0,0,0,0.08)]";
 const MODAL_SHELL =
   "fixed inset-0 z-[100] hidden font-pretendard"
 const MODAL_CARD =
-  "relative w-full rounded-[8px] bg-white px-[24px] py-[32px] text-center font-pretendard tracking-tight shadow-lg";
+  "relative w-full rounded-[8px] bg-white px-[24px] text-center font-pretendard tracking-tight shadow-lg";
 const CLOSE_BTN =
   "absolute top-[16px] right-[16px] inline-flex h-[32px] w-[32px] items-center justify-center border-[0px] bg-transparent p-0 font-pretendard text-[20px] tracking-tight text-[#999999]";
 const DISMISS_CLOSE_MS = 320;
+
+type ToggleOption = { value: string; label: string };
 
 function setBodyScrollLocked(locked: boolean): void {
   document.body.classList.toggle("overflow-hidden", locked);
@@ -50,13 +62,47 @@ function hideModal(el: HTMLElement | null): void {
   setBodyScrollLocked(false);
 }
 
+function renderToggleGroup(
+  name: string,
+  label: string,
+  options: ToggleOption[],
+  selected: string,
+): string {
+  const pills = options
+    .map((opt) => {
+      const checked = opt.value === selected ? " checked" : "";
+      return /* html */ `
+        <label class="${RSVP_TOGGLE_OPTION}">
+          <input
+            type="radio"
+            name="${name}"
+            value="${opt.value}"
+            class="${RSVP_TOGGLE_INPUT}"
+            ${checked}
+          />
+          <span class="${RSVP_TOGGLE_PILL}">${opt.label}</span>
+        </label>`;
+    })
+    .join("");
+
+  return /* html */ `
+    <div class="${RSVP_FIELD_GROUP}" role="group" aria-label="${label}">
+      <p class="${RSVP_FIELD_LABEL}">${label}</p>
+      <div class="${RSVP_TOGGLE_TRACK}" role="radiogroup" aria-label="${label}">
+        ${pills}
+      </div>
+    </div>`;
+}
+
 function syncGuestCountVisibility(root: ParentNode): void {
-  const attending = root.querySelector<HTMLSelectElement>(
-    '#rsvp-form select[name="attending"]',
+  const attending = root.querySelector<HTMLInputElement>(
+    '#rsvp-form input[name="attending"]:checked',
   );
+  const isAttending = attending?.value !== "no";
   const guestWrap = root.querySelector<HTMLElement>("#rsvp-guest-count-wrap");
-  if (!attending || !guestWrap) return;
-  guestWrap.classList.toggle("hidden", attending.value === "no");
+  const mealWrap = root.querySelector<HTMLElement>("#rsvp-meal-wrap");
+  guestWrap?.classList.toggle("hidden", !isAttending);
+  mealWrap?.classList.toggle("hidden", !isAttending);
 }
 
 function fieldValue(form: HTMLFormElement, name: string): string {
@@ -74,7 +120,11 @@ function isRsvpFormReady(form: HTMLFormElement): boolean {
   const side = fieldValue(form, "side");
   const attending = fieldValue(form, "attending");
   if (!name || !side || !attending) return false;
-  if (attending === "yes" && !fieldValue(form, "guestCount")) return false;
+  if (attending === "yes") {
+    const guestCount = Number(fieldValue(form, "guestCount"));
+    if (!Number.isFinite(guestCount) || guestCount < 1) return false;
+    if (!fieldValue(form, "meal")) return false;
+  }
   return true;
 }
 
@@ -128,10 +178,6 @@ export function renderRsvpOverlayHtml(config: ClientConfig, themeId: ThemeId): s
   const title = config.rsvp.title ?? "참석 의사 전달";
   const subtitleHtml = renderSubtitleHtml(resolveSubtitleLines(config));
 
-  const guestOptions = [1, 2, 3, 4, 5]
-    .map((n) => `<option value="${n}">${n}명</option>`)
-    .join("");
-
   return /* html */ `
     <div
       id="rsvp-intro-modal"
@@ -142,8 +188,8 @@ export function renderRsvpOverlayHtml(config: ClientConfig, themeId: ThemeId): s
       aria-labelledby="rsvp-intro-title"
     >
       <div class="absolute inset-0 bg-black/35" data-rsvp-close="intro"></div>
-      <div class="relative mx-auto flex h-full max-w-[400px] items-center px-[24px] py-[40px]">
-        <div class="${MODAL_CARD}">
+      <div class="relative mx-auto flex h-full max-w-[400px] items-center px-[24px] py-[24px]">
+        <div class="${MODAL_CARD} pt-[32px] pb-[22px]">
           <button
             type="button"
             data-rsvp-close="intro"
@@ -178,7 +224,7 @@ export function renderRsvpOverlayHtml(config: ClientConfig, themeId: ThemeId): s
           <button
             type="button"
             id="rsvp-dismiss-today"
-            class="mt-[16px] inline-flex w-full items-center justify-center gap-[6px] border-[0px] bg-transparent p-0 font-pretendard text-[12px] font-extralight tracking-tight text-[#999999]"
+            class="mt-[20px] inline-flex w-full items-center justify-center gap-[6px] border-[0px] bg-transparent p-0 font-pretendard text-[12px] font-extralight tracking-tight text-[#999999]"
           >
             <span id="rsvp-dismiss-check" class="inline-flex" aria-hidden="true">${rsvpIcons.checkbox}</span>
             오늘 하루 보지 않기
@@ -197,7 +243,7 @@ export function renderRsvpOverlayHtml(config: ClientConfig, themeId: ThemeId): s
     >
       <div class="absolute inset-0 bg-black/35" data-rsvp-close="form"></div>
       <div class="relative mx-auto flex h-full max-w-[400px] items-center px-[24px] py-[40px]">
-        <div class="${MODAL_CARD}">
+        <div class="${MODAL_CARD} max-h-full overflow-y-auto py-[32px]">
           <button
             type="button"
             data-rsvp-close="form"
@@ -209,11 +255,8 @@ export function renderRsvpOverlayHtml(config: ClientConfig, themeId: ThemeId): s
           <h2 id="rsvp-form-title" class="m-0 text-[16px] font-medium tracking-tight text-[#111111]">
             참석 의사 전달하기
           </h2>
-          <p class="m-0 mt-[8px] text-[12px] font-extralight tracking-tight text-[#888888]">
-            결혼식 준비에 참고하도록 전달해 주세요.
-          </p>
 
-          <form id="rsvp-form" class="mt-[24px] space-y-[10px] text-left">
+          <form id="rsvp-form" class="mt-[24px] flex flex-col gap-[16px] text-left">
             <input
               name="name"
               type="text"
@@ -222,18 +265,48 @@ export function renderRsvpOverlayHtml(config: ClientConfig, themeId: ThemeId): s
               placeholder="성함을 입력해주세요"
               class="${RSVP_FIELD}"
             />
-            <select name="side" required class="${RSVP_SELECT}">
-              <option value="groom" selected>신랑측</option>
-              <option value="bride">신부측</option>
-            </select>
-            <select name="attending" class="${RSVP_SELECT}">
-              <option value="yes">참석할게요</option>
-              <option value="no">참석이 어려워요</option>
-            </select>
-            <div id="rsvp-guest-count-wrap">
-              <select name="guestCount" class="${RSVP_SELECT}">
-                ${guestOptions}
-              </select>
+            ${renderToggleGroup(
+              "side",
+              "어느 분의 하객이신가요?",
+              [
+                { value: "groom", label: "신랑" },
+                { value: "bride", label: "신부" },
+              ],
+              "groom",
+            )}
+            ${renderToggleGroup(
+              "attending",
+              "참석 가능하신가요?",
+              [
+                { value: "yes", label: "참석 가능" },
+                { value: "no", label: "참석 불가" },
+              ],
+              "yes",
+            )}
+            <div id="rsvp-meal-wrap">
+              ${renderToggleGroup(
+                "meal",
+                "식사를 하실 예정인가요?",
+                [
+                  { value: "yes", label: "네" },
+                  { value: "no", label: "아니요" },
+                  { value: "undecided", label: "미정" },
+                ],
+                "yes",
+              )}
+            </div>
+            <div id="rsvp-guest-count-wrap" class="${RSVP_FIELD_GROUP}">
+              <label class="${RSVP_FIELD_LABEL}" for="rsvp-guest-count">
+                동행 인원 수를 작성해주세요
+              </label>
+              <input
+                id="rsvp-guest-count"
+                name="guestCount"
+                type="text"
+                inputmode="numeric"
+                maxlength="2"
+                class="${RSVP_FIELD}"
+              />
             </div>
             <textarea
               name="message"
@@ -243,7 +316,7 @@ export function renderRsvpOverlayHtml(config: ClientConfig, themeId: ThemeId): s
               class="${RSVP_TEXTAREA}"
             ></textarea>
             <p id="rsvp-error" class="m-0 hidden text-center text-[11px] tracking-tight text-[#c44]"></p>
-            <button type="submit" disabled class="${submitBtnClass}">제출하기</button>
+            <button type="submit" disabled class="${submitBtnClass}">작성 완료</button>
           </form>
         </div>
       </div>
@@ -307,6 +380,14 @@ export function initRsvp(root: ParentNode, config: ClientConfig, themeId: ThemeI
     syncRsvpSubmit(root);
   });
 
+  root
+    .querySelector<HTMLInputElement>("#rsvp-guest-count")
+    ?.addEventListener("input", (e) => {
+      const input = e.currentTarget as HTMLInputElement;
+      const digits = input.value.replace(/\D/g, "");
+      if (input.value !== digits) input.value = digits;
+    });
+
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!form || !errorEl) return;
@@ -320,6 +401,12 @@ export function initRsvp(root: ParentNode, config: ClientConfig, themeId: ThemeI
     const side: RsvpSide | null =
       sideRaw === "groom" || sideRaw === "bride" ? sideRaw : null;
     const attending = String(fd.get("attending") ?? "yes") as RsvpAttending;
+    const mealRaw = String(fd.get("meal") ?? "");
+    const meal: RsvpMeal | undefined =
+      attending === "yes" &&
+      (mealRaw === "yes" || mealRaw === "no" || mealRaw === "undecided")
+        ? mealRaw
+        : undefined;
     const guestCount =
       attending === "no" ? 0 : Math.min(10, Math.max(1, Number(fd.get("guestCount")) || 1));
     const message = String(fd.get("message") ?? "").trim();
@@ -344,6 +431,7 @@ export function initRsvp(root: ParentNode, config: ClientConfig, themeId: ThemeI
       side,
       attending,
       guestCount,
+      meal,
       message: message || undefined,
     });
 

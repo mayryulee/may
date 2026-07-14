@@ -10,6 +10,7 @@ type StoredRsvpEntry = {
   side: "groom" | "bride";
   attending: "yes" | "no";
   guestCount: number;
+  meal?: "yes" | "no" | "undecided";
   message?: string;
   createdAt: string;
 };
@@ -52,6 +53,7 @@ export default async (req: Request, _context: Context) => {
     side?: string;
     attending?: string;
     guestCount?: number;
+    meal?: string;
     message?: string;
   };
 
@@ -63,6 +65,11 @@ export default async (req: Request, _context: Context) => {
     attending === "no"
       ? 0
       : Math.min(10, Math.max(1, Number(body.guestCount) || 1));
+  const meal: "yes" | "no" | "undecided" | undefined =
+    attending === "yes" &&
+    (body.meal === "yes" || body.meal === "no" || body.meal === "undecided")
+      ? body.meal
+      : undefined;
   const message = body.message?.trim() || undefined;
 
   if (!name || !side) {
@@ -79,6 +86,7 @@ export default async (req: Request, _context: Context) => {
     side,
     attending,
     guestCount,
+    meal,
     message,
     createdAt: new Date().toISOString(),
   };

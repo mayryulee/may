@@ -21,10 +21,10 @@ export function rsvpIntroCtaClass(themeId: ThemeId): string {
   return `rsvp-primary-btn mt-[24px] block w-full ${GRACE_PRIMARY_BTN}`;
 }
 
-/** 제출 폼 — 제출하기 */
+/** 제출 폼 — 작성 완료 */
 export function rsvpSubmitBtnClass(themeId: ThemeId): string {
   if (isTenderTheme(themeId)) {
-    return `rsvp-submit rsvp-submit--outline mt-[8px] w-full block ${TENDER_BTN}`;
+    return `rsvp-submit rsvp-submit--outline w-full block ${TENDER_BTN}`;
   }
-  return `rsvp-submit mt-[8px] w-full ${GRACE_SUBMIT_BTN}`;
+  return `rsvp-submit w-full ${GRACE_SUBMIT_BTN}`;
 }

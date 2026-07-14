@@ -3,12 +3,14 @@ import type { ThemeId } from "./types";
 
 export type RsvpAttending = "yes" | "no";
 export type RsvpSide = "groom" | "bride";
+export type RsvpMeal = "yes" | "no" | "undecided";
 
 export type RsvpSubmitInput = {
   name: string;
   side: RsvpSide;
   attending: RsvpAttending;
   guestCount: number;
+  meal?: RsvpMeal;
   message?: string;
 };
 
@@ -73,6 +75,7 @@ export async function submitRsvp(
     side: input.side,
     attending: input.attending,
     guestCount: input.guestCount,
+    meal: input.meal,
     message: input.message?.trim() || undefined,
   };
 

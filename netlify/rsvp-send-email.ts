@@ -3,6 +3,7 @@ export type RsvpEmailEntry = {
   side: "groom" | "bride";
   attending: "yes" | "no";
   guestCount: number;
+  meal?: "yes" | "no" | "undecided";
   message?: string;
   createdAt: string;
 };
@@ -21,6 +22,12 @@ function attendingLabel(attending: "yes" | "no"): string {
 
 function sideLabel(side: "groom" | "bride"): string {
   return side === "groom" ? "신랑측" : "신부측";
+}
+
+function mealLabel(meal: "yes" | "no" | "undecided"): string {
+  if (meal === "yes") return "네";
+  if (meal === "no") return "아니요";
+  return "미정";
 }
 
 function formatCreatedAt(iso: string): string {
@@ -59,6 +66,10 @@ export async function sendRsvpEmail(opts: {
   const status = attendingLabel(entry.attending);
   const guestLine =
     entry.attending === "yes" ? `<p><strong>동반 인원:</strong> ${entry.guestCount}명</p>` : "";
+  const mealLine =
+    entry.attending === "yes" && entry.meal
+      ? `<p><strong>식사 여부:</strong> ${mealLabel(entry.meal)}</p>`
+      : "";
   const messageLine = entry.message
     ? `<p><strong>메시지:</strong><br>${escapeHtml(entry.message).replaceAll("\n", "<br>")}</p>`
     : "";
@@ -73,6 +84,7 @@ export async function sendRsvpEmail(opts: {
     `성함: ${entry.name}`,
     `측: ${sideLabel(entry.side)}`,
     `참석 여부: ${status}`,
+    entry.attending === "yes" && entry.meal ? `식사 여부: ${mealLabel(entry.meal)}` : "",
     entry.attending === "yes" ? `동반 인원: ${entry.guestCount}명` : "",
     entry.message ? `메시지: ${entry.message}` : "",
     "",
@@ -85,6 +97,7 @@ export async function sendRsvpEmail(opts: {
       <p><strong>성함:</strong> ${escapeHtml(entry.name)}</p>
       <p><strong>측:</strong> ${sideLabel(entry.side)}</p>
       <p><strong>참석 여부:</strong> ${status}</p>
+      ${mealLine}
       ${guestLine}
       ${messageLine}
       <p style="margin-top:20px;font-size:12px;color:#999">접수 시각: ${escapeHtml(createdAtDisplay)}</p>
