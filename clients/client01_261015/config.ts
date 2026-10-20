@@ -203,14 +203,14 @@ const config: ClientConfig = {
 
   accounts: {
     groom: [
-      { relation: "신랑", name: "김정호", bank: "신한은행", number: "123-45-67890" },
-      { relation: "신랑 아버지", name: "김종욱", bank: "신한은행", number: "123-45-67891" },
-      { relation: "신랑 어머니", name: "최은희", bank: "신한은행", number: "123-45-67892" },
+      { relation: "신랑", name: "양우혁", bank: "카카오뱅크", number: "3333-14-0538904" },
+      { relation: "신랑 아버지", name: "양성규", bank: "하나은행", number: "535-910309-64507" },
+      { relation: "신랑 어머니", name: "김선정", bank: "하나은행", number: "259-910671-54807" },
     ],
     bride: [
-      { relation: "신부", name: "박채현", bank: "신한은행", number: "123-45-67893" },
-      { relation: "신부 아버지", name: "박중호", bank: "신한은행", number: "123-45-67894" },
-      { relation: "신부 어머니", name: "김혜진", bank: "신한은행", number: "123-45-67895" },
+      { relation: "신부", name: "송지현", bank: "하나은행", number: "899-910068-87707" },
+      { relation: "신부 아버지", name: "송일재", bank: "카카오뱅크", number: "3333-25-4766517" },
+      { relation: "신부 어머니", name: "신정규", bank: "im뱅크", number: "077-08-195229" },
     ],
   },
 
