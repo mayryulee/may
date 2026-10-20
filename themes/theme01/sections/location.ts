@@ -19,16 +19,28 @@ function renderTransportLabel(label: string): string {
   return /* html */ `<p class="m-0 font-bold text-[16px] tracking-tighter">${label}</p>`;
 }
 
-const BUS_LINE_PREFIX = /^(간선|지선|일반|직행|마을)\s*:/;
+const BUS_LINE_PREFIX = /^(간선|지선|광역|일반|직행|좌석|마을|공항|심야|순환)\s*:/;
 
-function busLineClass(line: string): string {
+/** lines 안의 빈 문자열("") 다음 줄 위에 두는 간격 */
+const LINE_GAP_CLASS = "mt-[8px]";
+
+/**
+ * `**텍스트**` → 살짝 두껍게. 제주명조는 단일 굵기라 font-weight 대신 얇은 외곽선으로 표현
+ */
+function renderEmphasis(line: string): string {
+  return line.replace(
+    /\*\*(.+?)\*\*/g,
+    '<span class="[-webkit-text-stroke:0.4px_currentColor]">$1</span>',
+  );
+}
+
+function busLineClass(line: string, gapBefore: boolean): string {
   const base = "m-0 tracking-[-0.08em]";
-  if (!BUS_LINE_PREFIX.test(line)) return base;
-
-  const kind = line.match(/^(간선|지선|일반|직행|마을)/)?.[1];
-  if (kind === "간선") return `${base} text-[12px] mt-[8px]`;
-  if (kind) return `${base} text-[12px]`;
-  return base;
+  const kind = line.match(BUS_LINE_PREFIX)?.[1];
+  const classes = [base];
+  if (kind) classes.push("text-[12px]");
+  if (gapBefore || kind === "간선") classes.push(LINE_GAP_CLASS);
+  return classes.join(" ");
 }
 
 function renderTransportSection(
@@ -38,8 +50,17 @@ function renderTransportSection(
 ): string {
   const sectionClass =
     index < total - 1 ? "border-b-[1px] border-[#dddddd] py-[32px]" : "pt-[32px]";
+  let gapBefore = false;
   const lines = section.lines
-    .map((line) => `<p class="${busLineClass(line)}">${line}</p>`)
+    .map((line, i) => {
+      if (line === "") {
+        gapBefore = i > 0;
+        return "";
+      }
+      const html = `<p class="${busLineClass(line, gapBefore)}">${renderEmphasis(line)}</p>`;
+      gapBefore = false;
+      return html;
+    })
     .join("");
 
   return /* html */ `
