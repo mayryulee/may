@@ -81,13 +81,13 @@ const config: ClientConfig = {
   },
 
   venue: {
-    name: "더베일리하우스 삼성점 2F",
+    name: "더베일리하우스 삼성점",
     address: "서울 강남구 영동대로 506",
     addressFull: "서울 강남구 영동대로 506(삼성동168-3)",
     tel: "02-539-2956",
-    lat: 37.507037,
-    lng: 127.061892,
-    naverPlaceId: "1634613412",
+    lat: 37.509788,
+    lng: 127.06318,
+    naverPlaceId: "520612610",
     location: {
       theme01: {
         transport: [
@@ -214,46 +214,16 @@ const config: ClientConfig = {
     ],
   },
 
-  information: [
-    {
-      title: "화환 반입 금지 안내",
-      lines: [
-        "축하해 주시는 마음만으로도 큰 기쁨입니다.",
-        "식장 사정으로 3단 꽃화환은 정중히 사양하오니",
-        "너른 양해 부탁드립니다.",
-        "(부득이 화환을 보내실 경우 1단 쌀화환 또는",
-        "호접란 화분만 가능합니다.)",
-      ],
-    },
-    {
-      title: "전세버스 안내",
-      lines: [
-        "하객분들의 편의를 위해",
-        "전세버스를 운행합니다.",
-        "",
-        "출발 시간 및 장소를 확인하시어",
-        "이용에 참고해 주시기 바랍니다.",
-      ],
-    },
-  ],
-
-  quote: {
-    stanzas: [
-      ["사랑은 짧은 세월에 변하지 않고", "운명이 다할 때까지 견디는것"],
-      ["만일 이것이 틀렸다면, 그렇게 밝혀졌다면"],
-      ["나는 글을 쓰지 않았고,", "그 누구도 사랑을 안했다네"],
-    ],
-    attribution: "셰익스피어 소네트 116",
-  },
-
   share: {
-    title: "정호♥채현 결혼합니다.",
-    description: "11월 29일 일요일 낮 12시 노블발렌티 대치점",
+    title: "우혁♥지현 결혼합니다.",
+    description: "11월 29일 일요일 낮 12시 더베일리하우스 삼성점",
     kakaoTemplate: "vertical",
   },
 
+  // 안내 사항(information)·명언(quote) 미사용 — 블록을 추가하면 다시 표시됩니다
+
   rsvp: {
-    enabled: true,
+    enabled: false,
     showOnLoad: true,
     title: "참석 의사 전달",
     subtitleLines: [
@@ -266,10 +236,10 @@ const config: ClientConfig = {
     },
   },
 
-  // 배경음악 미사용 — 사용 시 주석 해제
-  // bgm: {
-  //   src: "bright.mp3",
-  // },
+  // 배경음악 (assets/audio/)
+  bgm: {
+    src: "bright.mp3",
+  },
 };
 
 export default config;
