@@ -14,3 +14,6 @@ packages/shared/generated/
 
 # Local Netlify folder
 .netlify
+
+# 에디터 임시 파일
+*.swp

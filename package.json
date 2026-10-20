@@ -10,7 +10,8 @@
     "prebuild": "npm run generate:clients && node scripts/sync-client-assets.mjs",
     "build": "tsc && tsc -p tsconfig.node.json && vite build && node scripts/prerender-client-pages.mjs",
     "preview": "vite preview",
-    "ship": "bash scripts/git-ship.sh"
+    "ship": "bash scripts/git-ship.sh",
+    "resize:images": "node scripts/resize-client-images.mjs"
   },
   "devDependencies": {
     "@netlify/blobs": "^10.7.9",
