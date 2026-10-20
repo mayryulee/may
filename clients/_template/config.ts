@@ -48,6 +48,7 @@ const config: ClientConfig = {
   },
 
   invitation: {
+    // 한 줄씩 입력. 빈 문자열 "" 을 넣은 자리에 문단 간격이 생깁니다 (theme01)
     lines: ["초대 인사말을 입력해 주세요."],
     groomParents: { parents: "아버지 · 어머니의", relation: "아들", name: "신랑" },
     brideParents: { parents: "아버지 · 어머니의", relation: "딸", name: "신부" },

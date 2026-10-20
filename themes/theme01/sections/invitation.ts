@@ -1,10 +1,31 @@
 import type { ClientConfig } from "../../../packages/shared/types";
 import { clientImageUrl } from "../../../packages/shared/types";
 
+const PARAGRAPH_GAP_CLASS = "mt-[24px] m-0";
+
+/**
+ * lines 안의 빈 문자열("")이 문단 구분 — 다음 줄 위에 문단 간격을 둡니다.
+ * 빈 문자열이 없으면 기존처럼 4번째 줄 앞에 간격을 둡니다.
+ */
 function renderInvitationLines(lines: readonly string[]): string {
+  if (!lines.includes("")) {
+    return lines
+      .map((line, i) => {
+        const margin = i === 3 ? PARAGRAPH_GAP_CLASS : "m-0";
+        return /* html */ `<p class="${margin}">${line}</p>`;
+      })
+      .join("");
+  }
+
+  let gapBefore = false;
   return lines
     .map((line, i) => {
-      const margin = i === 3 ? "mt-[24px] m-0" : "m-0";
+      if (line === "") {
+        gapBefore = i > 0;
+        return "";
+      }
+      const margin = gapBefore ? PARAGRAPH_GAP_CLASS : "m-0";
+      gapBefore = false;
       return /* html */ `<p class="${margin}">${line}</p>`;
     })
     .join("");

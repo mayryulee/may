@@ -42,7 +42,8 @@ export function renderInvitationHtml(
   venue: ClientConfig["venue"],
 ): string {
   const saveTheDateLines =
-    invitation.introLines ?? invitation.lines.slice(0, 4);
+    invitation.introLines ??
+    invitation.lines.filter((line) => line !== "").slice(0, 4);
   const backgroundSrc = themeImageUrl(THEME_ID, "background01.png");
 
   return /* html */ `
