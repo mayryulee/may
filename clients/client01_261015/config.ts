@@ -2,22 +2,22 @@ import type { ClientConfig } from "../../packages/shared/types";
 
 const config: ClientConfig = {
   id: "client01_261015",
-  slug: "client01_261015",
+  slug: "ywsj",
   theme: "theme01",
-  expiresAt: "2027-07-25",
+  expiresAt: "2027-02-28",
 
   meta: {
     title: "정호♥채현 결혼합니다.",
     description:
-      "2027년 4월 25일, Jeongho & Chaehyun의 모바일 청첩장에 소중한 분들을 초대합니다.",
+      "2026년 11월 29일, Jeongho & Chaehyun의 모바일 청첩장에 소중한 분들을 초대합니다.",
     ogSiteName: "Jeongho & Chaehyun",
     ogTitle: "정호♥채현 결혼합니다.",
-    ogDescription: "4월 25일 토요일 낮 11시 노블발렌티 대치점",
+    ogDescription: "11월 29일 일요일 낮 12시 노블발렌티 대치점",
     // 카카오 썸네일 + OG 미리보기 공용 커버 (세로/가로 무관, 파일명 cover.png로 통일)
     ogImage: "cover.png",
     ogImageAlt: "정호와 채현의 결혼식 초대",
     twitterTitle: "정호♥채현 결혼합니다.",
-    twitterDescription: "2027년 4월 25일, 소중한 분들을 초대합니다.",
+    twitterDescription: "2026년 11월 29일, 소중한 분들을 초대합니다.",
   },
 
   couple: {
@@ -30,12 +30,12 @@ const config: ClientConfig = {
     ddayLabel: "정호 ♥ 채현",
   },
 
-  weddingAt: "2027-04-25T11:00:00+09:00",
+  weddingAt: "2026-11-29T12:00:00+09:00",
 
   header: {
     titleImageAlt: "Starting our life Together",
-    year: "2027",
-    monthDay: "04.25",
+    year: "2026",
+    monthDay: "11.29",
   },
 
   hero: {
@@ -71,9 +71,9 @@ const config: ClientConfig = {
   },
 
   dateDisplay: {
-    shortDate: "27.04.25",
-    time: "am 11:00",
-    fullDateKo: "2027년 4월 25일 일요일 오전 11시",
+    shortDate: "26.11.29",
+    time: "pm 12:00",
+    fullDateKo: "2026년 11월 29일 일요일 낮 12시",
     venueShort: "노블발렌티 대치점",
   },
 
@@ -238,7 +238,7 @@ const config: ClientConfig = {
 
   share: {
     title: "정호♥채현 결혼합니다.",
-    description: "4월 25일 토요일 낮 11시 노블발렌티 대치점",
+    description: "11월 29일 일요일 낮 12시 노블발렌티 대치점",
     kakaoTemplate: "vertical",
   },
 
