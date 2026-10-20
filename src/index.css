@@ -64,6 +64,18 @@
   font-variation-settings: "wdth" 100;
 }
 
+/* 모바일 확대 방지 (packages/shared/zoom-guard.ts 와 함께 동작) */
+html {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+img {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
 .font-quicksand {
   font-optical-sizing: auto;
 }

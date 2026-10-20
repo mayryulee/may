@@ -255,6 +255,10 @@ const config: ClientConfig = {
       emails: ["maybrand@naver.com"],
     },
   },
+
+  bgm: {
+    src: "bright.mp3",
+  },
 };
 
 export default config;

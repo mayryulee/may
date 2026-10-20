@@ -1,12 +1,15 @@
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const publicImagesDir = resolve(root, "public", "images");
+const publicAudioDir = resolve(root, "public", "audio");
 const publicThemeAssetsDir = resolve(root, "public", "theme-assets");
 const themesDir = resolve(root, "themes");
 const clientsDir = resolve(root, "clients");
+/** 공용 배경음악 모음 — 고객 config의 bgm.src 에 여기 파일명을 지정 */
+const audioLibraryDir = resolve(root, "assets", "audio");
 
 function listClientIds() {
   return readdirSync(clientsDir, { withFileTypes: true })
@@ -48,6 +51,30 @@ for (const id of clientIds) {
   copyDirContents(from, resolve(publicImagesDir, id));
 }
 
+clearDir(publicAudioDir);
+const audioFiles = existsSync(audioLibraryDir)
+  ? readdirSync(audioLibraryDir).filter((f) => !f.startsWith("."))
+  : [];
+// macOS는 한글 파일명을 NFD로 저장 → 배포 서버(Linux)·config(NFC)와 맞추기 위해 NFC로 복사
+const audioNames = audioFiles.map((f) => f.normalize("NFC"));
+audioFiles.forEach((file, i) =>
+  cpSync(resolve(audioLibraryDir, file), resolve(publicAudioDir, audioNames[i])),
+);
+
+for (const id of clientIds) {
+  const src = readFileSync(resolve(clientsDir, id, "config.ts"), "utf8")
+    .split("\n")
+    .filter((line) => !line.trim().startsWith("//"))
+    .join("\n");
+  const bgmSrc = src.match(/bgm:\s*\{[^}]*?src:\s*"([^"]+)"/)?.[1]?.normalize("NFC");
+  if (bgmSrc && !audioNames.includes(bgmSrc)) {
+    console.error(
+      `[${id}] bgm.src "${bgmSrc}" not found in assets/audio/ (available: ${audioNames.join(", ") || "none"})`,
+    );
+    process.exit(1);
+  }
+}
+
 clearDir(publicThemeAssetsDir);
 for (const themeId of readdirSync(themesDir)) {
   const themeDir = resolve(themesDir, themeId);
@@ -63,5 +90,5 @@ for (const themeId of readdirSync(themesDir)) {
 }
 
 console.log(
-  `Synced clients [${clientIds.join(", ")}] → public/images/{id}/, theme assets → public/theme-assets/`,
+  `Synced clients [${clientIds.join(", ")}] → public/images/{id}/ + assets/audio → public/audio/, theme assets → public/theme-assets/`,
 );

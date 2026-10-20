@@ -11,6 +11,8 @@ import {
   syncClientPath,
 } from "./client-route";
 import { applyDocumentMeta } from "./document-meta";
+import { initZoomGuard } from "@shared/zoom-guard";
+import { initBgm } from "@shared/bgm";
 
 const themes = {
   theme01,
@@ -39,9 +41,11 @@ function mountClient(slug: string, pathname = window.location.pathname): void {
   applyDocumentMeta(config, slug);
   app.innerHTML = theme.renderPageHtml(config, themeId);
   theme.initPage(app, config, themeId);
+  initBgm(config);
 }
 
 function bootstrap(): void {
+  initZoomGuard();
   const slug = syncClientPath();
   mountClient(slug);
 }

@@ -3,6 +3,7 @@ dist
 public/images/*
 !public/images/.gitkeep
 public/theme-assets/
+public/audio/
 public/icons/
 packages/shared/generated/
 .DS_Store

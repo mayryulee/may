@@ -117,6 +117,13 @@ const config: ClientConfig = {
       emails: ["mayryulee@gmail.com"],
     },
   },
+
+  // 배경음악: assets/audio/ 의 샘플 음원 중 파일명을 골라 주석 해제
+  // bgm: {
+  //   src: "song01.mp3",
+  //   autoplay: true,
+  //   volume: 0.5,
+  // },
 };
 
 export default config;

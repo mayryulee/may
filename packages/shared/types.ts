@@ -126,6 +126,15 @@ export type ClientRsvpConfig = {
   };
 };
 
+export type ClientBgmConfig = {
+  /** 공용 음원 모음 assets/audio/ 안의 파일명 (예: "song01.mp3") */
+  src: string;
+  /** 접속 시 자동 재생 시도 (모바일은 첫 터치 시 재생). 기본 true */
+  autoplay?: boolean;
+  /** 0 ~ 1, 기본 0.5 */
+  volume?: number;
+};
+
 export type ClientConfig = {
   id: string;
   /** URL 경로 (`/eunju-hani`) — 미지정 시 빌드 스크립트가 폴더명을 사용 */
@@ -195,11 +204,18 @@ export type ClientConfig = {
     kakaoTemplate?: "vertical" | "horizontal";
   };
   rsvp?: ClientRsvpConfig;
+  /** 배경음악 — 미지정 시 음악/버튼 없음 */
+  bgm?: ClientBgmConfig;
 };
 
 /** 클라이언트 전용 사진 (갤러리, 커버, 메인 등) */
 export function clientImageUrl(clientId: string, filename: string): string {
   return `/images/${clientId}/${filename}`;
+}
+
+/** 공용 배경음악 (assets/audio/) */
+export function bgmUrl(filename: string): string {
+  return `/audio/${encodeURIComponent(filename.normalize("NFC"))}`;
 }
 
 /** 테마 전용 이미지 (title.png 등) */
