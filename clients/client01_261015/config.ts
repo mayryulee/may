@@ -216,7 +216,8 @@ const config: ClientConfig = {
 
   share: {
     title: "우혁♥지현 결혼합니다.",
-    description: "11월 29일 일요일 낮 12시 더베일리하우스 삼성점",
+    // \n 위치에서 카카오 공유 메시지 설명이 줄바꿈됩니다
+    description: "11월 29일 일요일 낮 12시\n더베일리하우스 삼성점 2F",
     kakaoTemplate: "vertical",
   },
 
