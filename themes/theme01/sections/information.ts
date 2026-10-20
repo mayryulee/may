@@ -24,7 +24,11 @@ function renderSlide(slide: InformationSlide, index: number): string {
     </div>`;
 }
 
-export function renderInformationHtml(slides: readonly InformationSlide[]): string {
+export function renderInformationHtml(
+  slides: readonly InformationSlide[] = [],
+): string {
+  if (slides.length === 0) return "";
+
   const slideHtml = slides.map((slide, index) => renderSlide(slide, index)).join("");
 
   return /* html */ `

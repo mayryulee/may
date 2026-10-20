@@ -1,6 +1,6 @@
 import { initVenueMap } from "../../../packages/shared/venue-map";
 import type { LocationTransportSection, Venue } from "../../../packages/shared/types";
-import { themeIconUrl, venueLocationForTheme } from "../../../packages/shared/types";
+import { themeIconUrl, venueLocationForTheme, venueSearchName } from "../../../packages/shared/types";
 
 const THEME_ID = "theme01" as const;
 
@@ -77,6 +77,7 @@ function renderTransportHtml(transport: readonly LocationTransportSection[]): st
 
 export function renderLocationHtml(venue: Venue): string {
   const { transport } = venueLocationForTheme(venue, THEME_ID);
+  const searchName = venueSearchName(venue);
   const copyIconSrc = themeIconUrl(THEME_ID, "btn-copy.svg");
   const kakaoIconSrc = themeIconUrl(THEME_ID, "navi-kakao.svg");
   const naverIconSrc = themeIconUrl(THEME_ID, "navi-naver.svg");
@@ -125,7 +126,7 @@ export function renderLocationHtml(venue: Venue): string {
       <div class="mt-[12px] flex justify-center px-[31px] gap-[18px]">
         <a
           data-map="kakao"
-          href="https://map.kakao.com/?q=${enc(venue.name)}"
+          href="https://map.kakao.com/?q=${enc(searchName)}"
           target="_blank"
           rel="noopener noreferrer"
           class="flex h-[40px] w-[109px] shrink-0 items-center justify-center rounded-[6px] bg-white no-underline"
@@ -143,7 +144,7 @@ export function renderLocationHtml(venue: Venue): string {
         </a>
         <a
           data-map="naver"
-          href="https://map.naver.com/p/search/${enc(venue.name)}/place/${venue.naverPlaceId}"
+          href="https://map.naver.com/p/search/${enc(searchName)}/place/${venue.naverPlaceId}"
           target="_blank"
           rel="noopener noreferrer"
           class="flex h-[40px] w-[109px] shrink-0 items-center justify-center rounded-[6px] bg-white no-underline"
@@ -161,7 +162,7 @@ export function renderLocationHtml(venue: Venue): string {
         </a>
         <a
           data-map="tmap"
-          href="tmap://route?goalname=${enc(venue.name)}&amp;goalx=${venue.lng}&amp;goaly=${venue.lat}"
+          href="tmap://route?goalname=${enc(searchName)}&amp;goalx=${venue.lng}&amp;goaly=${venue.lat}"
           rel="noopener noreferrer"
           class="flex h-[40px] w-[109px] shrink-0 items-center justify-center rounded-[6px] bg-white no-underline"
           aria-label="T MAP"

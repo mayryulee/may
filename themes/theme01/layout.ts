@@ -37,7 +37,7 @@ export function renderPageHtml(config: ClientConfig, _themeId: ThemeId): string 
 
     ${renderInformationHtml(config.information)}
 
-    ${renderGuestbookHtml()}
+    ${renderGuestbookHtml(!config.information?.length)}
 
     ${renderQuoteHtml(config.quote)}
 

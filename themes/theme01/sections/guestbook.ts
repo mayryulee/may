@@ -189,9 +189,13 @@ async function refreshList(root: ParentNode, clientId: string): Promise<void> {
   }
 }
 
-export function renderGuestbookHtml(): string {
+/**
+ * @param afterWhiteSection 바로 위 섹션도 흰 배경이면 true — 위 여백이 겹치지 않게 상단 패딩 제거
+ */
+export function renderGuestbookHtml(afterWhiteSection = false): string {
+  const paddingClass = afterWhiteSection ? "pb-[120px]" : "py-[120px]";
   return /* html */ `
-    <section id="guestbook" class="py-[120px] px-[30px] text-center" aria-label="방명록">
+    <section id="guestbook" class="${paddingClass} px-[30px] text-center" aria-label="방명록">
       <p class="m-0 font-optima text-[30px] uppercase text-[#111111]">Message</p>
       <p class="m-0 mt-[16px] text-[16px] tracking-tighter text-[#5D5D5D]">
         저희 둘에게 따뜻한 방명록을 남겨주세요

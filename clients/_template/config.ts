@@ -71,6 +71,8 @@ const config: ClientConfig = {
     lat: 37.5,
     lng: 127.0,
     naverPlaceId: "",
+    // 지도 버튼 검색어 — name 에 층·홀 이름이 붙어 검색이 안 될 때만 지정 (docs/client-venue-checklist.md)
+    // mapSearchName: "예식장명",
     location: {
       theme01: {
         transport: [{ label: "오시는 길", lines: ["안내 문구를 입력해 주세요."] }],

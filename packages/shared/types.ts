@@ -79,9 +79,19 @@ export type Venue = {
   lat: number;
   lng: number;
   naverPlaceId: string;
+  /**
+   * 지도 버튼(카카오·네이버·티맵)·지도 위치 검색에 쓸 이름.
+   * 미지정 시 name 사용. name 에 층·홀 이름이 붙어 검색이 안 될 때 지정 (예: "더베일리하우스 삼성점")
+   */
+  mapSearchName?: string;
   /** 테마별 오시는 길·교통편 (디자인에 맞게 행 단위로 저장) */
   location: Record<ThemeId, ThemeLocationContent>;
 };
+
+/** 지도 검색어 — mapSearchName 이 없으면 name */
+export function venueSearchName(venue: Venue): string {
+  return venue.mapSearchName?.trim() || venue.name;
+}
 
 export function venueLocationForTheme(
   venue: Venue,
@@ -188,8 +198,10 @@ export type ClientConfig = {
   venue: Venue;
   gallery: GalleryImage[];
   accounts: GiftAccounts;
-  information: InformationSlide[];
-  quote: {
+  /** 안내 사항 슬라이드 — 미지정·빈 배열이면 섹션 숨김 */
+  information?: InformationSlide[];
+  /** 명언·인용문 — 미지정이면 섹션 숨김 */
+  quote?: {
     stanzas: string[][];
     attribution: string;
   };

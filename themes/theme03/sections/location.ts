@@ -1,6 +1,6 @@
 import { initVenueMap } from "../../../packages/shared/venue-map";
 import type { LocationTransportSection, Venue } from "../../../packages/shared/types";
-import { themeIconUrl, venueLocationForTheme } from "../../../packages/shared/types";
+import { themeIconUrl, venueLocationForTheme, venueSearchName } from "../../../packages/shared/types";
 const THEME_ID = "theme03" as const;
 
 const enc = (s: string) => encodeURIComponent(s);
@@ -49,21 +49,21 @@ function renderMapNavHtml(venue: Venue): string {
       <div class="inline-grid">
         ${renderMapLink(
           `data-map="naver"
-          href="https://map.naver.com/p/search/${enc(venue.name)}/place/${venue.naverPlaceId}"
+          href="https://map.naver.com/p/search/${enc(venueSearchName(venue))}/place/${venue.naverPlaceId}"
           target="_blank"
           rel="noopener noreferrer"`,
           "네이버 지도",
         )}
         ${renderMapLink(
           `data-map="kakao"
-          href="https://map.kakao.com/?q=${enc(venue.name)}"
+          href="https://map.kakao.com/?q=${enc(venueSearchName(venue))}"
           target="_blank"
           rel="noopener noreferrer"`,
           "카카오맵",
         )}
         ${renderMapLink(
           `data-map="tmap"
-          href="tmap://route?goalname=${enc(venue.name)}&amp;goalx=${venue.lng}&amp;goaly=${venue.lat}"
+          href="tmap://route?goalname=${enc(venueSearchName(venue))}&amp;goalx=${venue.lng}&amp;goaly=${venue.lat}"
           rel="noopener noreferrer"`,
           "티맵",
           false,

@@ -1,5 +1,6 @@
 import { copyText, COPY_TOAST, showCopyToast } from "./copy-toast";
 import type { Venue } from "./types";
+import { venueSearchName } from "./types";
 
 const enc = (s: string) => encodeURIComponent(s);
 
@@ -47,17 +48,17 @@ declare global {
 function buildMapLinks(venue: Venue, siteAppName: string) {
   return {
     kakao: {
-      app: `kakaomap://search?q=${enc(venue.name)}&p=${venue.lat},${venue.lng}`,
-      web: `https://map.kakao.com/?q=${enc(venue.name)}`,
-      webMobile: `http://m.map.kakao.com/scheme/search?q=${enc(venue.name)}&p=${venue.lat},${venue.lng}`,
+      app: `kakaomap://search?q=${enc(venueSearchName(venue))}&p=${venue.lat},${venue.lng}`,
+      web: `https://map.kakao.com/?q=${enc(venueSearchName(venue))}`,
+      webMobile: `http://m.map.kakao.com/scheme/search?q=${enc(venueSearchName(venue))}&p=${venue.lat},${venue.lng}`,
     },
     naver: {
       app: `nmap://place?id=${venue.naverPlaceId}&appname=${siteAppName}`,
-      web: `https://map.naver.com/p/search/${enc(venue.name)}/place/${venue.naverPlaceId}`,
+      web: `https://map.naver.com/p/search/${enc(venueSearchName(venue))}/place/${venue.naverPlaceId}`,
     },
     tmap: {
-      app: `tmap://route?goalname=${enc(venue.name)}&goalx=${venue.lng}&goaly=${venue.lat}`,
-      androidIntent: `intent://route?goalname=${enc(venue.name)}&goalx=${venue.lng}&goaly=${venue.lat}#Intent;scheme=tmap;package=com.skt.tmap.ku;end`,
+      app: `tmap://route?goalname=${enc(venueSearchName(venue))}&goalx=${venue.lng}&goaly=${venue.lat}`,
+      androidIntent: `intent://route?goalname=${enc(venueSearchName(venue))}&goalx=${venue.lng}&goaly=${venue.lat}#Intent;scheme=tmap;package=com.skt.tmap.ku;end`,
       store: "https://play.google.com/store/apps/details?id=com.skt.tmap.ku",
       storeIos: "https://apps.apple.com/app/id431589174",
     },
@@ -228,7 +229,7 @@ async function resolveVenueCoords(
   mapsApi: KakaoMapsApi,
   venue: Venue,
 ): Promise<LatLngCoords | null> {
-  const keywordCoords = parseGeocodeResult(await keywordSearch(mapsApi, venue.name));
+  const keywordCoords = parseGeocodeResult(await keywordSearch(mapsApi, venueSearchName(venue)));
   if (keywordCoords) return keywordCoords;
 
   for (const query of [venue.address, venue.addressFull]) {

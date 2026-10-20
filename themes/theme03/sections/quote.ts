@@ -1,6 +1,8 @@
 import type { ClientConfig } from "../../../packages/shared/types";
 
 export function renderQuoteHtml(quote: ClientConfig["quote"]): string {
+  if (!quote) return "";
+
   const stanzas = quote.stanzas
     .map((stanza) => {
       const lines = stanza.map((line) => `<p class="m-0">${line}</p>`).join("");

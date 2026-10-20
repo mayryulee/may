@@ -2,7 +2,7 @@ import type { InformationSlide } from "./types";
 
 export function initInformationCarousel(
   root: ParentNode,
-  slides: readonly InformationSlide[],
+  slides: readonly InformationSlide[] = [],
 ): void {
   const section = root.querySelector("#information");
   const track = root.querySelector<HTMLElement>("#info-track");
