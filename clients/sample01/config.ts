@@ -256,9 +256,10 @@ const config: ClientConfig = {
     },
   },
 
-  bgm: {
-    src: "bright.mp3",
-  },
+  // 배경음악 미사용 — 사용 시 주석 해제
+  // bgm: {
+  //   src: "bright.mp3",
+  // },
 };
 
 export default config;
