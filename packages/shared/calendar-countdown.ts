@@ -18,10 +18,6 @@ function pad2(n: number): string {
   return String(n).padStart(2, "0");
 }
 
-function pad3(n: number): string {
-  return String(n).padStart(3, "0");
-}
-
 export function initCalendarCountdown(
   root: ParentNode,
   weddingAt: Date,
@@ -42,7 +38,8 @@ export function initCalendarCountdown(
     const mins = Math.floor((diff % MS_HOUR) / MS_MIN);
     const secs = Math.floor((diff % MS_MIN) / 1000);
 
-    daysEl.textContent = pad3(days);
+    // 두 자리 기본 (39, 05), 100일 이상이면 그대로 세 자리
+    daysEl.textContent = pad2(days);
     hoursEl.textContent = pad2(hours);
     minsEl.textContent = pad2(mins);
     secsEl.textContent = pad2(secs);

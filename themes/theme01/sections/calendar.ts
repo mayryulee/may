@@ -40,7 +40,7 @@ export function renderCalendarHtml(
                 000
               </p>
             </div>
-            <span class="pb-[4px] font-optima text-[14px] leading-none text-[#111111]">:</span>
+            <span class="flex h-[36px] items-center font-optima text-[14px] leading-none text-[#111111]">:</span>
             <div class="flex flex-col items-center">
               <p class="m-0 w-fit font-optima text-[12px] font-normal uppercase tracking-tight text-[#6E6E6E]">
                 Hour
@@ -49,7 +49,7 @@ export function renderCalendarHtml(
                 00
               </p>
             </div>
-            <span class="pb-[4px] font-optima text-[14px] leading-none text-[#111111]">:</span>
+            <span class="flex h-[36px] items-center font-optima text-[14px] leading-none text-[#111111]">:</span>
             <div class="flex flex-col items-center">
               <p class="m-0 w-fit font-optima text-[12px] font-normal uppercase tracking-tight text-[#6E6E6E]">
                 Min
@@ -58,7 +58,7 @@ export function renderCalendarHtml(
                 00
               </p>
             </div>
-            <span class="pb-[4px] font-optima text-[14px] leading-none text-[#111111]">:</span>
+            <span class="flex h-[36px] items-center font-optima text-[14px] leading-none text-[#111111]">:</span>
             <div class="flex flex-col items-center">
               <p class="m-0 w-fit font-optima text-[12px] font-normal uppercase tracking-tight text-[#6E6E6E]">
                 Sec
