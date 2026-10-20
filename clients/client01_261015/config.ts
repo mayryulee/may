@@ -7,27 +7,27 @@ const config: ClientConfig = {
   expiresAt: "2027-02-28",
 
   meta: {
-    title: "정호♥채현 결혼합니다.",
+    title: "우혁♥지현 결혼합니다.",
     description:
-      "2026년 11월 29일, Jeongho & Chaehyun의 모바일 청첩장에 소중한 분들을 초대합니다.",
-    ogSiteName: "Jeongho & Chaehyun",
-    ogTitle: "정호♥채현 결혼합니다.",
-    ogDescription: "11월 29일 일요일 낮 12시 노블발렌티 대치점",
+      "2026년 11월 29일, Woohyeok & Jeehyeon의 모바일 청첩장에 소중한 분들을 초대합니다.",
+    ogSiteName: "Woohyeok & Jeehyeon",
+    ogTitle: "우혁♥지현 결혼합니다.",
+    ogDescription: "11월 29일 일요일 낮 12시 더베일리하우스 삼성점",
     // 카카오 썸네일 + OG 미리보기 공용 커버 (세로/가로 무관, 파일명 cover.png로 통일)
     ogImage: "cover.png",
-    ogImageAlt: "정호와 채현의 결혼식 초대",
-    twitterTitle: "정호♥채현 결혼합니다.",
+    ogImageAlt: "우혁과 지현의 결혼식 초대",
+    twitterTitle: "우혁♥지현 결혼합니다.",
     twitterDescription: "2026년 11월 29일, 소중한 분들을 초대합니다.",
   },
 
   couple: {
-    groomEn: "Jeongho",
-    brideEn: "Chaehyun",
-    groomKo: "김정호",
-    brideKo: "박채현",
-    groomGivenName: "정호",
-    brideGivenName: "채현",
-    ddayLabel: "정호 ♥ 채현",
+    groomEn: "Woohyeok",
+    brideEn: "Jeehyeon",
+    groomKo: "양우혁",
+    brideKo: "송지현",
+    groomGivenName: "우혁",
+    brideGivenName: "지현",
+    ddayLabel: "우혁 ♥ 지현",
   },
 
   weddingAt: "2026-11-29T12:00:00+09:00",
@@ -40,7 +40,7 @@ const config: ClientConfig = {
 
   hero: {
     image: "main01.png",
-    alt: "Jeongho와 Chaehyun 웨딩 사진",
+    alt: "Woohyeok과 Jeehyeon 웨딩 사진",
   },
 
   calendar: {
@@ -50,11 +50,14 @@ const config: ClientConfig = {
 
   invitation: {
     lines: [
-      "봄 햇살이 함께 했던 지난날,",
-      "여러 해의 봄날 처럼",
-      "앞으로도 햇살같은 봄날을 함께 하려 합니다.",
-      "부디 귀한 시간 내주시어 저희의 봄날에 함께",
-      "축복 해주시면 감사하겠습니다.",
+      "소중한 분들을 초대합니다.",
+      "", // 문단 간격
+      "다정한 안부를 나누던 날들이 모여",
+      "평생을 함께하기로 했습니다.",
+      "서로의 매일을 응원하는 든든한 사랑이 되겠습니다.",
+      "", // 문단 간격
+      "부디 귀한 시간 내주시어 저희의 첫걸음을",
+      "축복 해주시면 감사하겠습니다."
     ],
     groomParents: {
       parents: "김종욱·최은희",
@@ -74,7 +77,7 @@ const config: ClientConfig = {
     shortDate: "26.11.29",
     time: "pm 12:00",
     fullDateKo: "2026년 11월 29일 일요일 낮 12시",
-    venueShort: "노블발렌티 대치점",
+    venueShort: "더베일리하우스 삼성점",
   },
 
   venue: {
