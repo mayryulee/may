@@ -64,6 +64,19 @@
   font-variation-settings: "wdth" 100;
 }
 
+/*
+ * theme01 제주명조 자간 — 기본 tracking-tighter(-0.05em)가 빡빡해 0.02em 넓힘.
+ * 제주명조 영역 안의 다른 글꼴(영문 제목·숫자·버튼)은 Tailwind 기본값 유지.
+ */
+.font-jeju {
+  --tracking-tighter: -0.03em;
+}
+
+.font-jeju
+  :where(.font-optima, .font-zalando-sans, .font-pretendard, .font-sans, .font-cabinet, .font-dm) {
+  --tracking-tighter: -0.05em;
+}
+
 /* 모바일 확대 방지 (packages/shared/zoom-guard.ts 와 함께 동작) */
 html {
   touch-action: manipulation;

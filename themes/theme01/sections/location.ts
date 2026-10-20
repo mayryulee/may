@@ -35,7 +35,7 @@ function renderEmphasis(line: string): string {
 }
 
 function busLineClass(line: string, gapBefore: boolean): string {
-  const base = "m-0 tracking-[-0.08em]";
+  const base = "m-0 tracking-[-0.06em]";
   const kind = line.match(BUS_LINE_PREFIX)?.[1];
   const classes = [base];
   if (kind) classes.push("text-[12px]");
