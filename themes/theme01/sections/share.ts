@@ -18,22 +18,6 @@ export function renderShareHtml(): string {
         >
           카카오톡으로 청첩장 전하기
         </button>
-        <button
-          type="button"
-          id="share-copy-link"
-          class="flex w-full items-center justify-center gap-[8px] rounded-[8px] border-[0px] bg-[#F7F7F7] py-[13px] font-pretendard text-[16px] text-[#15181F]"
-        >
-          청첩장 링크 복사하기
-          <img
-            src="${themeIconUrl("theme01", "btn-copy.svg")}"
-            alt=""
-            width="16"
-            height="16"
-            class="block"
-            decoding="async"
-            aria-hidden="true"
-          />
-        </button>
       </div>
       <img
         class="mx-auto mt-[84px] block h-auto w-[180px]"

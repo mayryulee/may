@@ -1,4 +1,4 @@
-import { copyText, COPY_TOAST, mountCopyToast, showCopyToast } from "./copy-toast";
+import { mountCopyToast, showCopyToast } from "./copy-toast";
 import type { ClientConfig } from "./types";
 
 const KAKAO_SDK_SRC = "https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js";
@@ -25,12 +25,6 @@ function siteUrl(): string {
 
   const fromEnv = import.meta.env.VITE_SITE_URL?.replace(/\/$/, "");
   return fromEnv || window.location.origin.replace(/\/$/, "");
-}
-
-function sharePageUrl(): string {
-  const path = window.location.pathname.replace(/\/$/, "");
-  const base = siteUrl();
-  return path ? `${base}${path}` : base;
 }
 
 /** 클라이언트별 카카오 템플릿 방향 (미지정 시 세로) */
@@ -65,11 +59,6 @@ function loadKakaoSdk(): Promise<void> {
     script.onerror = () => reject(new Error("Kakao SDK load failed"));
     document.head.appendChild(script);
   });
-}
-
-async function copyShareUrlFallback(): Promise<void> {
-  await copyText(sharePageUrl());
-  showCopyToast(COPY_TOAST.address);
 }
 
 async function shareToKakao(config: ClientConfig): Promise<void> {
@@ -140,14 +129,6 @@ export function initShare(config: ClientConfig): void {
     } catch (error) {
       console.error(error);
       showCopyToast(`카카오 공유 실패: ${kakaoShareErrorMessage(error)}`);
-    }
-  });
-
-  document.querySelector("#share-copy-link")?.addEventListener("click", async () => {
-    try {
-      await copyShareUrlFallback();
-    } catch {
-      showCopyToast(COPY_TOAST.failed);
     }
   });
 }
