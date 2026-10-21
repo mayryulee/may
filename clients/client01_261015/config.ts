@@ -12,7 +12,7 @@ const config: ClientConfig = {
       "2026년 11월 29일, Woohyeok & Jeehyeon의 모바일 청첩장에 소중한 분들을 초대합니다.",
     ogSiteName: "Woohyeok & Jeehyeon",
     ogTitle: "우혁♥지현 결혼합니다.",
-    ogDescription: "11월 29일 일요일 낮 12시 더베일리하우스 삼성점",
+    ogDescription: "11월 29일 일요일 오후 2시 더베일리하우스 삼성점 2층",
     // 카카오 썸네일 + OG 미리보기 공용 커버 (세로/가로 무관, 파일명 cover.png로 통일)
     ogImage: "cover.png",
     ogImageAlt: "우혁과 지현의 결혼식 초대",
@@ -30,7 +30,7 @@ const config: ClientConfig = {
     ddayLabel: "우혁 ♥ 지현",
   },
 
-  weddingAt: "2026-11-29T12:00:00+09:00",
+  weddingAt: "2026-11-29T14:00:00+09:00",
 
   header: {
     titleImageAlt: "Starting our life Together",
@@ -50,8 +50,6 @@ const config: ClientConfig = {
 
   invitation: {
     lines: [
-      "소중한 분들을 초대합니다.",
-      "", // 문단 간격
       "다정한 안부를 나누던 날들이 모여",
       "평생을 함께하기로 했습니다.",
       "서로의 매일을 응원하는 든든한 사랑이 되겠습니다.",
@@ -75,9 +73,9 @@ const config: ClientConfig = {
 
   dateDisplay: {
     shortDate: "26.11.29",
-    time: "pm 12:00",
-    fullDateKo: "2026년 11월 29일 일요일 낮 12시",
-    venueShort: "더베일리하우스 삼성점 2F",
+    time: "pm 2:00",
+    fullDateKo: "2026년 11월 29일 일요일 오후 2시",
+    venueShort: "더베일리하우스 삼성점 2층",
   },
 
   venue: {
@@ -202,22 +200,23 @@ const config: ClientConfig = {
   ],
 
   accounts: {
+    messageLines: ["소중한 마음 감사히 잘 받겠습니다."],
     groom: [
-      { relation: "신랑", name: "양우혁", bank: "카카오뱅크", number: "3333-14-0538904" },
-      { relation: "신랑 아버지", name: "양성규", bank: "하나은행", number: "535-910309-64507" },
-      { relation: "신랑 어머니", name: "김선정", bank: "하나은행", number: "259-910671-54807" },
+      { relation: "신랑", name: "양우혁", bank: "카카오뱅크", number: "3333-14-0538904", phone: "010-4236-4274" },
+      { relation: "신랑 아버지", name: "양성규", bank: "하나은행", number: "535-910309-64507", phone: "010-9330-7510" },
+      { relation: "신랑 어머니", name: "김선정", bank: "하나은행", number: "259-910671-54807", phone: "010-2285-4274" },
     ],
     bride: [
-      { relation: "신부", name: "송지현", bank: "하나은행", number: "899-910068-87707" },
-      { relation: "신부 아버지", name: "송일재", bank: "카카오뱅크", number: "3333-25-4766517" },
-      { relation: "신부 어머니", name: "신정규", bank: "im뱅크", number: "077-08-195229" },
+      { relation: "신부", name: "송지현", bank: "하나은행", number: "899-910068-87707", phone: "010-8816-6282" },
+      { relation: "신부 아버지", name: "송일재", bank: "카카오뱅크", number: "3333-25-4766517", phone: "010-5478-6282" },
+      { relation: "신부 어머니", name: "신정규", bank: "im뱅크", number: "077-08-195229", phone: "010-3520-6282" },
     ],
   },
 
   share: {
     title: "우혁♥지현 결혼합니다.",
     // \n 위치에서 카카오 공유 메시지 설명이 줄바꿈됩니다
-    description: "11월 29일 일요일 낮 12시\n더베일리하우스 삼성점 2F",
+    description: "11월 29일 일요일 오후 2시\n더베일리하우스 삼성점 2층",
     kakaoTemplate: "vertical",
   },
 
