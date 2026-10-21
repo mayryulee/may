@@ -19,9 +19,13 @@ main 브랜치에 푸시하면 Netlify가 자동 빌드·배포합니다.
 
 ```bash
 npm install
-npm run dev          # http://localhost:5173/<slug>  (사진 교체 후엔 서버 재시작 필요)
+npm run dev          # http://localhost:5173/<slug>  (사진·아이콘 교체 후엔 서버 재시작 필요)
+npm run dev -- --host  # 같은 와이파이의 핸드폰에서 http://<Mac IP>:5173/<slug> 로 확인
 npm run build        # 배포 전 확인용
 ```
+
+- `--host` 로 핸드폰 확인 시 https 가 아니라 자동 복사가 안 될 수 있고, 카카오 지도·공유는 등록 도메인이 아니라 동작 안 함
+  → 이 기능들은 배포 후 실제 사이트에서 확인.
 
 - `.env` 는 git 에 없음 (카카오 키, Resend 키). 다른 PC 에서는 직접 복사해 와야 함.
 - 주소 `/grace` `/tender` `/veil` = 테마 미리보기(sample01/sample02). `/` → `/grace` 로 이동.
@@ -68,6 +72,11 @@ npm run resize:images -- <clientId> main01.png # 특정 파일만
 - **강조**: 교통편 lines 에서 `"**신랑**"` → 살짝 두껍게 (제주명조는 굵기 1개라 0.4px 외곽선).
 - **버스 종류 접두어**(`간선 :` `지선 :` `광역 :` `직행 :` 등)로 시작하면 12px 작은 글씨.
 - **안내(information)·명언(quote)** 블록을 빼면 해당 섹션 숨김. theme01 은 안내가 없으면 방명록 상단 여백 자동 제거.
+- **계좌 연락처** (theme01): `accounts.groom/bride[]` 항목에 `phone: "010-0000-0000"` 을 넣으면
+  이름 옆 전화 아이콘(`themes/theme01/icons/phone.svg`, 14px) → 클릭 시 연락처 팝업 + 번호 자동 복사 + '전화 걸기'(tel:).
+  `phone` 없는 사람은 아이콘 없음. 팝업은 방명록 삭제 팝업과 같은 스타일 재사용.
+- **계좌 안내 문구** (theme01): `accounts.messageLines: ["소중한 마음 감사히 잘 받겠습니다."]` — 줄 단위 배열.
+  생략 시 기본 문구("참석이 어려우신 분들을 위해 기재했습니다." / "너그러운 마음으로 양해 부탁드립니다.").
 - **참석 의사 팝업**: `rsvp.enabled: false` 면 팝업·메일 없음.
 - **배경음악**: `bgm: { src: "bright.mp3" }` (음원은 `assets/audio/`). 블록 없으면 음악 없음.
 - **지도 검색어**: `venue.name` 에 층·홀(예: `2F`)을 붙이면 카카오 검색 실패 → `mapSearchName` 에 검색용 이름 지정.
