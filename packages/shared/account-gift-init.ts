@@ -47,5 +47,52 @@ export function initAccountGift(root: ParentNode): void {
     },
   );
 
+  initContactModal(root);
+
   setActiveTab(root, "groom");
+}
+
+function initContactModal(root: ParentNode): void {
+  const modal = root.querySelector<HTMLElement>("#gift-contact-modal");
+  if (!modal) return;
+
+  const close = () => {
+    modal.classList.add("hidden");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("overflow-hidden");
+  };
+
+  root.querySelectorAll<HTMLButtonElement>("[data-contact-phone]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const phone = btn.dataset.contactPhone ?? "";
+      const setText = (selector: string, text: string) => {
+        const el = modal.querySelector<HTMLElement>(selector);
+        if (el) el.textContent = text;
+      };
+      setText("[data-contact-relation]", btn.dataset.contactRelation ?? "");
+      setText("[data-contact-name]", btn.dataset.contactName ?? "");
+      setText("[data-contact-phone-text]", phone);
+      modal
+        .querySelector<HTMLAnchorElement>("[data-contact-call]")
+        ?.setAttribute("href", `tel:${phone.replace(/[^0-9+]/g, "")}`);
+
+      modal.classList.remove("hidden");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("overflow-hidden");
+
+      try {
+        await copyText(phone);
+        showCopyToast(COPY_TOAST.phone);
+      } catch {
+        showCopyToast(COPY_TOAST.failed);
+      }
+    });
+  });
+
+  modal.querySelectorAll("[data-contact-close]").forEach((el) => {
+    el.addEventListener("click", close);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.classList.contains("hidden")) close();
+  });
 }

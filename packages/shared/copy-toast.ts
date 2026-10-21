@@ -3,6 +3,7 @@ const TOAST_ID = "copy-toast";
 export const COPY_TOAST = {
   address: "주소를 복사했습니다.",
   account: "계좌번호를 복사했습니다.",
+  phone: "연락처를 복사했습니다.",
   failed: "복사에 실패했습니다.",
 } as const;
 

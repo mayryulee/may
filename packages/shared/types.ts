@@ -47,11 +47,15 @@ export type GiftAccount = {
   name: string;
   bank: string;
   number: string;
+  /** 연락처 — 있으면 이름 옆 전화 아이콘 → 연락처 팝업 + 자동 복사 (theme01) */
+  phone?: string;
 };
 
 export type GiftAccounts = {
   groom: GiftAccount[];
   bride: GiftAccount[];
+  /** '마음 전하실 곳' 안내 문구 (줄 단위). 미지정 시 테마 기본 문구 */
+  messageLines?: string[];
 };
 
 export type InformationSlide = {

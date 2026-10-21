@@ -89,7 +89,10 @@ const config: ClientConfig = {
   gallery: [{ src: "gallery01.png", alt: "갤러리 사진 1" }],
 
   accounts: {
-    groom: [{ relation: "신랑", name: "신랑", bank: "은행", number: "000-00-00000" }],
+    // 안내 문구 — 생략하면 "참석이 어려우신 분들을 위해…" 기본 문구
+    // messageLines: ["소중한 마음 감사히 잘 받겠습니다."],
+    // phone 을 넣으면 이름 옆 전화 아이콘 → 연락처 팝업 + 자동 복사 (theme01)
+    groom: [{ relation: "신랑", name: "신랑", bank: "은행", number: "000-00-00000" /* , phone: "010-0000-0000" */ }],
     bride: [{ relation: "신부", name: "신부", bank: "은행", number: "000-00-00000" }],
   },
 
