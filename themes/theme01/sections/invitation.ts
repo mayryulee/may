@@ -39,11 +39,6 @@ export function renderInvitationHtml(
 
   return /* html */ `
     <section class="pt-[60px] text-center" aria-label="초대">
-      <div class="mx-auto flex h-[22px] w-[78px] items-center justify-center rounded-[50%] border-[0.5px] border-[#111111]">
-        <span class="font-sans text-[7.5px] font-normal uppercase tracking-[0.13em]">
-          INVITATION
-        </span>
-      </div>
       <h2 class="mt-[16px] text-[18px] tracking-normal">
         소중한 분들을 초대합니다
       </h2>
