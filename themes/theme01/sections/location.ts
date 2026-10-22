@@ -1,5 +1,10 @@
 import { initVenueMap } from "../../../packages/shared/venue-map";
-import type { LocationTransportSection, Venue } from "../../../packages/shared/types";
+import type {
+  LocationTransportSection,
+  ShuttleInfo,
+  ShuttleStop,
+  Venue,
+} from "../../../packages/shared/types";
 import { themeIconUrl, venueLocationForTheme, venueSearchName } from "../../../packages/shared/types";
 
 const THEME_ID = "theme01" as const;
@@ -70,9 +75,124 @@ function renderTransportSection(
     </div>`;
 }
 
-function renderTransportHtml(transport: readonly LocationTransportSection[]): string {
-  const total = transport.length;
-  return transport.map((section, i) => renderTransportSection(section, i, total)).join("");
+const SHUTTLE_DEFAULT_TITLE = "전세버스 탑승 안내";
+
+function renderTransportHtml(
+  transport: readonly LocationTransportSection[],
+  shuttle?: ShuttleInfo,
+): string {
+  const total = transport.length + (shuttle ? 1 : 0);
+  const sections = transport
+    .map((section, i) => renderTransportSection(section, i, total))
+    .join("");
+  return sections + (shuttle ? renderShuttleButton(shuttle) : "");
+}
+
+/** 지도 버튼과 같은 흰 버튼 */
+function renderShuttleButton(shuttle: ShuttleInfo): string {
+  return /* html */ `
+    <div class="pt-[32px]">
+      <button
+        type="button"
+        data-shuttle-open
+        class="flex h-[44px] w-full items-center justify-center rounded-[6px] border-[0px] bg-white text-[15px] tracking-tighter text-[#111111]"
+      >
+        ${shuttle.title ?? SHUTTLE_DEFAULT_TITLE}
+      </button>
+    </div>`;
+}
+
+function renderShuttleStop(stop: ShuttleStop): string {
+  return /* html */ `
+    <div>
+      ${stop.label ? `<p class="m-0 mb-[6px] text-[12px] font-medium text-[#111111]">${stop.label}</p>` : ""}
+      <p class="m-0 flex flex-wrap items-baseline gap-x-[8px]">
+        <span class="text-[14px] font-medium text-[#111111]">${stop.place}</span>
+        <span class="text-[12px] font-extralight text-[#5D5D5D]">${stop.address}</span>
+      </p>
+      ${stop.time ? `<p class="m-0 mt-[8px] text-[13px] text-[#111111]">${stop.time}</p>` : ""}
+    </div>`;
+}
+
+const SHUTTLE_ARROW = /* html */ `<p class="m-0 my-[10px] text-center text-[14px] text-[#AAAAAA]" aria-hidden="true">↓</p>`;
+
+/** 연락처 팝업과 같은 스타일 — 내용이 길면 카드 안에서 스크롤 */
+function renderShuttleModalHtml(shuttle: ShuttleInfo): string {
+  const intro = (shuttle.introLines ?? [])
+    .map((line) => `<p class="m-0">${line}</p>`)
+    .join("");
+  const groups = shuttle.groups
+    .map(
+      (group) => /* html */ `
+        <div class="mt-[12px] rounded-[8px] bg-white px-[20px] py-[20px] text-left">
+          <p class="m-0 text-[15px] font-medium text-[#111111]">${group.title}</p>
+          ${group.note ? `<p class="m-0 mt-[6px] text-[12px] font-extralight leading-relaxed text-[#888888]">${group.note}</p>` : ""}
+          <!-- w-fit: 화살표가 카드가 아니라 탑승 장소 텍스트 너비 기준 가운데 -->
+          <div class="mt-[16px] w-fit">${group.stops.map(renderShuttleStop).join(SHUTTLE_ARROW)}</div>
+        </div>`,
+    )
+    .join("");
+  const notice = (shuttle.noticeLines ?? [])
+    .map((line) => `<p class="m-0">${line}</p>`)
+    .join("");
+
+  return /* html */ `
+    <div
+      id="shuttle-modal"
+      class="fixed inset-0 z-[110] hidden"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="shuttle-modal-title"
+    >
+      <div class="absolute inset-0 bg-black/35" data-shuttle-close></div>
+      <div class="relative mx-auto flex h-full max-w-[400px] items-center px-[24px] py-[40px]">
+        <div class="relative flex max-h-full w-full flex-col rounded-[8px] bg-[#F7F7F7] text-center font-pretendard tracking-tight shadow-lg">
+          <button
+            type="button"
+            data-shuttle-close
+            class="absolute top-[16px] right-[16px] z-[1] inline-flex h-[32px] w-[32px] items-center justify-center border-[0px] bg-transparent p-0 font-pretendard text-[20px] tracking-tight text-[#999999]"
+            aria-label="닫기"
+          >
+            ×
+          </button>
+          <div class="overflow-y-auto px-[24px] pt-[32px] pb-[24px]">
+            <h2 id="shuttle-modal-title" class="m-0 text-[16px] font-medium tracking-tight text-[#111111]">
+              ${shuttle.title ?? SHUTTLE_DEFAULT_TITLE}
+            </h2>
+            ${intro ? `<div class="mt-[8px] text-[12px] font-extralight leading-relaxed text-[#888888]">${intro}</div>` : ""}
+            <div class="mt-[12px]">${groups}</div>
+            ${notice ? `<div class="mt-[20px] text-[12px] font-extralight leading-relaxed text-[#888888]">${notice}</div>` : ""}
+            <button
+              type="button"
+              data-shuttle-close
+              class="mt-[24px] w-full rounded-[8px] border-[0px] bg-[#111111] py-[13px] font-pretendard text-[14px] font-normal tracking-tight text-white"
+            >
+              확인
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function initShuttleModal(root: ParentNode): void {
+  const modal = root.querySelector<HTMLElement>("#shuttle-modal");
+  if (!modal) return;
+
+  const setOpen = (open: boolean) => {
+    modal.classList.toggle("hidden", !open);
+    modal.setAttribute("aria-hidden", String(!open));
+    document.body.classList.toggle("overflow-hidden", open);
+  };
+
+  root.querySelector("[data-shuttle-open]")?.addEventListener("click", () => setOpen(true));
+  modal.querySelectorAll("[data-shuttle-close]").forEach((el) => {
+    el.addEventListener("click", () => setOpen(false));
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.classList.contains("hidden")) setOpen(false);
+  });
 }
 
 export function renderLocationHtml(venue: Venue): string {
@@ -180,11 +300,13 @@ export function renderLocationHtml(venue: Venue): string {
       </div>
 
       <div class="mt-[50px] mx-[47px] space-y-[0px] text-left text-[14px] leading-[1.85] tracking-tighter">
-        ${renderTransportHtml(transport)}
+        ${renderTransportHtml(transport, venue.shuttle)}
       </div>
+      ${venue.shuttle ? renderShuttleModalHtml(venue.shuttle) : ""}
     </section>`;
 }
 
 export function initLocation(root: ParentNode, venue: Venue): void {
   initVenueMap(root, venue, { fallbackFontClass: "font-jeju" });
+  initShuttleModal(root);
 }

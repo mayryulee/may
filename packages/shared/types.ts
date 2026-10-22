@@ -71,6 +71,34 @@ export type LocationTransportSection = {
   lines: string[];
 };
 
+/** 전세버스 탑승 장소 */
+export type ShuttleStop = {
+  /** 장소 위 작은 제목 (예: "1차 탑승 | 오전 8:00") */
+  label?: string;
+  place: string;
+  address: string;
+  /** 주소 아래 시간 (예: "출발 오전 7:10") */
+  time?: string;
+};
+
+export type ShuttleGroup = {
+  /** 예: "신랑측 | 김해" */
+  title: string;
+  /** 그룹 안내 (예: "아래 두 장소를 순차적으로 경유하여 운행합니다.") */
+  note?: string;
+  /** 2곳 이상이면 사이에 ↓ 표시 (순차 경유) */
+  stops: ShuttleStop[];
+};
+
+/** 오시는 길 '전세버스 탑승 안내' 버튼 + 팝업 (theme01) */
+export type ShuttleInfo = {
+  /** 버튼·팝업 제목. 기본 "전세버스 탑승 안내" */
+  title?: string;
+  introLines?: string[];
+  groups: ShuttleGroup[];
+  noticeLines?: string[];
+};
+
 export type ThemeLocationContent = {
   transport: LocationTransportSection[];
 };
@@ -88,6 +116,8 @@ export type Venue = {
    * 미지정 시 name 사용. name 에 층·홀 이름이 붙어 검색이 안 될 때 지정 (예: "더베일리하우스 삼성점")
    */
   mapSearchName?: string;
+  /** 전세버스 안내 — 있으면 오시는 길에 버튼, 누르면 안내 팝업 (theme01) */
+  shuttle?: ShuttleInfo;
   /** 테마별 오시는 길·교통편 (디자인에 맞게 행 단위로 저장) */
   location: Record<ThemeId, ThemeLocationContent>;
 };
