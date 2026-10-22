@@ -77,6 +77,9 @@ npm run resize:images -- <clientId> main01.png # 특정 파일만
   `phone` 없는 사람은 아이콘 없음. 팝업은 방명록 삭제 팝업과 같은 스타일 재사용.
 - **계좌 안내 문구** (theme01): `accounts.messageLines: ["소중한 마음 감사히 잘 받겠습니다."]` — 줄 단위 배열.
   생략 시 기본 문구("참석이 어려우신 분들을 위해 기재했습니다." / "너그러운 마음으로 양해 부탁드립니다.").
+- **갤러리 썸네일 기준점** (theme01): 썸네일은 3:4 세로로 가운데 기준 잘림 → 가로 사진에서 인물이 잘리면
+  `galleryThumbPosition: { "galleryp05.png": "right" }` 처럼 파일명별 CSS object-position 지정
+  (`"left"` `"right"` `"70% center"` 등, 숫자 클수록 오른쪽). 크게 보기(팝업)는 항상 원본 전체.
 - **참석 의사 팝업**: `rsvp.enabled: false` 면 팝업·메일 없음.
 - **배경음악**: `bgm: { src: "bright.mp3" }` (음원은 `assets/audio/`). 블록 없으면 음악 없음.
 - **지도 검색어**: `venue.name` 에 층·홀(예: `2F`)을 붙이면 카카오 검색 실패 → `mapSearchName` 에 검색용 이름 지정.
