@@ -4,7 +4,7 @@ const config: ClientConfig = {
   id: "sample02",
   slug: "sample02",
   theme: "theme02",
-  expiresAt: "2027-08-25",
+  // 테마 미리보기용 샘플 — 만료 없음 (expiresAt 넣지 말 것)
 
   meta: {
     title: "정호♥채현 결혼합니다.",
