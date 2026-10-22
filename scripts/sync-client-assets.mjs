@@ -1,6 +1,7 @@
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { centerCalendarImage } from "./center-calendar.mjs";
 
 const root = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const publicImagesDir = resolve(root, "public", "images");
@@ -49,6 +50,15 @@ for (const id of clientIds) {
     process.exit(1);
   }
   copyDirContents(from, resolve(publicImagesDir, id));
+
+  // 달력 이미지 가로 가운데 보정 (public 사본만)
+  const calendarPath = resolve(publicImagesDir, id, "calendar.png");
+  if (existsSync(calendarPath)) {
+    const padded = await centerCalendarImage(calendarPath);
+    if (padded !== 0) {
+      console.log(`[${id}] calendar.png 가운데 보정: ${padded > 0 ? "오른쪽" : "왼쪽"}에 ${Math.abs(padded)}px 여백`);
+    }
+  }
 }
 
 clearDir(publicAudioDir);

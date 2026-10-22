@@ -11,7 +11,8 @@ export function renderCalendarHtml(
 
   return /* html */ `
     <section class="bg-[#F7F7F7] text-center" aria-label="캘린더">
-      <div class="w-full pt-[72px] pl-[76px] pr-[65px] text-center">
+      <!-- 좌우 여백 동일 — 이미지 치우침은 빌드 시 scripts/center-calendar.mjs 가 보정 -->
+      <div class="w-full pt-[72px] px-[70px] text-center">
         <img
           class="mx-auto block w-full h-auto"
           src="${calendarSrc}"

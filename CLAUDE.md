@@ -65,6 +65,9 @@ npm run resize:images -- <clientId> main01.png # 특정 파일만
 긴 변 1600px JPEG(확장자는 .png 유지), 원본은 `~/Desktop/may_originals/<clientId>/` 에 자동 백업.
 `cover.png`(580×800 세로 / 800×496 가로), `calendar.png` 는 제외.
 
+`calendar.png`(theme01)는 빌드 시 `scripts/center-calendar.mjs` 가 요일 행(일~토) 기준으로 가로 가운데를 자동 보정
+(public 사본에 투명 여백 추가, 원본 그대로). 달력 영역 좌우 여백은 70px 동일 — 이미지별로 여백을 조정하지 말 것.
+
 ## 고객 데이터 분리 · 만료
 
 - 브라우저는 접속한 청첩장의 config 만 내려받음: `scripts/generate-client-registry.mjs` 가
