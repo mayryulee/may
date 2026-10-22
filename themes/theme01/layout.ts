@@ -29,7 +29,7 @@ export function renderPageHtml(config: ClientConfig, _themeId: ThemeId): string 
 
     ${renderCalendarHtml(config.id, config.calendar, config.couple)}
 
-    ${renderGalleryHtml(config.id, config.gallery)}
+    ${renderGalleryHtml(config.id, config.gallery, config.galleryThumbPosition)}
 
     ${renderLocationHtml(config.venue)}
 
@@ -53,7 +53,7 @@ export function initPage(
   _themeId: ThemeId,
 ): void {
   initCalendar(root, new Date(config.weddingAt));
-  initGallery(root, config.id, config.gallery);
+  initGallery(root, config.id, config.gallery, config.galleryThumbPosition);
   initLocation(root, config.venue);
   initAccountGift(root);
   initInformationCarousel(root, config.information);

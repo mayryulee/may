@@ -29,12 +29,17 @@ function galleryArrowIcon(direction: "prev" | "next"): string {
           </svg>`;
 }
 
+type ThumbPositions = Readonly<Record<string, string>>;
+
 function renderGalleryThumb(
   clientId: string,
   image: GalleryImage,
   index: number,
+  positions: ThumbPositions = {},
 ): string {
   const src = clientImageUrl(clientId, image.src);
+  const position = positions[image.src];
+  const positionStyle = position ? ` style="object-position: ${position}"` : "";
   return /* html */ `
     <button
       type="button"
@@ -43,7 +48,7 @@ function renderGalleryThumb(
       aria-label="${image.alt} 크게 보기"
     >
       <img
-        class="aspect-[3/4] w-full object-cover object-center"
+        class="aspect-[3/4] w-full object-cover object-center"${positionStyle}
         src="${src}"
         alt="${image.alt}"
         loading="lazy"
@@ -56,8 +61,11 @@ function renderGalleryThumb(
 export function renderGalleryHtml(
   clientId: string,
   images: readonly GalleryImage[],
+  positions: ThumbPositions = {},
 ): string {
-  const thumbs = images.map((img, i) => renderGalleryThumb(clientId, img, i)).join("");
+  const thumbs = images
+    .map((img, i) => renderGalleryThumb(clientId, img, i, positions))
+    .join("");
   const plusBtnSrc = themeIconUrl(THEME_ID, "btn-plus.svg");
 
   return /* html */ `
@@ -164,6 +172,7 @@ export function initGallery(
   root: ParentNode,
   clientId: string,
   images: readonly GalleryImage[],
+  positions: ThumbPositions = {},
 ): void {
   const section = root.querySelector("#gallery");
   const grid = section?.querySelector<HTMLElement>("#gallery-grid");
@@ -237,7 +246,7 @@ export function initGallery(
       const index = resolved.length + revealedPopupCount + i;
       const filename = `galleryp${String(popupIndex).padStart(2, "0")}.png`;
       const alt = `갤러리 사진 ${index + 1}`;
-      const html = renderGalleryThumb(clientId, { src: filename, alt }, index);
+      const html = renderGalleryThumb(clientId, { src: filename, alt }, index, positions);
       const template = document.createElement("template");
       template.innerHTML = html.trim();
       const btn = template.content.firstElementChild as HTMLButtonElement | null;

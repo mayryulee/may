@@ -201,6 +201,12 @@ export type ClientConfig = {
   };
   venue: Venue;
   gallery: GalleryImage[];
+  /**
+   * 갤러리 썸네일 자르는 기준점 (파일명 → CSS object-position). 미지정 시 가운데.
+   * 가로 사진에서 인물이 잘릴 때 사용. 예: { "galleryp05.png": "right" }, { "gallery03.png": "70% center" }
+   * 크게 보기(팝업)는 항상 원본 전체.
+   */
+  galleryThumbPosition?: Record<string, string>;
   accounts: GiftAccounts;
   /** 안내 사항 슬라이드 — 미지정·빈 배열이면 섹션 숨김 */
   information?: InformationSlide[];
