@@ -41,6 +41,23 @@ function applyMeta(html, client, baseUrl) {
     .replaceAll("__OG_IMAGE_URL__", imageUrl);
 }
 
+const EXPIRED_TITLE = "청첩장 열람 기간 종료";
+const EXPIRED_DESCRIPTION = "열람 기간이 종료된 청첩장입니다.";
+
+function applyExpiredMeta(html, slug, baseUrl) {
+  return html
+    .replaceAll("__META_TITLE__", EXPIRED_TITLE)
+    .replaceAll("__META_DESCRIPTION__", EXPIRED_DESCRIPTION)
+    .replaceAll("__META_OG_SITE_NAME__", "may")
+    .replaceAll("__META_OG_TITLE__", EXPIRED_TITLE)
+    .replaceAll("__META_OG_DESCRIPTION__", EXPIRED_DESCRIPTION)
+    .replaceAll("__META_OG_IMAGE_ALT__", "")
+    .replaceAll("__META_TWITTER_TITLE__", EXPIRED_TITLE)
+    .replaceAll("__META_TWITTER_DESCRIPTION__", EXPIRED_DESCRIPTION)
+    .replaceAll("__OG_SITE_URL__", `${baseUrl}/${slug}`)
+    .replaceAll("__OG_IMAGE_URL__", "");
+}
+
 function main() {
   const indexPath = resolve(distDir, "index.html");
   if (!existsSync(indexPath)) {
@@ -68,6 +85,14 @@ function main() {
     writePage(client.slug, client);
   }
 
+  // 만료된 청첩장: 고객 정보 없는 중립 메타로만 페이지 생성 (링크 미리보기에 이름·사진 노출 안 함)
+  for (const slug of manifest.expiredSlugs ?? []) {
+    const outDir = resolve(distDir, slug);
+    mkdirSync(outDir, { recursive: true });
+    writeFileSync(resolve(outDir, "index.html"), applyExpiredMeta(baseHtml, slug, baseUrl), "utf8");
+    redirectLines.push(`/${slug}    /${slug}/index.html   200`);
+  }
+
   // 미리보기 slug(grace/tender/veil)도 매핑된 클라이언트 메타로 프리렌더
   for (const [slug, clientId] of Object.entries(PREVIEW_SLUG_TO_CLIENT_ID)) {
     const client = clientById.get(clientId);
@@ -85,7 +110,9 @@ function main() {
   writeFileSync(redirectsPath, `${redirectLines.join("\n")}\n`, "utf8");
 
   console.log(
-    `Prerendered ${manifest.clients.length} client pages + ${Object.keys(PREVIEW_SLUG_TO_CLIENT_ID).length} preview slugs, root meta = ${defaultClient.slug}`,
+    `Prerendered ${manifest.clients.length} client pages + ${Object.keys(PREVIEW_SLUG_TO_CLIENT_ID).length} preview slugs` +
+      ((manifest.expiredSlugs ?? []).length ? ` + ${manifest.expiredSlugs.length} expired` : "") +
+      `, root meta = ${defaultClient.slug}`,
   );
 }
 

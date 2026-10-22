@@ -1,5 +1,9 @@
 import { isThemeSlug, themeIdFromSlug, type ThemeId } from "@shared/types";
-import { CLIENT_BY_SLUG } from "@shared/generated/client-registry";
+import {
+  CLIENT_EXPIRES_AT,
+  CLIENT_LOADERS,
+  EXPIRED_SLUGS,
+} from "@shared/generated/client-loaders";
 
 /** 접속 시 기본 미리보기 경로 */
 export const DEFAULT_PREVIEW_PATH = "/grace";
@@ -23,11 +27,11 @@ export function resolveClientSlugFromPath(pathname: string): string | null {
   const segment = pathSegment(pathname);
   if (!segment) return null;
 
-  if (segment in CLIENT_BY_SLUG) return segment;
+  if (segment in CLIENT_LOADERS || EXPIRED_SLUGS.includes(segment)) return segment;
 
   if (isThemeSlug(segment)) {
     const mapped = THEME_SLUG_TO_CLIENT[segment];
-    if (mapped && mapped in CLIENT_BY_SLUG) return mapped;
+    if (mapped && mapped in CLIENT_LOADERS) return mapped;
   }
 
   return null;
@@ -50,4 +54,16 @@ export function syncClientPath(): string {
   }
 
   return fromPath;
+}
+
+/**
+ * 만료 여부 — config.expiresAt("YYYY-MM-DD") 그날 한국시간 자정이 지나면 만료.
+ * 빌드에서 이미 제외된 slug(EXPIRED_SLUGS)도 만료로 처리.
+ */
+export function isClientExpired(slug: string, now = Date.now()): boolean {
+  if (EXPIRED_SLUGS.includes(slug)) return true;
+  const expiresAt = CLIENT_EXPIRES_AT[slug];
+  if (!expiresAt) return false;
+  const end = Date.parse(`${expiresAt}T23:59:59.999+09:00`);
+  return !Number.isNaN(end) && now > end;
 }
