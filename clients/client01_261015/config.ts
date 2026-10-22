@@ -198,6 +198,10 @@ const config: ClientConfig = {
     { src: "gallery05.png", alt: "갤러리 사진 5" },
     { src: "gallery06.png", alt: "갤러리 사진 6" },
   ],
+  // 썸네일 자르는 기준점 — 가로 사진에서 신랑·신부가 다 보이도록
+  galleryThumbPosition: {
+    "galleryp05.png": "right",
+  },
 
   accounts: {
     messageLines: ["소중한 마음 감사히 잘 받겠습니다."],
