@@ -45,6 +45,7 @@ npm run build        # 배포 전 확인용
 
 1. `clients/sample01`(또는 `_template`)을 `clients/<id>` 로 복사. 폴더명 예: `client01_261015`
 2. `config.ts` 의 `id`(=폴더명), `slug`(URL `/` 뒤, 겹치면 빌드 실패), `theme` 수정
+   - slug 는 영문 소문자·숫자·`-`·`_` 만. `grace` `tender` `veil`(테마 미리보기)·`images` `assets` `audio` `fonts` `theme-assets` 등 사이트 폴더 이름은 빌드 에러로 막혀 있음
 3. 사진은 `images/` 에 정해진 파일명으로: `cover.png`(카톡 썸네일), `main01.png`, `sub01.png`, `calendar.png`,
    `gallery01~06.png`(처음 보이는 6장), `galleryp01~.png`(theme01 '더보기'로 4장씩). theme03 메인은 `main02.png`
 4. 빈 `images/` 는 빌드 실패 → `.gitkeep` 유지
@@ -63,6 +64,17 @@ npm run resize:images -- <clientId> main01.png # 특정 파일만
 
 긴 변 1600px JPEG(확장자는 .png 유지), 원본은 `~/Desktop/may_originals/<clientId>/` 에 자동 백업.
 `cover.png`(580×800 세로 / 800×496 가로), `calendar.png` 는 제외.
+
+## 고객 데이터 분리 · 만료
+
+- 브라우저는 접속한 청첩장의 config 만 내려받음: `scripts/generate-client-registry.mjs` 가
+  `packages/shared/generated/client-loaders.ts`(slug별 동적 import)를 생성 → 빌드 시 고객별 JS 파일로 분리.
+  `client-registry.ts`(전체 config)는 Netlify 함수 전용 — 브라우저 코드(src/, themes/)에서 import 금지.
+- **만료**: `expiresAt: "YYYY-MM-DD"`(보통 예식 3개월 뒤) 그날 한국시간 자정이 지나면
+  1. 접속 시: 데이터를 불러오지 않고 "열람 기간이 종료된 청첩장입니다" 화면 (배포 없이 자동)
+  2. 다음 빌드·배포 시: 해당 고객 데이터 파일·페이지를 빌드에서 제외, slug 만 남겨 같은 안내 + 고객 정보 없는 링크 미리보기
+  `expiresAt` 이 없거나 `"YYYY-MM-DD"` 그대로면 만료 없음.
+- **sample01/sample02 는 테마 미리보기용이라 `expiresAt` 을 넣지 말 것** (넣으면 /grace·/tender·/veil 이 닫힘. sample01 은 빌드 에러로 막음).
 
 ## config 작성 문법
 
